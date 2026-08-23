@@ -25,7 +25,7 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 
 ### Agentes (`agents/`)
 
-Subagentes en formato markdown para OpenCode (`~/.config/opencode/agents/`).
+Subagentes en formato markdown compatibles con OpenCode y CommandCode (ver diferencias de instalación más abajo).
 
 | Agente | Rol |
 |--------|-----|
@@ -71,6 +71,13 @@ cp -r skills/<nombre> ~/.config/opencode/skills/
 # agentes y comandos
 cp agents/*.md ~/.config/opencode/agents/
 cp commands/*.md ~/.config/opencode/commands/
+```
+
+**CommandCode**: los agentes son compatibles. Copiá los `.md` a `~/.commandcode/agents/` y quitá del frontmatter los campos `mode` y `model` (son específicos de OpenCode; CommandCode selecciona el modelo desde su propia configuración):
+
+```bash
+cp agents/*.md ~/.commandcode/agents/
+# luego editá cada archivo para eliminar 'mode:' y 'model:' del frontmatter
 ```
 
 **Otros agentes** (Claude Code, Cursor, etc.): las skills siguen el formato estándar `SKILL.md`; copiá la carpeta al directorio de skills de tu herramienta.
