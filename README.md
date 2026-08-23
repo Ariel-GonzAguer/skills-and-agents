@@ -96,3 +96,7 @@ Diferencias de frontmatter a tener en cuenta:
 ## Autor
 
 Ariel GonzAgüer — [Gato Rojo Lab](https://gatorojolab.com)
+
+## Licencia
+
+[MIT + Commons Clause](./LICENSE): podés usar, copiar y modificar el contenido libremente, pero no vender las skills, agentes o documentos como producto o servicio.
