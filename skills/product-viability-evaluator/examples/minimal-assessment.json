@@ -1,0 +1,64 @@
+{
+  "project": {
+    "name": "Example niche SaaS",
+    "type": "saas_b2b",
+    "classification_confidence": 90,
+    "description": "Synthetic example for demonstrating the assessment contract."
+  },
+  "decision_frame": {
+    "decision": "Invest in a paid pilot",
+    "commitment_scope": "Four-week concierge pilot",
+    "horizon": "6 months",
+    "currency": "USD",
+    "geography": "United States"
+  },
+  "founder_context": {
+    "people": 1,
+    "weekly_hours": 15,
+    "budget": 5000
+  },
+  "dimensions": {
+    "problem": { "weight": 15, "score": 72, "pre_red_team_score": 76, "confidence": 65, "evidence_strength": 3, "positive_factors": ["Five target buyers described the recurring manual cost"], "negative_factors": ["No paid behavior yet"], "evidence_ids": ["S01"], "unknowns": ["Cost of inaction across the segment"], "rationale": "The problem appears real but payment behavior is not verified." },
+    "customer": { "weight": 11, "score": 68, "pre_red_team_score": 70, "confidence": 60, "evidence_strength": 2, "positive_factors": ["User and buyer roles are named"], "negative_factors": ["Budget owner is not confirmed"], "evidence_ids": ["S01"], "unknowns": ["Approval process"], "rationale": "The ICP is specific enough for a pilot but procurement remains unknown." },
+    "market": { "weight": 7, "score": 55, "pre_red_team_score": 58, "confidence": 45, "evidence_strength": 2, "positive_factors": ["A list of 300 matching accounts is available"], "negative_factors": ["Problem incidence is unknown"], "evidence_ids": ["S02"], "unknowns": ["Reachable problem incidence"], "rationale": "Reach is tangible but the effective market is not established." },
+    "competition": { "weight": 7, "score": 62, "pre_red_team_score": 64, "confidence": 55, "evidence_strength": 2, "positive_factors": ["Current alternatives require manual consolidation"], "negative_factors": ["A bundled incumbent feature may be sufficient"], "evidence_ids": ["S02"], "unknowns": ["Switching behavior"], "rationale": "There is room to improve the workflow, but switching value needs proof." },
+    "differentiation": { "weight": 8, "score": 58, "pre_red_team_score": 65, "confidence": 50, "evidence_strength": 2, "positive_factors": ["Niche workflow knowledge"], "negative_factors": ["Feature set is easy to copy"], "evidence_ids": ["S01"], "unknowns": ["Durability of workflow advantage"], "rationale": "Initial relevance exists without a strong moat." },
+    "product": { "weight": 7, "score": 45, "pre_red_team_score": 45, "confidence": 70, "evidence_strength": 3, "positive_factors": ["Concierge process can deliver the core outcome"], "negative_factors": ["Software product is not built"], "evidence_ids": ["S03"], "unknowns": ["Self-service onboarding effort"], "rationale": "A pilot is deliverable, but product maturity is intentionally low." },
+    "monetization": { "weight": 11, "score": 52, "pre_red_team_score": 60, "confidence": 40, "evidence_strength": 1, "positive_factors": ["A value-based monthly price hypothesis exists"], "negative_factors": ["No payment request has been made"], "evidence_ids": ["S01"], "unknowns": ["Willingness to pay"], "rationale": "Pricing is a testable assumption, not evidence." },
+    "acquisition": { "weight": 12, "score": 64, "pre_red_team_score": 68, "confidence": 55, "evidence_strength": 2, "positive_factors": ["Founder has direct access to 40 target buyers"], "negative_factors": ["No conversion data"], "evidence_ids": ["S02"], "unknowns": ["Meeting and close rates"], "rationale": "The first ten buyers are reachable, but scale is unproven." },
+    "economics": { "weight": 10, "score": 48, "pre_red_team_score": 55, "confidence": 35, "evidence_strength": 1, "positive_factors": ["Expected variable software cost is low"], "negative_factors": ["Support time, CAC, and churn are unknown"], "evidence_ids": ["S03"], "unknowns": ["CAC", "Churn", "Support hours"], "rationale": "Economics cannot yet support a production investment." },
+    "execution_risk": { "weight": 5, "score": 75, "pre_red_team_score": 75, "confidence": 70, "evidence_strength": 3, "positive_factors": ["Pilot needs no regulated data or complex integration"], "negative_factors": ["Founder capacity is limited"], "evidence_ids": ["S03"], "unknowns": ["Integration needs after pilot"], "rationale": "The next experiment is feasible within constraints." },
+    "founder_fit": { "weight": 7, "score": 78, "pre_red_team_score": 80, "confidence": 65, "evidence_strength": 3, "positive_factors": ["Founder has domain access and enough hours for a pilot"], "negative_factors": ["No dedicated sales capacity beyond the founder"], "evidence_ids": ["S02"], "unknowns": ["Long-term interest in support"], "rationale": "Fit is strong for validation, not yet for scale." }
+  },
+  "evidence": [
+    { "id": "S01", "label": "EVIDENCE", "statement": "Five synthetic interview summaries describe the problem.", "strength": 2, "source": "Synthetic interview notes", "date": "2026-08-13", "direction": "supporting", "limitations": "Small convenience sample and no payment behavior." },
+    { "id": "S02", "label": "FACT", "statement": "A synthetic list contains 300 matching accounts and 40 founder contacts.", "strength": 3, "source": "Synthetic CRM export", "date": "2026-08-13", "direction": "supporting", "limitations": "Reachability does not prove need or conversion." },
+    { "id": "S03", "label": "ESTIMATE", "statement": "A concierge pilot can be delivered within 60 hours and USD 1,000.", "strength": 2, "source": "Synthetic founder estimate", "date": "2026-08-13", "direction": "mixed", "limitations": "Not verified by delivery." }
+  ],
+  "unknowns": [
+    { "item": "Willingness to pay USD 500 per month", "decision_impact": "critical", "resolution": "Request three paid pilot commitments from qualified buyers." }
+  ],
+  "assumptions": [
+    { "item": "Pilot price", "value": 500, "sensitivity": "Below USD 300, founder delivery time may make the model unattractive." }
+  ],
+  "financial_scenarios": {
+    "pessimistic": { "customers": 2, "monthly_arpu": 300, "variable_costs": 100, "fixed_costs": 200, "acquisition_spend": 600, "new_customers": 2, "monthly_churn_rate": 0.1, "founder_hours": 30, "one_time_capital": 1000 },
+    "base": { "customers": 5, "monthly_arpu": 500, "variable_costs": 250, "fixed_costs": 300, "acquisition_spend": 1000, "new_customers": 5, "monthly_churn_rate": 0.05, "founder_hours": 35, "one_time_capital": 1000 },
+    "optimistic": { "customers": 10, "monthly_arpu": 650, "variable_costs": 500, "fixed_costs": 500, "acquisition_spend": 1500, "new_customers": 10, "monthly_churn_rate": 0.03, "founder_hours": 45, "one_time_capital": 1500 }
+  },
+  "red_team": {
+    "performed": true,
+    "attacks": [
+      { "id": "RT01", "challenged_claim": "Interview interest implies willingness to pay.", "failure_mechanism": "Polite interview responses may disappear when payment is requested.", "severity": "critical", "likelihood": "high", "affected_dimensions": ["monetization", "economics"], "score_impact": -8, "falsification_test": "Secure three paid pilots at or above USD 500 per month." }
+    ],
+    "global_adjustment": 0
+  },
+  "deal_breakers": [
+    { "risk": "Willingness to pay is unverified", "status": "open", "severity": "high", "verdict_ceiling": "VALIDATE", "evidence_ids": ["S01"], "remediation": "Obtain three paid pilot commitments." }
+  ],
+  "experiments": [
+    { "hypothesis": "Qualified buyers will pay USD 500 per month for the outcome.", "method": "Offer a four-week concierge pilot to 15 qualified accounts.", "success_threshold": "At least three signed and paid pilots.", "failure_threshold": "Zero paid pilots after 15 qualified offers.", "cost": "60 founder hours and at most USD 1,000", "duration": "Four weeks", "decision_changed": "Success permits building the minimum automation; failure triggers pricing or problem pivot." }
+  ],
+  "proposed_verdict": "VALIDATE",
+  "confidence_penalty": 4
+}

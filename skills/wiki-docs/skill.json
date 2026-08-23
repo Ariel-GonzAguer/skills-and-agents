@@ -1,0 +1,18 @@
+{
+  "name": "wiki-docs",
+  "description": "Genera documentación técnica completa para proyectos de software siguiendo una estructura wiki organizada por dominios técnicos. Usa cuando el usuario pida documentar un proyecto, crear wiki, o generar documentación estructurada.",
+  "version": "1.0.0",
+  "author": ["Ariel GonzAgüer", "CommandCode"],
+  "tags": ["documentation", "wiki", "technical-writing", "project-docs"],
+  "triggers": [
+    "documentar proyecto",
+    "crear wiki",
+    "generar documentación",
+    "document this project",
+    "create wiki",
+    "generate documentation",
+    "documentación técnica"
+  ],
+  "category": "documentation",
+  "complexity": "medium"
+}

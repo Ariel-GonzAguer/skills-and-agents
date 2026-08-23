@@ -1,0 +1,14 @@
+{
+  "build_minimum_evidence_coverage": 70,
+  "build_minimum_confidence": 60,
+  "low_coverage_threshold": 50,
+  "low_confidence_threshold": 40,
+  "maximum_global_red_team_adjustment": -10,
+  "maximum_confidence_penalty": 20,
+  "verdicts": ["BUILD", "VALIDATE", "PIVOT", "RECONSIDER", "ABANDON"],
+  "notes": [
+    "The score never selects the verdict automatically.",
+    "Open deal breakers can impose a stricter verdict ceiling.",
+    "calculate-score.mjs reads these thresholds at runtime; run the complete test suite after changes."
+  ]
+}

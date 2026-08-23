@@ -1,0 +1,100 @@
+[
+  {
+    "id": "b2b-clearly-viable",
+    "name": "SaaS B2B clearly viable",
+    "type": "saas_b2b",
+    "scores": [88, 84, 75, 70, 82, 78, 85, 77, 82, 76, 90],
+    "confidence": 82,
+    "expected_verdict": "BUILD",
+    "expected_score": [78, 86]
+  },
+  {
+    "id": "b2b-acquisition-impossible",
+    "name": "Attractive SaaS B2B with inaccessible acquisition",
+    "type": "saas_b2b",
+    "scores": [82, 76, 84, 68, 72, 74, 78, 18, 42, 35, 30],
+    "confidence": 76,
+    "expected_verdict": "RECONSIDER",
+    "expected_score": [55, 65],
+    "deal_breaker": { "risk": "No buyer access within runway", "verdict_ceiling": "RECONSIDER" }
+  },
+  {
+    "id": "excellent-tech-no-market",
+    "name": "Technically excellent project without market demand",
+    "type": "developer_tool",
+    "scores": [16, 28, 20, 45, 24, 94, 18, 22, 15, 88, 52],
+    "confidence": 88,
+    "expected_verdict": "ABANDON",
+    "expected_score": [30, 40],
+    "deal_breaker": { "risk": "Behavioral evidence rejects the problem", "verdict_ceiling": "ABANDON" }
+  },
+  {
+    "id": "small-profitable-niche",
+    "name": "Small niche with excellent return on time",
+    "type": "saas_b2b",
+    "scores": [80, 88, 48, 82, 76, 72, 84, 78, 90, 86, 94],
+    "confidence": 80,
+    "expected_verdict": "BUILD",
+    "expected_score": [76, 84]
+  },
+  {
+    "id": "open-source-path-unknown",
+    "name": "Open source adoption with unproven monetization",
+    "type": "open_source",
+    "scores": [78, 66, 68, 72, 76, 84, 34, 70, 38, 55, 70],
+    "confidence": 65,
+    "expected_verdict": "VALIDATE",
+    "expected_score": [60, 70],
+    "deal_breaker": { "risk": "Payer conversion is unverified", "verdict_ceiling": "VALIDATE" }
+  },
+  {
+    "id": "insufficient-information",
+    "name": "Project with insufficient information",
+    "type": "unknown",
+    "scores": [58, null, null, null, 55, 62, null, null, null, 50, null],
+    "confidence": 28,
+    "expected_verdict": "RECONSIDER",
+    "expected_score": [54, 62],
+    "critical_unknown": true,
+    "expected_max_coverage": 50
+  },
+  {
+    "id": "pricing-failure",
+    "name": "Strong problem with structurally wrong pricing",
+    "type": "saas_b2b",
+    "scores": [84, 80, 70, 65, 74, 76, 22, 68, 30, 70, 75],
+    "confidence": 78,
+    "expected_verdict": "PIVOT",
+    "expected_score": [60, 70],
+    "deal_breaker": { "risk": "Current pricing cannot produce positive contribution", "verdict_ceiling": "PIVOT" }
+  },
+  {
+    "id": "distribution-failure",
+    "name": "Good product with no plausible distribution path",
+    "type": "consumer_app",
+    "scores": [72, 68, 82, 62, 70, 80, 65, 14, 35, 60, 42],
+    "confidence": 74,
+    "expected_verdict": "VALIDATE",
+    "expected_score": [53, 63],
+    "deal_breaker": { "risk": "Distribution hypothesis is unvalidated", "verdict_ceiling": "VALIDATE" }
+  },
+  {
+    "id": "excellent-code-bad-value",
+    "name": "Excellent code with a weak value proposition",
+    "type": "saas_b2c",
+    "scores": [32, 45, 55, 52, 18, 92, 30, 40, 28, 86, 66],
+    "confidence": 82,
+    "expected_verdict": "PIVOT",
+    "expected_score": [45, 55],
+    "deal_breaker": { "risk": "Current offer does not create switching value", "verdict_ceiling": "PIVOT" }
+  },
+  {
+    "id": "rough-code-strong-opportunity",
+    "name": "Mediocre code with strong commercial opportunity",
+    "type": "saas_b2b",
+    "scores": [92, 86, 78, 74, 84, 42, 88, 82, 86, 48, 90],
+    "confidence": 84,
+    "expected_verdict": "BUILD",
+    "expected_score": [77, 85]
+  }
+]

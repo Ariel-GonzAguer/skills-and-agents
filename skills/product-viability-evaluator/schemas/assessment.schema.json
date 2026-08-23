@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/product-viability-assessment.schema.json",
+  "title": "Product Viability Assessment",
+  "type": "object",
+  "required": [
+    "project",
+    "decision_frame",
+    "dimensions",
+    "evidence",
+    "unknowns",
+    "assumptions",
+    "red_team",
+    "deal_breakers",
+    "experiments"
+  ],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["name", "type", "classification_confidence"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "type": {
+          "enum": [
+            "saas_b2b", "saas_b2c", "consumer_app", "marketplace",
+            "developer_tool", "open_source", "api", "ai_product",
+            "agency_service", "ecommerce", "hardware_software",
+            "enterprise_software", "internal_tool", "content_product",
+            "community", "mobile_app", "other", "unknown"
+          ]
+        },
+        "modifiers": { "type": "array", "items": { "type": "string" } },
+        "classification_confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+        "description": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "decision_frame": {
+      "type": "object",
+      "required": ["decision", "commitment_scope", "horizon"],
+      "properties": {
+        "decision": { "type": "string", "minLength": 1 },
+        "commitment_scope": { "type": "string", "minLength": 1 },
+        "horizon": { "type": "string", "minLength": 1 },
+        "currency": { "type": "string" },
+        "geography": { "type": "string" },
+        "alternatives": { "type": "array", "items": { "type": "string" } }
+      },
+      "additionalProperties": true
+    },
+    "founder_context": { "type": "object", "additionalProperties": true },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "problem", "customer", "market", "competition", "differentiation",
+        "product", "monetization", "acquisition", "economics",
+        "execution_risk", "founder_fit"
+      ],
+      "additionalProperties": { "$ref": "#/$defs/dimension" }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "unknowns": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/unknown" }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/assumption" }
+    },
+    "financial_scenarios": {
+      "type": "object",
+      "properties": {
+        "pessimistic": { "$ref": "#/$defs/scenario" },
+        "base": { "$ref": "#/$defs/scenario" },
+        "optimistic": { "$ref": "#/$defs/scenario" }
+      },
+      "additionalProperties": false
+    },
+    "red_team": {
+      "type": "object",
+      "required": ["performed", "attacks"],
+      "properties": {
+        "performed": { "const": true },
+        "attacks": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/attack" }
+        },
+        "conflicts": { "type": "array", "items": { "type": "object" } },
+        "global_adjustment": { "type": "number", "minimum": -10, "maximum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "deal_breakers": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/dealBreaker" }
+    },
+    "experiments": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/experiment" }
+    },
+    "proposed_verdict": {
+      "enum": ["BUILD", "VALIDATE", "PIVOT", "RECONSIDER", "ABANDON"]
+    },
+    "confidence_penalty": { "type": "number", "minimum": 0, "maximum": 20 }
+  },
+  "$defs": {
+    "dimension": {
+      "type": "object",
+      "required": [
+        "weight", "score", "pre_red_team_score", "confidence",
+        "evidence_strength", "positive_factors", "negative_factors",
+        "evidence_ids", "unknowns", "rationale"
+      ],
+      "properties": {
+        "weight": { "type": "number", "exclusiveMinimum": 0, "maximum": 100 },
+        "score": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "pre_red_team_score": { "type": ["number", "null"], "minimum": 0, "maximum": 100 },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 100 },
+        "evidence_strength": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "positive_factors": { "type": "array", "items": { "type": "string" } },
+        "negative_factors": { "type": "array", "items": { "type": "string" } },
+        "evidence_ids": { "type": "array", "items": { "type": "string", "pattern": "^[SC][0-9]+$" } },
+        "unknowns": { "type": "array", "items": { "type": "string" } },
+        "rationale": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["id", "label", "statement", "strength", "source", "date", "direction", "limitations"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[SC][0-9]+$" },
+        "label": { "enum": ["FACT", "EVIDENCE", "ESTIMATE", "ASSUMPTION", "INFERENCE", "UNKNOWN"] },
+        "statement": { "type": "string", "minLength": 1 },
+        "strength": { "type": "integer", "minimum": 0, "maximum": 4 },
+        "source": { "type": "string", "minLength": 1 },
+        "date": { "type": "string", "minLength": 1 },
+        "direction": { "enum": ["supporting", "contrary", "mixed", "neutral"] },
+        "limitations": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "unknown": {
+      "type": "object",
+      "required": ["item", "decision_impact", "resolution"],
+      "properties": {
+        "item": { "type": "string", "minLength": 1 },
+        "decision_impact": { "enum": ["low", "medium", "high", "critical"] },
+        "resolution": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "assumption": {
+      "type": "object",
+      "required": ["item", "value", "sensitivity"],
+      "properties": {
+        "item": { "type": "string", "minLength": 1 },
+        "value": { "type": ["number", "string", "boolean", "null"] },
+        "sensitivity": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "scenario": {
+      "type": "object",
+      "properties": {
+        "customers": { "type": "number", "minimum": 0 },
+        "monthly_arpu": { "type": "number", "minimum": 0 },
+        "monthly_revenue": { "type": "number", "minimum": 0 },
+        "variable_costs": { "type": "number", "minimum": 0 },
+        "fixed_costs": { "type": "number", "minimum": 0 },
+        "acquisition_spend": { "type": "number", "minimum": 0 },
+        "new_customers": { "type": "number", "minimum": 0 },
+        "monthly_churn_rate": { "type": "number", "minimum": 0, "maximum": 1 },
+        "founder_hours": { "type": "number", "minimum": 0 },
+        "one_time_capital": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": true
+    },
+    "attack": {
+      "type": "object",
+      "required": ["id", "challenged_claim", "failure_mechanism", "severity", "likelihood", "affected_dimensions", "score_impact", "falsification_test"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^RT[0-9]+$" },
+        "challenged_claim": { "type": "string", "minLength": 1 },
+        "failure_mechanism": { "type": "string", "minLength": 1 },
+        "severity": { "enum": ["low", "medium", "high", "critical"] },
+        "likelihood": { "enum": ["low", "medium", "high", "unknown"] },
+        "affected_dimensions": { "type": "array", "items": { "type": "string" } },
+        "score_impact": { "type": "number", "maximum": 0 },
+        "falsification_test": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "dealBreaker": {
+      "type": "object",
+      "required": ["risk", "status", "severity", "verdict_ceiling", "evidence_ids", "remediation"],
+      "properties": {
+        "risk": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["open", "mitigated", "accepted"] },
+        "severity": { "enum": ["high", "critical"] },
+        "verdict_ceiling": { "enum": ["BUILD", "VALIDATE", "PIVOT", "RECONSIDER", "ABANDON"] },
+        "evidence_ids": { "type": "array", "items": { "type": "string" } },
+        "remediation": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    },
+    "experiment": {
+      "type": "object",
+      "required": ["hypothesis", "method", "success_threshold", "failure_threshold", "cost", "duration", "decision_changed"],
+      "properties": {
+        "hypothesis": { "type": "string", "minLength": 1 },
+        "method": { "type": "string", "minLength": 1 },
+        "success_threshold": { "type": "string", "minLength": 1 },
+        "failure_threshold": { "type": "string", "minLength": 1 },
+        "cost": { "type": "string", "minLength": 1 },
+        "duration": { "type": "string", "minLength": 1 },
+        "decision_changed": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}

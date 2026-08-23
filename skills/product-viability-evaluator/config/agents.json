@@ -1,0 +1,11 @@
+{
+  "comment": "Maps skill roles to opencode agent names. Agents are defined as .md files under ~/.config/opencode/agents/ and each binds its own model. Edit the model there, never in this file.",
+  "role_agent": {
+    "Researcher": "viability-researcher",
+    "Product/technical analyst": "viability-product-analyst",
+    "Commercial analyst": "viability-commercial-analyst",
+    "Financial analyst": "viability-financial-analyst",
+    "Skeptic": "viability-skeptic",
+    "Synthesizer": "viability-synthesizer"
+  }
+}

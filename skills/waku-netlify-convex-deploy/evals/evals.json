@@ -1,0 +1,70 @@
+{
+  "skill_name": "waku-netlify-convex-deploy",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "Start a new TypeScript Waku + Convex project for a small authenticated notes app and prepare it for Netlify. Do not deploy or configure hosted secrets.",
+      "expected_output": "A focused initialization workflow that confirms missing product decisions, scaffolds the project with pnpm, creates schema and generated types safely, configures Netlify contexts without secret values, adds baseline authorization tests, and stops before side effects without approval.",
+      "files": [],
+      "assertions": [
+        "Identifies initialize mode and asks only for missing decisions that affect architecture.",
+        "Uses current official Waku, Convex, and Netlify documentation before version-sensitive commands or configuration.",
+        "Creates or proposes schema, generated types, client setup, Netlify configuration, environment names, ignore rules, and baseline tests without exposing secrets.",
+        "Distinguishes static output from dynamic SSR and does not add a runtime without a request-time requirement.",
+        "Requests explicit approval before editing, installing, generating, provisioning, configuring hosted values, or deploying."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Add a shared projects feature to this Waku + Convex app. Projects must be private to their members, existing clients must keep working during the schema change, and create a preview only after approval. Do not touch production.",
+      "expected_output": "A maintenance workflow that inspects the existing app, preserves compatibility, adds Convex validators and resource authorization with negative tests, regenerates types when needed, runs relevant gates, presents exact side effects, and keeps preview separate from production.",
+      "files": [],
+      "assertions": [
+        "Identifies maintain mode and classifies the change as a cross-layer schema, authorization, and UI change.",
+        "Uses expand, migrate, contract or another compatible sequence instead of breaking existing clients or disabling schema validation.",
+        "Checks membership authorization from authoritative Convex data and tests cross-user denial, not only UI visibility.",
+        "Regenerates Convex generated files with the installed CLI rather than editing them manually.",
+        "Asks for explicit approval before edits, generation, hosted variable changes, or preview deployment, and never deploys production."
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Audit this Waku + Convex repository for production deployment on Netlify. Fix confirmed blockers but do not deploy. I especially want database type safety, authorization, environment separation, and the Waku SSR wrapper checked.",
+      "expected_output": "A repository-backed audit with file:line findings, minimal fixes, full verification results, and a blocked/ready verdict without exposing secrets or deploying.",
+      "files": [],
+      "assertions": [
+        "Inspects Waku, Convex, Netlify, security, and repository configuration rather than only running the build.",
+        "Checks Convex schema, generated types, runtime validators, authentication, and resource authorization.",
+        "Checks production versus deploy-preview Convex key isolation and Netlify variable scopes without printing values.",
+        "Does not deploy because production deployment was not requested.",
+        "Stops after the read-only audit and asks for explicit approval before applying fixes or running side-effecting commands."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Our Netlify deploy loads static pages but authenticated routes fail with error decoding lambda response. Diagnose and repair the Waku + Convex integration, create a preview, and verify it. Do not touch production.",
+      "expected_output": "Root-cause diagnosis from logs/config, minimal repair, preview-specific Convex and Netlify deployment, deployed smoke tests, and no production side effect.",
+      "files": [],
+      "assertions": [
+        "Treats error decoding lambda response as a wrapper symptom and inspects the first runtime/import error.",
+        "Checks generated Waku output, serve wrapper, dependencies, Functions-scoped variables, Convex URL, and CSP.",
+        "Asks for explicit approval before repairing files, configuring hosted values, or creating the preview.",
+        "After approval, uses isolated preview Convex data/key and a Netlify draft or deploy preview.",
+        "After approval, performs deployed route, auth, Convex read/write, denied access, headers, and CSP smoke checks."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review, fix, and deploy this Waku app with Convex to Netlify production. You have access to both CLIs. Keep existing user changes and stop if anything security-critical remains.",
+      "expected_output": "Minimal fixes followed by explicit target checks, complete pre-deploy gates, preview verification, production deployment, post-deploy verification, and a redacted deployment report.",
+      "files": [],
+      "assertions": [
+        "Preserves unrelated worktree changes and confirms production intent and targets before deployment.",
+        "Presents the audit and proposed scope, then asks for explicit approval before the first side effect, even though production deployment was requested.",
+        "Blocks on unresolved critical/high security issues or failed typecheck, tests, lint, build, dry run, or target uncertainty.",
+        "Runs preview verification before production and independently verifies production after CLI success.",
+        "Reports partial deployment and compatibility/rollback implications if Convex changes but Netlify fails."
+      ]
+    }
+  ]
+}

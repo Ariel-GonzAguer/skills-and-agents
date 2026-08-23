@@ -1,0 +1,70 @@
+{
+  "skill_name": "product-viability-evaluator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Evaluate a B2B SaaS that automates compliance evidence collection for 50-200 employee healthcare vendors. The team has two engineers, one founder with five years in compliance sales, USD 120,000 runway, 35 hours per week, 12 paid pilots at USD 600/month, 10 still active after six months, and an average 45-day sales cycle. Competitors charge USD 800-2,000/month. Produce the full viability report and state what commitment BUILD would authorize.",
+      "expected_output": "A high-confidence but still critical assessment that separates verified pilot behavior from assumptions, models economics, red-teams retention and market access, and may select BUILD for a bounded next commitment rather than unconditional company-scale investment.",
+      "files": [],
+      "expectations": [
+        "Uses one of BUILD, VALIDATE, PIVOT, RECONSIDER, or ABANDON and defines the commitment scope.",
+        "Reports score, confidence, and evidence coverage as separate measures.",
+        "Identifies the founder's compliance sales experience as founder-fit evidence without treating it as market proof.",
+        "Includes pessimistic, base, and optimistic financial scenarios with disclosed assumptions.",
+        "Performs a substantive red team and names evidence that would change the verdict."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Evaluate a beautifully engineered consumer journaling app with offline sync, end-to-end encryption, 95% test coverage, and excellent accessibility. It has 18,000 free downloads, 1.5% week-four retention, no paying users, no audience, and a solo founder with six hours per week. The founder says the wellness market is worth billions. Decide whether more development is justified.",
+      "expected_output": "The assessment must not confuse engineering quality or broad TAM with business viability. It should emphasize retention, willingness to pay, distribution, founder constraints, and likely recommend pivoting, reconsidering, or abandoning further development unless a bounded experiment succeeds.",
+      "files": [],
+      "expectations": [
+        "Treats the billion-dollar wellness TAM claim as unsupported or irrelevant to reachable market.",
+        "Keeps product/technical quality separate from demand and economics.",
+        "Uses the 1.5% week-four retention as negative behavioral evidence.",
+        "Analyzes founder return on time using the six-hour weekly constraint.",
+        "Does not issue BUILD while willingness to pay and retention remain unresolved."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Evaluate an open-source database migration CLI. It has 9,000 GitHub stars, 40 weekly active contributors, 3,000 monthly package downloads, and maintainers spending 70 unpaid hours per month. There is no company, no paid plan, no sponsor above USD 100/month, and users range from hobbyists to large enterprises. Propose a commercial viability decision for the two maintainers, who want USD 4,000 monthly profit while working at most 10 hours per week each.",
+      "expected_output": "A nuanced open-source assessment that distinguishes adoption, contributors, users, buyers, and sponsors; treats stars as weak monetization evidence; models maintainer workload and personal ROI; and identifies a payer/conversion experiment.",
+      "files": [],
+      "expectations": [
+        "Classifies the project as open source and adapts weights or analysis accordingly.",
+        "Separates users, contributors, sponsors, and potential enterprise buyers.",
+        "Does not treat GitHub stars as willingness-to-pay evidence.",
+        "Calculates or bounds return on time against the maintainers' income and hour targets.",
+        "Includes a paid support, hosted, or enterprise conversion experiment with pass and fail thresholds."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Compare two solo-founder projects over a 12-month horizon. Project A is a niche reporting SaaS expected to reach USD 2,000 monthly profit with 20 ongoing founder hours per month and USD 3,000 maximum capital at risk. Project B is an AI customer-support tool expected to reach USD 5,000 monthly profit with 120 ongoing founder hours per month, USD 25,000 capital at risk, and dependency on one model API. The founder can invest 15 hours per week and values time at USD 40/hour. Evidence quality is similar and moderate. Recommend one, neither, or a validation sequence.",
+      "expected_output": "A normalized comparison that does not automatically choose the larger revenue number, calculates return per founder hour, includes risk and dependency, and recommends based on founder constraints and evidence confidence.",
+      "files": [],
+      "expectations": [
+        "Uses the same horizon, currency, opportunity-cost rate, and confidence standard for both projects.",
+        "Calculates Project A at roughly USD 100 profit per ongoing hour and Project B at roughly USD 41.67 before founder time cost.",
+        "Considers maximum capital loss, API dependency, and reversibility.",
+        "Separates score from confidence and avoids choosing solely by monthly profit.",
+        "Provides a next experiment for each project or a justified sequence."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Evaluate this idea with no other information: 'an AI app for small businesses'. Do not ask a long questionnaire. Give the most honest initial assessment possible and identify the single next question or experiment with the highest decision impact.",
+      "expected_output": "A low-coverage, low-confidence partial assessment that marks most fields UNKNOWN, avoids invented competitors and financials, does not force a score from missing data, and asks at most one high-impact question or recommends one discovery experiment.",
+      "files": [],
+      "expectations": [
+        "Marks customer, problem, pricing, CAC, churn, and reachable market as UNKNOWN rather than inventing values.",
+        "Reports low evidence coverage and explains why confidence is limited.",
+        "Does not issue BUILD.",
+        "Does not fabricate competitors, market size, demand, or financial scenarios.",
+        "Asks at most one question and explains how the answer could change the decision."
+      ]
+    }
+  ]
+}
