@@ -46,6 +46,20 @@ Comandos rápidos para OpenCode (`~/.config/opencode/commands/`).
 - `react-doctor`: análisis de código React
 - `summarize`: resumen rápido del proyecto actual
 
+### Documentos técnicos (`docs/`)
+
+Soluciones reales documentadas en producción, complementarias a las skills.
+
+| Doc | Complementa | Tema |
+|-----|-------------|------|
+| `opencode-guia.md` | Todo el repo | Guía de uso y configuración de OpenCode: MCPs, modos de trabajo, flujo recomendado |
+| `rate-limiting-netlify-blobs.md` | `chatbot-openai-builder` | Rate limiting con Netlify Blobs |
+| `race-condition-rate-limiting.md` | `chatbot-openai-builder` | Race condition en contadores distribuidos y su solución |
+| `cache-datos-chatbot-ia.md` | `chatbot-openai-builder` | Caché en memoria para reducir consumo de tokens |
+| `csp-con-nonces.md` | `security-audit-webapp`, `waku-netlify-firebase-deploy` | CSP con nonces por request en Edge Functions |
+| `firebase-admin-bundling-waku-netlify.md` | `waku-netlify-firebase-deploy` | Solución definitiva al bundling de firebase-admin en Netlify Lambda |
+| `firebase-admin-cjs-interop.md` | `waku-netlify-firebase-deploy` | Interop CJS/ESM de firebase-admin con Vite/Waku |
+
 ## Instalación
 
 **OpenCode**: copiá las carpetas a tu configuración:
