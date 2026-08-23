@@ -3,6 +3,7 @@
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
+import os from "node:os";
 import { fileURLToPath } from "node:url";
 
 const directory = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
@@ -32,17 +33,29 @@ function packageSkill() {
 
   const parent = path.dirname(directory);
   const folder = path.basename(directory);
+  // Política única de contenido: evals/ queda fuera del paquete en TODOS los sistemas operativos.
   if (process.platform === "win32") {
-    const temporaryArchive = `${archivePath}.zip`;
-    if (fs.existsSync(temporaryArchive)) fs.rmSync(temporaryArchive);
-    const command = [
-      `$source = Join-Path '${escapePowerShellLiteral(parent)}' '${escapePowerShellLiteral(folder)}'`,
-      `$destination = '${escapePowerShellLiteral(temporaryArchive)}'`,
-      "Compress-Archive -LiteralPath $source -DestinationPath $destination -CompressionLevel Optimal"
-    ].join("; ");
-    const result = spawnSync("powershell.exe", ["-NoProfile", "-Command", command], { encoding: "utf8" });
-    if (result.status !== 0) throw new Error(result.stderr || result.stdout || "Unable to create Skill archive.");
-    fs.renameSync(temporaryArchive, archivePath);
+    const stagingParent = fs.mkdtempSync(path.join(os.tmpdir(), "skill-pkg-"));
+    try {
+      const evalsRoot = path.join(directory, "evals");
+      const staging = path.join(stagingParent, folder);
+      fs.cpSync(directory, staging, {
+        recursive: true,
+        filter: (source) => source !== evalsRoot && !source.startsWith(evalsRoot + path.sep),
+      });
+      const temporaryArchive = `${archivePath}.zip`;
+      if (fs.existsSync(temporaryArchive)) fs.rmSync(temporaryArchive);
+      const command = [
+        `$source = Join-Path '${escapePowerShellLiteral(stagingParent)}' '${escapePowerShellLiteral(folder)}'`,
+        `$destination = '${escapePowerShellLiteral(temporaryArchive)}'`,
+        "Compress-Archive -LiteralPath $source -DestinationPath $destination -CompressionLevel Optimal"
+      ].join("; ");
+      const result = spawnSync("powershell.exe", ["-NoProfile", "-Command", command], { encoding: "utf8" });
+      if (result.status !== 0) throw new Error(result.stderr || result.stdout || "Unable to create Skill archive.");
+      fs.renameSync(temporaryArchive, archivePath);
+    } finally {
+      fs.rmSync(stagingParent, { recursive: true, force: true });
+    }
   } else {
     try {
       execFileSync("zip", ["-qr", archivePath, folder, "-x", `${folder}/evals/*`], { cwd: parent, stdio: "inherit" });

@@ -340,7 +340,7 @@ MCP permite que OpenCode acceda a herramientas externas: bases de datos, APIs, s
 
 ### Comandos reutilizables (Skills/Prompts)
 
-Crea archivos `.md` en `.opencode/command/` con plantillas de prompts que uses frecuentemente:
+Crea archivos `.md` en `.opencode/commands/` con plantillas de prompts que uses frecuentemente (la convención actual es plural; OpenCode también sigue aceptando `command/` singular). Después los ejecutás dentro de OpenCode como `/review`, `/test` o `/refactor`:
 
 ```
 .opencode/

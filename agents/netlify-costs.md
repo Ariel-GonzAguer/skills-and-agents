@@ -52,7 +52,7 @@ curl -s -H "Authorization: Bearer $TOKEN" \
 
 ### Paso 3: Calcular costos estimados
 
-Usá la tabla de precios actualizada (vigente desde abril 2026):
+Usá la tabla de precios como snapshot de referencia (agosto 2026). Confirmá siempre los valores vigentes en la página oficial de precios de Netlify antes de dar cifras:
 
 | Plan | Credits/mes | Precio | Pack adicional |
 |------|-------------|--------|----------------|

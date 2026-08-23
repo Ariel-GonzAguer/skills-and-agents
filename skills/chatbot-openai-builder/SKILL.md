@@ -95,26 +95,43 @@ export async function POST(request: Request): Promise<Response> {
   if (!(await checkRateLimit(clientIp))) {
     return new Response(JSON.stringify({ 
       error: 'Demasiadas solicitudes. Espera un minuto.' 
-    }), { status: 429 });
+    }), {
+      status: 429,
+      headers: { 'Retry-After': '60' },
+    });
   }
 
   // 3. Parsear y sanitizar input
   const { question, history = [] } = await request.json();
   const sanitized = sanitizeInput(question);
 
+  // Validar historial del cliente (ver chatbot-security): debe ser array, solo roles
+  // permitidos y contenido string sanitizado. Nunca aceptar el rol 'system' del cliente.
+  const ALLOWED_ROLES = ['user', 'assistant'];
+  const historialValido = Array.isArray(history)
+    ? history
+        .filter(m => m && ALLOWED_ROLES.includes(m.role) && typeof m.content === 'string')
+        .map(m => ({ role: m.role, content: sanitizeInput(m.content).slice(0, 2000) }))
+        .slice(-10)
+    : [];
+
   // 4. Preparar mensajes (limitar historial para reducir tokens)
   const messages = [
     { role: 'system', content: createSystemPrompt(businessData) },
-    ...history.slice(-10), // Últimos 10 mensajes
+    ...historialValido, // Últimos 10 mensajes
     { role: 'user', content: sanitized }
   ];
 
   // 5. Streaming con OpenAI
   const stream = await openai.chat.completions.create({
-    model: 'gpt-4.1-mini'
+    model: 'gpt-4.1-mini',
     messages,
     max_completion_tokens: 500,
     stream: true,
+  }, {
+    // Timeout explícito: evita colgar la función serverless si OpenAI no responde.
+    signal: AbortSignal.timeout(30_000),
+    maxRetries: 1,
   });
 
   // 6. Crear ReadableStream para respuesta
@@ -300,6 +317,8 @@ export default function ChatbotOpenAI() {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let assistantMessage = '';
+      let buffer = '';
+      let assistantPlaceholder = false;
 
       if (!reader) throw new Error('No se pudo leer la respuesta');
 
@@ -309,13 +328,17 @@ export default function ChatbotOpenAI() {
         content: '', 
         timestamp: Date.now() 
       }]);
+      assistantPlaceholder = true;
 
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n').filter(line => line.trim() !== '');
+        // Acumular en buffer: un chunk de red puede cortar un evento SSE por la mitad.
+        buffer += decoder.decode(value, { stream: true });
+        const partes = buffer.split('\n');
+        buffer = partes.pop() ?? '';
+        const lines = partes.filter(line => line.trim() !== '');
 
         for (const line of lines) {
           if (line.startsWith('data: ')) {
@@ -345,7 +368,9 @@ export default function ChatbotOpenAI() {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error desconocido');
-      setMessages(prev => prev.slice(0, -1));
+      // Solo remover el placeholder si llegó a crearse; si el error fue antes,
+      // slice(0, -1) borraría el mensaje del usuario por error.
+      setMessages(prev => (assistantPlaceholder ? [...prev.slice(0, -1)] : prev));
     } finally {
       setIsLoading(false);
     }
@@ -993,9 +1018,10 @@ async function getBusinessData() {
 - [Netlify Blobs Documentation](https://docs.netlify.com/blobs/overview/)
 - [React Streaming SSE](https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events)
 
-## Ejemplo completo en disco local
+## Ejemplo completo de referencia
 
-Para ver un ejemplo completo y funcional, consulta:
-- API: `C:\Users\arieg\OneDrive\Escritorio\Ariel\projects\Portafolio\waku-portafolio\waku-portafolio\src\pages\_api\api-openai.ts`
-- Componente: `C:\Users\arieg\OneDrive\Escritorio\Ariel\projects\Portafolio\waku-portafolio\waku-portafolio\src\components\ChatbotOpenAI`
-- Tests: `C:\Users\arieg\OneDrive\Escritorio\Ariel\projects\Portafolio\waku-portafolio\waku-portafolio\src\__tests__\ChatbotOpenAI.test.tsx`
+Una implementación completa y funcional de este patrón existe en producción en Gato Rojo Lab (asistente virtual del estudio): endpoint serverless con rate limiting persistente, componente React con streaming y suite de tests. La implementación es privada, pero la estructura esperada es:
+
+- `netlify-functions/api-openai.ts` — endpoint con validación, rate limit y streaming SSE
+- `src/components/ChatbotOpenAI/` — UI accesible (diálogo con foco gestionado, anuncios ARIA)
+- `src/__tests__/ChatbotOpenAI.test.tsx` — tests del componente y del manejo de errores

@@ -119,5 +119,5 @@ Esto hace que `getStore` sea `undefined`, lanzando el `catch` y usando el `Map` 
 Netlify Blobs no ofrece operaciones atómicas, por lo que peticiones concurrentes pueden causar race conditions (permitir más peticiones del límite configurado). Por esto:
 
 - El límite se ajusta a **7 en lugar de 10** para compensar el margen de error. Actualmente está permitiendo hasta un 30% más de lo configurado, pero es un trade-off necesario para evitar rechazos injustos.
-- Si necesitas atomicidad estricta, considera [Upstash Rate Limit](./GUIA_IMPLEMENTAR_UPSTASH_RATE_LIMIT.md)
-- Ver análisis completo en [SOLUCION_RACE_CONDITION_RATE_LIMIT.md](./SOLUCION_RACE_CONDITION_RATE_LIMIT.md)
+- Si necesitas atomicidad estricta, considera un almacén externo con operaciones atómicas (por ejemplo, Upstash Redis o similar).
+- Ver análisis completo en [Análisis completo de la race condition](./race-condition-rate-limiting.md)
