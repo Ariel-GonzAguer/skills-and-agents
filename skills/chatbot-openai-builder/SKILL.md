@@ -30,7 +30,7 @@ Usa esta skill cuando el usuario mencione:
 
 **Backend:**
 - API serverless (Netlify Functions, Vercel Edge, Cloudflare Workers)
-- OpenAI SDK (gpt-4.1-mini como balance costo/calidad; gpt-4.1 para mayor capacidad)
+- OpenAI SDK (gpt-5-nano para bajo costo y respuestas rápidas; gpt-4.1-mini como balance costo/calidad)
 - Netlify Blobs o similar para rate limiting persistente
 
 **Seguridad:**
@@ -124,7 +124,7 @@ export async function POST(request: Request): Promise<Response> {
 
   // 5. Streaming con OpenAI
   const stream = await openai.chat.completions.create({
-    model: 'gpt-4.1-mini',
+    model: 'gpt-5-nano',
     messages,
     max_completion_tokens: 500,
     stream: true,
@@ -544,7 +544,7 @@ export default function ChatbotOpenAI() {
 - System prompt compacto y sin redundancias
 - Limitar historial a últimos 10-20 mensajes
 - `max_completion_tokens` bajo (500-1000)
-- Usar modelo económico (gpt-4.1-mini)
+- Usar modelo económico (gpt-5-nano)
 
 ### 2. Cache de datos del negocio
 ```typescript
@@ -938,7 +938,7 @@ const greetingMessage = "¡Hola! Soy Mandarino, el asistente virtual de Gato Roj
 1. Reducir `max_completion_tokens` a 500-1000
 2. Limitar historial a últimos 10 mensajes
 3. Compactar el system prompt
-4. Usar modelo económico (gpt-4.1-mini)
+4. Usar modelo económico (gpt-5-nano)
 5. Implementar cache de datos del negocio
 
 ## Integración con datos del negocio
