@@ -99,11 +99,11 @@ export async function POST(request: Request): Promise<Response> {
 
 ### Ventajas
 
-✅ Operaciones atómicas → **sin race conditions**  
-✅ Distribuido → funciona con múltiples instancias serverless  
-✅ Algoritmos avanzados: sliding window, token bucket, fixed window  
-✅ Analytics incluido  
-✅ Plan gratuito: 10,000 comandos/día  
+✓ Operaciones atómicas → **sin race conditions**  
+✓ Distribuido → funciona con múltiples instancias serverless  
+✓ Algoritmos avanzados: sliding window, token bucket, fixed window  
+✓ Analytics incluido  
+✓ Plan gratuito: 10,000 comandos/día  
 
 ---
 
@@ -166,9 +166,9 @@ async function checkRateLimit(clientIp: string): Promise<boolean> {
 
 ### Limitaciones
 
-⚠️ **No es 100% atómico** → aún puede haber race conditions (reducidas)  
-⚠️ Requiere una lectura adicional → más lento  
-⚠️ Si múltiples peticiones incrementan entre la primera y segunda lectura, aún pasarán  
+◬ **No es 100% atómico** → aún puede haber race conditions (reducidas)  
+◬ Requiere una lectura adicional → más lento  
+◬ Si múltiples peticiones incrementan entre la primera y segunda lectura, aún pasarán  
 
 ---
 
@@ -181,9 +181,9 @@ const RATE_LIMIT = 8; // En lugar de 10, para tener margen de error
 const RATE_WINDOW = 60 * 1000;
 ```
 
-✅ Simple  
-⚠️ No resuelve el problema real  
-⚠️ Reduce la capacidad real para usuarios legítimos  
+✓ Simple  
+◬ No resuelve el problema real  
+◬ Reduce la capacidad real para usuarios legítimos  
 
 ---
 

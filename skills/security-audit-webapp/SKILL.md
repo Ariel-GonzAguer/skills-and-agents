@@ -12,7 +12,7 @@ description: |
 # Security Audit for Serverless Web Applications
 
 Realiza una auditoría de seguridad exhaustiva siguiendo esta checklist. Cada sección debe revisarse
-en orden y reportar hallazgos con severidad (🔴 Alto / 🟡 Medio / 🟢 Bajo / ✅ Correcto).
+en orden y reportar hallazgos con severidad (🔴 Alto / 🟡 Medio / 🟢 Bajo / ✓ Correcto).
 
 ## 1. Flujo de Autenticación
 
@@ -93,11 +93,11 @@ DEBE mostrar siempre éxito. Los errores de API deben ser genéricos.
 
 ## 7. Almacenamiento de Tokens
 
-- ¿El token JWT se guarda en `localStorage`? (⚠️ vulnerable a XSS — un script malicioso puede robarlo)
+- ¿El token JWT se guarda en `localStorage`? (◬ vulnerable a XSS — un script malicioso puede robarlo)
 - ¿Se guarda en `sessionStorage`? (mejor, pero aún vulnerable a XSS)
-- ¿Solo en memoria (Zustand/React state)? (✅ ideal — no persiste entre sesiones)
-- ¿Firebase Auth SDK maneja la persistencia en IndexedDB? (✅ aceptable)
-- ¿Hay refresh token en cookie httpOnly? (✅ más seguro — inaccesible por JS)
+- ¿Solo en memoria (Zustand/React state)? (✓ ideal — no persiste entre sesiones)
+- ¿Firebase Auth SDK maneja la persistencia en IndexedDB? (✓ aceptable)
+- ¿Hay refresh token en cookie httpOnly? (✓ más seguro — inaccesible por JS)
 - ¿Se usan cookies `SameSite=Strict` o `Lax`? (mitiga CSRF además de XSS)
 
 **Impacto**: si un atacante logra inyectar XSS y el token está en `localStorage`, tiene acceso completo a la cuenta del usuario. Priorizar migración a cookies httpOnly.

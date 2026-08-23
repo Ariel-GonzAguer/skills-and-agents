@@ -27,7 +27,7 @@ El proyecto usaba `import * as admin from 'firebase-admin'` (namespace import). 
 Esto causaba que la función de inicialización retornara temprano sin ejecutar `initializeApp()`:
 
 ```typescript
-// ❌ admin.apps es undefined en Vite's module runner
+// ✕ admin.apps es undefined en Vite's module runner
 if (!admin?.apps) return;  // → retorna sin inicializar
 ```
 
@@ -51,11 +51,11 @@ if (!admin?.apps) return;  // → retorna sin inicializar
 Cambiar de namespace import a imports modulares:
 
 ```typescript
-// ❌ Antes (no funciona en Waku + Vite)
+// ✕ Antes (no funciona en Waku + Vite)
 import * as admin from 'firebase-admin';
 import admin from 'firebase-admin';
 
-// ✅ Después (funciona correctamente)
+// ✓ Después (funciona correctamente)
 import { initializeApp, cert, getApps } from 'firebase-admin/app';
 import { getAuth, type Auth } from 'firebase-admin/auth';
 import { getFirestore, type Firestore } from 'firebase-admin/firestore';
@@ -66,7 +66,7 @@ import { getFirestore, type Firestore } from 'firebase-admin/firestore';
 `ssr.external` y `build.rollupOptions.external` deben estar a nivel superior de Waku, **no** anidados dentro de `vite`:
 
 ```typescript
-// ✅ Correcto
+// ✓ Correcto
 export default defineConfig({
   ssr: {
     external: ['firebase-admin', 'firebase-admin/app', 'firebase-admin/auth', 'firebase-admin/firestore'],
@@ -81,7 +81,7 @@ export default defineConfig({
   },
 });
 
-// ❌ Incorrecto (ssr.external dentro de vite no se procesa igual)
+// ✕ Incorrecto (ssr.external dentro de vite no se procesa igual)
 export default defineConfig({
   vite: {
     ssr: {
@@ -110,17 +110,17 @@ export default defineConfig({
 | Import style | `import admin from 'firebase-admin'` (estático) | `await import('firebase-admin')` (lazy dynamic) |
 | Config `ssr.external` | Nivel superior Waku (ignorado) | Eliminado |
 | Funciones | Síncronas | Todas async |
-| ¿Funciona? | ✅ Sí | ✅ Sí |
+| ¿Funciona? | ✓ Sí | ✓ Sí |
 
 ## Regex: Permitir espacios en nombres de empresa
 
 El endpoint también validaba `empresa` con una regex que no permitía espacios:
 
 ```typescript
-// ❌ No permitía "Prueba 000"
+// ✕ No permitía "Prueba 000"
 const FIRESTORE_DOC_ID_REGEX = /^[a-zA-Z0-9_-]{1,1500}$/;
 
-// ✅ Ahora permite espacios
+// ✓ Ahora permite espacios
 const FIRESTORE_DOC_ID_REGEX = /^[a-zA-Z0-9 _-]{1,1500}$/;
 ```
 
@@ -147,7 +147,7 @@ El mismo error `Cannot read properties of undefined (reading 'length')` en `init
 Vite 8 module runner cambió la interop ESM/CJS. `loadAdmin()` usaba `await import('firebase-admin')` que ahora retorna un namespace ESM:
 
 ```typescript
-// ❌ admin.apps es undefined — el módulo viene envuelto
+// ✕ admin.apps es undefined — el módulo viene envuelto
 const imported = await import('firebase-admin');
 // imported = { default: { apps: [...], initializeApp: ..., ... } }
 // imported.apps → undefined

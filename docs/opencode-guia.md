@@ -307,10 +307,10 @@ MCP permite que OpenCode acceda a herramientas externas: bases de datos, APIs, s
 
 ### Buenas prácticas con MCP
 
-- ✅ Habilita **solo los servidores que necesitas** — cada uno consume tokens de contexto.
-- ✅ Usa `"env:VARIABLE"` para **todas las credenciales**, nunca texto plano.
-- ✅ Limita las rutas del filesystem a carpetas específicas del proyecto.
-- ⚠️ El servidor de GitHub puede consumir mucho contexto en repos grandes — úsalo con cuidado.
+- ✓ Habilita **solo los servidores que necesitas** — cada uno consume tokens de contexto.
+- ✓ Usa `"env:VARIABLE"` para **todas las credenciales**, nunca texto plano.
+- ✓ Limita las rutas del filesystem a carpetas específicas del proyecto.
+- ◬ El servidor de GitHub puede consumir mucho contexto en repos grandes — úsalo con cuidado.
 
 ---
 

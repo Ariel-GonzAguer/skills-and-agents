@@ -252,14 +252,14 @@ export function AccessibleForm() {
 **Radio / Checkbox groups MUST use `<fieldset>` + `<legend>`**:
 
 ```tsx
-{/* WRONG ❌ */}
+{/* WRONG ✕ */}
 <div>
   <label>Modo:</label>
   <label><input type="radio" name="m" value="a" /> Opción A</label>
   <label><input type="radio" name="m" value="b" /> Opción B</label>
 </div>
 
-{/* CORRECT ✅ */}
+{/* CORRECT ✓ */}
 <fieldset className="border-0 p-0 m-0">
   <legend className="font-semibold mb-1">Modo de vista</legend>
   <div className="flex gap-4">
@@ -425,12 +425,12 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 **Never use non-interactive elements as buttons**:
 
 ```tsx
-{/* WRONG ❌ — not keyboard accessible, no role, no enter/space */}
+{/* WRONG ✕ — not keyboard accessible, no role, no enter/space */}
 <span onClick={handleClick}>Agregar Cliente</span>
 <div onClick={handleClick}>Ver más</div>
 <p role="button" onClick={handleClick}>Volver</p>
 
-{/* CORRECT ✅ */}
+{/* CORRECT ✓ */}
 <button
   type="button"
   onClick={handleClick}
@@ -439,7 +439,7 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
   Agregar Cliente
 </button>
 
-{/* CORRECT ✅ — navigation */}
+{/* CORRECT ✓ — navigation */}
 <button
   type="button"
   onClick={() => navigate('/ruta')}
@@ -458,7 +458,7 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 ### Pattern G — External Links (WCAG 2.4.4)
 
 ```tsx
-{/* CORRECT ✅ — screen reader hears "Ver en YouTube (abre en nueva pestaña)" */}
+{/* CORRECT ✓ — screen reader hears "Ver en YouTube (abre en nueva pestaña)" */}
 <a
   href="https://youtube.com/..."
   target="_blank"
@@ -623,16 +623,16 @@ Common Tailwind pairs and their compliance for **normal text (< 18px not bold)**
 
 | Background | Text | Ratio | Status |
 |---|---|---|---|
-| `bg-sky-800` | `text-white` | 9.1:1 | ✅ AA + AAA |
-| `bg-green-600` | `text-white` | 5.7:1 | ✅ AA |
-| `bg-blue-700` | `text-white` | 7.2:1 | ✅ AA + AAA |
-| `bg-red-700` | `text-white` | 6.2:1 | ✅ AA |
-| `bg-amber-300` | `text-black` | 11.5:1 | ✅ AA + AAA |
-| `bg-yellow-500` | `text-black` | 6.1:1 | ✅ AA |
-| `bg-green-400` | `text-white` | 2.8:1 | ❌ FAIL — use `bg-green-600` |
-| `bg-red-400` | `text-white` | 3.0:1 | ❌ FAIL — use `bg-red-600` |
-| `bg-blue-400` | `text-white` | 2.7:1 | ❌ FAIL — use `bg-blue-700` |
-| `bg-yellow-300` | `text-white` | 1.5:1 | ❌ FAIL — use `text-black` |
+| `bg-sky-800` | `text-white` | 9.1:1 | ✓ AA + AAA |
+| `bg-green-600` | `text-white` | 5.7:1 | ✓ AA |
+| `bg-blue-700` | `text-white` | 7.2:1 | ✓ AA + AAA |
+| `bg-red-700` | `text-white` | 6.2:1 | ✓ AA |
+| `bg-amber-300` | `text-black` | 11.5:1 | ✓ AA + AAA |
+| `bg-yellow-500` | `text-black` | 6.1:1 | ✓ AA |
+| `bg-green-400` | `text-white` | 2.8:1 | ✕ FAIL — use `bg-green-600` |
+| `bg-red-400` | `text-white` | 3.0:1 | ✕ FAIL — use `bg-red-600` |
+| `bg-blue-400` | `text-white` | 2.7:1 | ✕ FAIL — use `bg-blue-700` |
+| `bg-yellow-300` | `text-white` | 1.5:1 | ✕ FAIL — use `text-black` |
 
 ### Touch Targets (WCAG 2.5.8 — 24×24px minimum, 2.5.5 AAA — 44×44px)
 

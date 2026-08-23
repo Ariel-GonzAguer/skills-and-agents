@@ -15,7 +15,7 @@ Esta implementación usa un caché en memoria simple pero efectivo para datos qu
 ## Problema Original
 
 ```typescript
-// ❌ Sin caché: reconstruye datos en cada request
+// ✕ Sin caché: reconstruye datos en cada request
 async function getBusinessData(): Promise<BusinessData | null> {
   return {
     name: 'Mi Negocio',
@@ -50,14 +50,14 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos en milisegundos
 
 ```typescript
 async function getBusinessData(): Promise<BusinessData | null> {
-  // ✅ Paso 1: Verificar si el caché es válido
+  // ✓ Paso 1: Verificar si el caché es válido
   const now = Date.now();
   if (cachedBusinessData && now - cacheTimestamp < CACHE_DURATION) {
     return cachedBusinessData; // Retornar caché sin reconstruir
   }
 
   try {
-    // ✅ Paso 2: Obtener datos (de DB, Firestore, o estáticos)
+    // ✓ Paso 2: Obtener datos (de DB, Firestore, o estáticos)
     const result: BusinessData = {
       name: 'Mi Negocio',
       description: 'Descripción del negocio...',
@@ -65,7 +65,7 @@ async function getBusinessData(): Promise<BusinessData | null> {
       faq: {...},
     };
 
-    // ✅ Paso 3: Guardar en caché
+    // ✓ Paso 3: Guardar en caché
     cachedBusinessData = result;
     cacheTimestamp = Date.now();
     
@@ -234,13 +234,13 @@ export async function PUT_UpdateBusinessData(request: Request) {
 
 ## Consideraciones Importantes
 
-### ⚠️ Limitaciones
+### ◬ Limitaciones
 
 1. **Cold Starts**: En el primer request después de un cold start, el caché estará vacío
 2. **No compartido entre instancias**: Cada instancia serverless tiene su propio caché
 3. **Pérdida de memoria**: Si la instancia se recicla, se pierde el caché
 
-### ✅ Cuándo Usar Este Patrón
+### ✓ Cuándo Usar Este Patrón
 
 - Datos del negocio que cambian poco
 - System prompts con configuración estática
@@ -248,7 +248,7 @@ export async function PUT_UpdateBusinessData(request: Request) {
 - FAQs y contenido educativo
 - Traducciones o configuraciones de idioma
 
-### ❌ Cuándo NO Usar Este Patrón
+### ✕ Cuándo NO Usar Este Patrón
 
 - Datos específicos del usuario (usar sesiones)
 - Información sensible o privada
@@ -347,17 +347,17 @@ describe('Cache de datos del negocio', () => {
 
 ## Resumen
 
-✅ **Implementa caché en memoria para:**
+✓ **Implementa caché en memoria para:**
 - Reducir costos de tokens en APIs de IA
 - Mejorar rendimiento de respuesta
 - Simplificar arquitectura sin infraestructura adicional
 
-✅ **Úsalo para:**
+✓ **Úsalo para:**
 - Datos estáticos o casi estáticos
 - System prompts de chatbots
 - Información del negocio
 
-❌ **No uses para:**
+✕ **No uses para:**
 - Datos de usuario específicos
 - Información que cambia frecuentemente
 - Datos sensibles que requieren sincronización

@@ -487,31 +487,31 @@ export default function ChatbotOpenAI() {
 ## Características de accesibilidad (WCAG 2.1+)
 
 ### WCAG 2.1.2: Sin trampa de teclado
-- ✅ Tecla **Escape** cierra el chat y devuelve el foco al botón flotante
+- ✓ Tecla **Escape** cierra el chat y devuelve el foco al botón flotante
 
 ### WCAG 2.4.3: Orden del foco
-- ✅ **Focus trap** dentro del modal cuando está abierto
-- ✅ Tab/Shift+Tab navegan entre elementos focusables
-- ✅ Al llegar al último elemento, Tab vuelve al primero
+- ✓ **Focus trap** dentro del modal cuando está abierto
+- ✓ Tab/Shift+Tab navegan entre elementos focusables
+- ✓ Al llegar al último elemento, Tab vuelve al primero
 
 ### WCAG 4.1.2: Nombre, función, valor
-- ✅ `role="dialog"` con `aria-modal="true"` para el modal
-- ✅ `aria-labelledby` conecta el título con el diálogo
-- ✅ `aria-expanded` y `aria-controls` en el botón flotante
-- ✅ Labels descriptivos en todos los controles
+- ✓ `role="dialog"` con `aria-modal="true"` para el modal
+- ✓ `aria-labelledby` conecta el título con el diálogo
+- ✓ `aria-expanded` y `aria-controls` en el botón flotante
+- ✓ Labels descriptivos en todos los controles
 
 ### WCAG 4.1.3: Mensajes de estado
-- ✅ `role="log"` con `aria-live="polite"` para nuevos mensajes
-- ✅ `role="alert"` con `aria-live="assertive"` para errores
-- ✅ `role="status"` para el indicador de escritura
-- ✅ Anuncio de apertura/cierre del chat
+- ✓ `role="log"` con `aria-live="polite"` para nuevos mensajes
+- ✓ `role="alert"` con `aria-live="assertive"` para errores
+- ✓ `role="status"` para el indicador de escritura
+- ✓ Anuncio de apertura/cierre del chat
 
 ### Otras mejoras de accesibilidad
-- ✅ `.sr-only` para texto solo para lectores de pantalla
-- ✅ `aria-label` descriptivos en botones con íconos
-- ✅ `aria-busy` durante carga
-- ✅ `aria-invalid` y `aria-errormessage` en inputs con error
-- ✅ Focus visible con anillos de enfoque
+- ✓ `.sr-only` para texto solo para lectores de pantalla
+- ✓ `aria-label` descriptivos en botones con íconos
+- ✓ `aria-busy` durante carga
+- ✓ `aria-invalid` y `aria-errormessage` en inputs con error
+- ✓ Focus visible con anillos de enfoque
 
 ## Optimizaciones de rendimiento
 
@@ -760,7 +760,7 @@ test('rate limit funciona', async () => {
 
 ## Checklist de implementación
 
-### Backend ✅
+### Backend ✓
 - [ ] Endpoint serverless creado (`/api/chat-openai`)
 - [ ] OpenAI SDK instalado (`npm install openai`)
 - [ ] API key en variables de entorno
@@ -773,7 +773,7 @@ test('rate limit funciona', async () => {
 - [ ] Manejo de errores específicos
 - [ ] Logging de métricas (tokens, duración)
 
-### Frontend ✅
+### Frontend ✓
 - [ ] Componente React con TypeScript
 - [ ] Botón flotante con z-index alto
 - [ ] Modal con `role="dialog"` y `aria-modal="true"`
@@ -790,7 +790,7 @@ test('rate limit funciona', async () => {
 - [ ] `aria-live` para anuncios
 - [ ] `role="alert"` para errores
 
-### Accesibilidad ✅
+### Accesibilidad ✓
 - [ ] WCAG 2.1.2: Sin trampa de teclado (Escape)
 - [ ] WCAG 2.4.3: Focus trap y orden del foco
 - [ ] WCAG 4.1.2: Roles y labels correctos
@@ -800,14 +800,14 @@ test('rate limit funciona', async () => {
 - [ ] Focus visible con anillos
 - [ ] Alto contraste (ratio 4.5:1+)
 
-### Seguridad ✅
+### Seguridad ✓
 - [ ] Validación de origen implementada
 - [ ] Rate limiting activo
 - [ ] Inputs sanitizados
 - [ ] API key nunca expuesta al frontend
 - [ ] Headers de seguridad configurados
 
-### Optimización ✅
+### Optimización ✓
 - [ ] System prompt compacto
 - [ ] Historial limitado (últimos 10-20 mensajes)
 - [ ] `max_completion_tokens` configurado

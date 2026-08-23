@@ -114,7 +114,7 @@ Esto hace que `getStore` sea `undefined`, lanzando el `catch` y usando el `Map` 
 - Netlify Blobs tiene un limite de 100MB en el plan gratuito
 - Las keys expiran con TTL implicito segun `resetTime`
 
-### ⚠️ Limitación: Race Conditions
+### ◬ Limitación: Race Conditions
 
 Netlify Blobs no ofrece operaciones atómicas, por lo que peticiones concurrentes pueden causar race conditions (permitir más peticiones del límite configurado). Por esto:
 
