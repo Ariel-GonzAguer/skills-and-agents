@@ -1,0 +1,25 @@
+{
+  "name": "theme-switching",
+  "description": "Implementa light/dark mode en React con Zustand (estado + persistencia localStorage) sincronizado con Tailwind CSS v4 class-based dark mode, seguro para SSR.",
+  "version": "1.0.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "react",
+    "zustand",
+    "dark-mode",
+    "tailwind",
+    "ssr"
+  ],
+  "triggers": [
+    "modo oscuro",
+    "agregar dark mode",
+    "theme toggle",
+    "light dark mode",
+    "cambiar tema",
+    "persistir tema"
+  ],
+  "category": "frontend",
+  "complexity": "medium"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "security-audit-webapp",
+  "description": "Auditoría completa de seguridad para aplicaciones web serverless (Waku, React, Netlify, Firebase) contra OWASP: CSRF, XSS, rate limiting, IDOR, token storage y hardening.",
+  "version": "1.0.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "security",
+    "owasp",
+    "serverless",
+    "audit",
+    "webapp"
+  ],
+  "triggers": [
+    "auditar seguridad",
+    "revisar vulnerabilidades",
+    "security audit",
+    "puede un atacante robar datos",
+    "hardening",
+    "OWASP"
+  ],
+  "category": "security",
+  "complexity": "high"
+}

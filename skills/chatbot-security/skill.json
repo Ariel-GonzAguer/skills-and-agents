@@ -1,0 +1,24 @@
+{
+  "name": "chatbot-security",
+  "description": "Checklist y patrones seguros para chatbots con LLM según OWASP LLM Top 10: prompt injection, historial del cliente, rate limiting, CSRF y exposición de secretos.",
+  "version": "1.0.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "security",
+    "llm",
+    "chatbot",
+    "prompt-injection",
+    "owasp"
+  ],
+  "triggers": [
+    "seguridad chatbot",
+    "llm security review",
+    "prompt injection",
+    "asegurar endpoint de ia",
+    "chatbot api"
+  ],
+  "category": "security",
+  "complexity": "medium"
+}

@@ -1,0 +1,25 @@
+{
+  "name": "wcag-react-implementer",
+  "description": "Implementación sistemática de patrones WCAG 2.2 nivel AA en React, TypeScript y Tailwind: ARIA, navegación por teclado, gestión de foco y anuncios para lectores de pantalla.",
+  "version": "1.0.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "accessibility",
+    "wcag",
+    "react",
+    "aria",
+    "a11y"
+  ],
+  "triggers": [
+    "accesibilidad",
+    "fix a11y",
+    "aria labels",
+    "screen reader",
+    "lector de pantalla",
+    "WCAG 2.2"
+  ],
+  "category": "accessibility",
+  "complexity": "medium"
+}

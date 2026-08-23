@@ -1,0 +1,25 @@
+{
+  "name": "chatbot-openai-builder",
+  "description": "Construye chatbots accesibles con OpenAI GPT, streaming de respuestas, rate limiting persistente y UI flotante lista para producción.",
+  "version": "1.1.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "openai",
+    "chatbot",
+    "streaming",
+    "wcag",
+    "netlify-functions"
+  ],
+  "triggers": [
+    "crear chatbot",
+    "integrar openai",
+    "asistente virtual",
+    "build chatbot",
+    "chatbot con streaming",
+    "chat flotante"
+  ],
+  "category": "ai-integration",
+  "complexity": "medium"
+}

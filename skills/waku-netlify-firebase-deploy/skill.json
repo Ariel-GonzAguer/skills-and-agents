@@ -1,0 +1,24 @@
+{
+  "name": "waku-netlify-firebase-deploy",
+  "description": "Despliega proyectos Waku en Netlify con Firebase Admin SDK: wrapper serve.js, configuración de netlify.toml, CSP con nonces en edge functions y solución al problema de bundling de firebase-admin.",
+  "version": "1.1.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "waku",
+    "netlify",
+    "firebase-admin",
+    "deployment",
+    "csp"
+  ],
+  "triggers": [
+    "deploy waku netlify",
+    "firebase-admin bundling",
+    "configurar netlify.toml",
+    "migrar de vercel a netlify",
+    "serve.js waku"
+  ],
+  "category": "deployment",
+  "complexity": "high"
+}
