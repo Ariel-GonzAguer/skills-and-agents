@@ -73,12 +73,17 @@ cp agents/*.md ~/.config/opencode/agents/
 cp commands/*.md ~/.config/opencode/commands/
 ```
 
-**CommandCode**: los agentes son compatibles. Copiá los `.md` a `~/.commandcode/agents/` y quitá del frontmatter los campos `mode` y `model` (son específicos de OpenCode; CommandCode selecciona el modelo desde su propia configuración):
+**CommandCode**: los agentes son compatibles ([docs oficiales](https://commandcode.ai/docs/agents)). Copiá los `.md` a `~/.commandcode/agents/`:
 
 ```bash
 cp agents/*.md ~/.commandcode/agents/
-# luego editá cada archivo para eliminar 'mode:' y 'model:' del frontmatter
 ```
+
+Diferencias de frontmatter a tener en cuenta:
+
+- `mode:` es ignorado por CommandCode (podés dejarlo o borrarlo)
+- `model:` sí existe en CommandCode, pero espera sus propios ids (`claude-sonnet-5`, etc.). Los ids de OpenCode como `opencode/mimo-v2.5-free` no existen ahí: quitá el campo para que herede el modelo de la sesión, o reemplazalo por un id válido
+- Opcional: agregá `tools:` (por ejemplo `tools: read_file, grep, glob`) para limitar las herramientas del agente
 
 **Otros agentes** (Claude Code, Cursor, etc.): las skills siguen el formato estándar `SKILL.md`; copiá la carpeta al directorio de skills de tu herramienta.
 
