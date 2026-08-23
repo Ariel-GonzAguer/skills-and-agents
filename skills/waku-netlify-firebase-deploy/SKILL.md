@@ -125,7 +125,35 @@ export const config = { path: '/*' };
 
 ## waku.config.ts structure
 
-Put `ssr` and `build` at the **top level** of `defineConfig`, NOT inside `vite`:
+Two patterns exist depending on the Waku version. Both work with Waku 1.0.0-beta.9:
+
+**Pattern A — `vite.ssr.external` (current, used by projects on waku beta.9):**
+
+```ts
+import { defineConfig } from 'waku/config';
+import tailwindcss from '@tailwindcss/vite';
+
+export default defineConfig({
+  vite: {
+    ssr: {
+      // firebase-admin is a pure Node.js package, it must not be bundled by Vite.
+      // firebase (client SDK) SHOULD be bundled so it is available in the SSR bundle.
+      external: ['firebase-admin'],
+    },
+    plugins: [tailwindcss()],
+    server: {
+      port: 3000,
+      headers: {
+        // Required for Firebase Auth popup to communicate with the child window
+        // in strict browsers (COOP). See "Known gotchas".
+        'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+      },
+    },
+  },
+});
+```
+
+**Pattern B — top-level `ssr` + `build` (older, pasaporte.app-style):**
 
 ```ts
 import { defineConfig } from 'waku/config';
@@ -146,6 +174,9 @@ export default defineConfig({
   },
 });
 ```
+
+Prefer Pattern A for new projects on beta.9: simpler and verified in production
+(superkeg-web, boucardi-web, monthly-cat-friend).
 
 Only externalize `firebase-admin`. Do NOT externalize subpaths (`firebase-admin/auth`, etc.).
 
@@ -223,7 +254,8 @@ fi
 
 ## Known gotchas
 
-- **firebase-admin 14.x**: esbuild can't resolve module exports. Use 13.8.0.
+- **firebase-admin 13.8.0**: verified current in production projects. 14.x still breaks with Netlify esbuild.
+- **Firebase Auth popup + COOP**: in dev, Firebase Auth with popup fails silently in strict browsers unless the dev server sends `Cross-Origin-Opener-Policy: same-origin-allow-popups`. Add it to `vite.server.headers` (see Pattern A).
 - **style-src with nonce**: CSP Level 3 ignores `unsafe-inline` when nonce is present. Use `'unsafe-inline'` without nonce for styles if the app has dynamic inline styles from JS.
 - **SSG phase**: Waku runs module-level code during SSG build. All firebase-admin usage must be inside request handlers, not at module top level.
 - **CNAME flattening**: Cloudflare supports CNAME at apex via flattening. Use `apex-loadbalancer.netlify.com` for apex, `superkeg.netlify.app` for www.
