@@ -1,0 +1,30 @@
+{
+  "name": "pwa-splash-icon",
+  "description": "Generate a properly sized PWA splash screen icon from an existing app logo. Adds padding around the icon so it doesn't get cropped by the browser's circular mask, sets a custom background color, and updates the web app manifest and service worker.",
+  "version": "1.0.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "pwa",
+    "splash-screen",
+    "icon",
+    "manifest",
+    "service-worker",
+    "sharp"
+  ],
+  "triggers": [
+    "splash screen",
+    "pwa icon cropped",
+    "icon cortado",
+    "pantalla de carga",
+    "loading screen icon",
+    "fondo del splash",
+    "fix cropped pwa icon",
+    "adjust loading screen icon",
+    "change splash screen background",
+    "generate pwa splash icon"
+  ],
+  "category": "pwa",
+  "complexity": "medium"
+}

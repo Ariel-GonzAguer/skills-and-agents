@@ -1,23 +1,23 @@
 ---
 name: waku-netlify-firebase-deploy
-description: Deploy Waku projects to Netlify with Firebase Admin SDK. Use when deploying Waku to Netlify, setting up netlify-functions/serve.js, configuring netlify.toml for Waku, fixing firebase-admin bundling issues, or migrating Waku projects from Vercel to Netlify. Covers serve.js wrapper, waku.config.ts structure, CSP nonce edge functions, and firebase-admin version compatibility.
+description: Despliega proyectos Waku en Netlify con Firebase Admin SDK. Usar al desplegar Waku en Netlify, configurar netlify-functions/serve.js, configurar netlify.toml para Waku, corregir problemas de empaquetado de firebase-admin, o migrar proyectos Waku de Vercel a Netlify. Cubre el wrapper serve.js, estructura de waku.config.ts, edge functions de nonce CSP y compatibilidad de versiones de firebase-admin.
 ---
 
-# Deploy Waku to Netlify with Firebase Admin SDK
+# Desplegar Waku en Netlify con Firebase Admin SDK
 
-Deploy a Waku project to Netlify with SSR support and Firebase Admin SDK.
+Desplegar un proyecto Waku en Netlify con soporte SSR y Firebase Admin SDK.
 
-## Prerequisites
+## Prerrequisitos
 
-- `firebase-admin@13.8.0` (14.x breaks with Netlify esbuild)
-- `jose` (optional and least preferred, for token verification without firebase-admin auth)
-- Netlify CLI installed and authenticated
+- `firebase-admin@13.8.0` (14.x falla con el esbuild de Netlify)
+- `jose` (opcional y menos preferido, para verificación de tokens sin auth de firebase-admin)
+- Netlify CLI instalado y autenticado
 
-## Files to create
+## Archivos a crear
 
 ### 1. `netlify-functions/serve.js`
 
-Wraps Waku's server bundle as a Netlify Function:
+Envuelve el bundle del servidor de Waku como una Netlify Function:
 
 ```js
 const { INTERNAL_runFetch } = await import("../dist/server/index.js");
@@ -58,11 +58,11 @@ export const config = {
     Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
 ```
 
-Key points:
-- `publish = "dist/public"` is the Waku static output directory
-- `functions.directory = "netlify-functions"` tells Netlify where the server wrapper lives
+Puntos clave:
+- `publish = "dist/public"` es el directorio de salida estática de Waku
+- `functions.directory = "netlify-functions"` le dice a Netlify dónde vive el wrapper del servidor
 
-### 3. CSP Nonce Edge Function
+### 3. Edge Function de CSP Nonce
 
 `netlify/edge-functions/csp-nonce.ts`:
 
@@ -123,11 +123,11 @@ export default async (_request: Request, context: Context) => {
 export const config = { path: '/*' };
 ```
 
-## waku.config.ts structure
+## Estructura de waku.config.ts
 
-Two patterns exist depending on the Waku version. Both work with Waku 1.0.0-beta.9:
+Existen dos patrones dependiendo de la versión de Waku. Ambos funcionan con Waku 1.0.0-beta.9:
 
-**Pattern A — `vite.ssr.external` (current, used by projects on waku beta.9):**
+**Patrón A — `vite.ssr.external` (actual, usado por proyectos en waku beta.9):**
 
 ```ts
 import { defineConfig } from 'waku/config';
@@ -136,16 +136,16 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   vite: {
     ssr: {
-      // firebase-admin is a pure Node.js package, it must not be bundled by Vite.
-      // firebase (client SDK) SHOULD be bundled so it is available in the SSR bundle.
+      // firebase-admin es un paquete puro de Node.js, no debe ser empaquetado por Vite.
+      // firebase (client SDK) DEBE ser empaquetado para que esté disponible en el bundle SSR.
       external: ['firebase-admin'],
     },
     plugins: [tailwindcss()],
     server: {
       port: 3000,
       headers: {
-        // Required for Firebase Auth popup to communicate with the child window
-        // in strict browsers (COOP). See "Known gotchas".
+        // Requerido para que el popup de Firebase Auth se comunique con la ventana hija
+        // en navegadores estrictos (COOP). Ver "Problemas conocidos".
         'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
       },
     },
@@ -153,7 +153,7 @@ export default defineConfig({
 });
 ```
 
-**Pattern B — top-level `ssr` + `build` (older, pasaporte.app-style):**
+**Patrón B — `ssr` de nivel superior + `build` (anterior, estilo pasaporte.app):**
 
 ```ts
 import { defineConfig } from 'waku/config';
@@ -175,30 +175,30 @@ export default defineConfig({
 });
 ```
 
-Prefer Pattern A for new projects on beta.9: simpler and verified in production
+Preferir el Patrón A para nuevos proyectos en beta.9: más simple y verificado en producción
 (superkeg-web, boucardi-web, monthly-cat-friend).
 
-Only externalize `firebase-admin`. Do NOT externalize subpaths (`firebase-admin/auth`, etc.).
+Solo externalizar `firebase-admin`. NO externalizar subrutas (`firebase-admin/auth`, etc.).
 
-## Firebase Admin imports
+## Importaciones de Firebase Admin
 
-Always use namespace imports. Never use subpath imports or default imports:
+Siempre usar importaciones de namespace. Nunca usar importaciones de subruta o importaciones por defecto:
 
 ```ts
-// Correct
+// Correcto
 import * as admin from 'firebase-admin';
 admin.initializeApp({ credential: admin.credential.cert(...) });
 admin.firestore.FieldValue.increment(-1);
 admin.auth().verifyIdToken(token);
 
-// Incorrect
-import admin from 'firebase-admin';           // default import fails
-import { FieldValue } from 'firebase-admin/firestore';  // subpath causes __dirname error
+// Incorrecto
+import admin from 'firebase-admin';           // importación por defecto falla
+import { FieldValue } from 'firebase-admin/firestore';  // subruta causa error __dirname
 ```
 
-## Lazy Firebase Admin initialization
+## Inicialización lazy de Firebase Admin
 
-Firebase Admin must be initialized lazily to avoid `admin.apps is undefined` during Waku's SSG phase:
+Firebase Admin debe inicializarse de forma lazy para evitar `admin.apps is undefined` durante la fase SSG de Waku:
 
 ```ts
 let dbInstance: admin.firestore.Firestore | null = null;
@@ -206,7 +206,7 @@ let dbInstance: admin.firestore.Firestore | null = null;
 export function initializeFirebaseAdmin(): void {
   if (!admin?.apps) return;
   if (admin.apps.length > 0) return;
-  // ... read env vars and initialize
+  // ... leer variables de entorno e inicializar
 }
 
 export function getFirestoreDb(): admin.firestore.Firestore {
@@ -216,7 +216,7 @@ export function getFirestoreDb(): admin.firestore.Firestore {
 }
 ```
 
-In API routes, call initialization at request time, not module level:
+En rutas de API, llamar la inicialización en tiempo de request, no a nivel de módulo:
 
 ```ts
 function ensureDb() {
@@ -224,11 +224,11 @@ function ensureDb() {
   return getFirestoreDb();
 }
 
-// Inside handler:
+// Dentro del handler:
 const empresaRef = ensureDb().collection('clientes').doc(empresa);
 ```
 
-## Deploy script
+## Script de despliegue
 
 `scripts/deploy-netlify.sh`:
 
@@ -252,10 +252,10 @@ else
 fi
 ```
 
-## Known gotchas
+## Problemas conocidos
 
-- **firebase-admin 13.8.0**: verified current in production projects. 14.x still breaks with Netlify esbuild.
-- **Firebase Auth popup + COOP**: in dev, Firebase Auth with popup fails silently in strict browsers unless the dev server sends `Cross-Origin-Opener-Policy: same-origin-allow-popups`. Add it to `vite.server.headers` (see Pattern A).
-- **style-src with nonce**: CSP Level 3 ignores `unsafe-inline` when nonce is present. Use `'unsafe-inline'` without nonce for styles if the app has dynamic inline styles from JS.
-- **SSG phase**: Waku runs module-level code during SSG build. All firebase-admin usage must be inside request handlers, not at module top level.
-- **CNAME flattening**: Cloudflare supports CNAME at apex via flattening. Use `apex-loadbalancer.netlify.com` for apex, `superkeg.netlify.app` for www.
+- **firebase-admin 13.8.0**: verificado actual en proyectos de producción. 14.x aún falla con el esbuild de Netlify.
+- **Popup de Firebase Auth + COOP**: en desarrollo, Firebase Auth con popup falla silenciosamente en navegadores estrictos a menos que el servidor de desarrollo envíe `Cross-Origin-Opener-Policy: same-origin-allow-popups`. Agregarlo a `vite.server.headers` (ver Patrón A).
+- **style-src con nonce**: CSP Nivel 3 ignora `unsafe-inline` cuando hay nonce presente. Usar `'unsafe-inline'` sin nonce para estilos si la app tiene estilos inline dinámicos desde JS.
+- **Fase SSG**: Waku ejecuta código a nivel de módulo durante el build SSG. Todo uso de firebase-admin debe estar dentro de handlers de request, no a nivel superior del módulo.
+- **Aplanamiento de CNAME**: Cloudflare soporta CNAME en apex vía aplanamiento. Usar `apex-loadbalancer.netlify.com` para apex, `superkeg.netlify.app` para www.

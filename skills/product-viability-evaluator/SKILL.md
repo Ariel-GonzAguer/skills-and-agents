@@ -1,166 +1,166 @@
 ---
 name: product-viability-evaluator
-description: Evaluate whether a product, repository, SaaS, app, open-source project, marketplace, API, service, or business idea is worth investing time and money in. Use whenever a user asks whether to build, continue, fund, launch, monetize, pivot, compare, or abandon a project, including requests such as "evaluate this project", "is this viable", "does this SaaS have a market", "audit this repo as a business", or "which project should I pursue". Performs evidence-led market research, read-only repository inspection, financial scenarios, founder-fit and return-on-time analysis, mandatory adversarial red team, explicit uncertainty handling, and produces BUILD, VALIDATE, PIVOT, RECONSIDER, or ABANDON.
-compatibility: Model-agnostic. Works with filesystem and shell tools; web research and subagents improve evidence but are optional. Node.js 18+ is optional for deterministic scoring and validation scripts.
+description: Evalúa si un producto, repositorio, SaaS, app, proyecto open-source, marketplace, API, servicio o idea de negocio vale la pena invertir tiempo y dinero. Usar cuando un usuario pregunte si construir, continuar, financiar, lanzar, monetizar, pivotar, comparar o abandonar un proyecto, incluyendo solicitudes como "evaluar este proyecto", "esto es viable", "este SaaS tiene mercado", "auditar este repo como negocio" o "qué proyecto debería seguir". Realiza investigación de mercado basada en evidencia, inspección de solo lectura del repositorio, escenarios financieros, análisis de ajuste fundador-retorno sobre el tiempo, equipo rojo adversarial obligatorio, manejo explícito de incertidumbre, y produce CONSTRUIR, VALIDAR, PIVOTAR, RECONSIDERAR o ABANDONAR.
+compatibilidad: Agnóstico al modelo. Funciona con herramientas de sistema de archivos y shell; la investigación web y subagentes mejoran la evidencia pero son opcionales. Node.js 18+ es opcional para scripts deterministas de puntuación y validación.
 ---
 
-# Product Viability Evaluator
+# Evaluador de Viabilidad de Producto
 
-Decide whether this opportunity deserves this founder's scarce time, money, and attention. Optimize for the best decision supported by available evidence, not for a persuasive answer.
+Decidir si esta oportunidad merece el tiempo, dinero y atención escasos de este fundador. Optimizar para la mejor decisión soportada por la evidencia disponible, no para una respuesta persuasiva.
 
-## Non-negotiable rules
+## Reglas innegociables
 
-1. Never fabricate market data, customer numbers, pricing, competitor information, financial metrics, citations, repository functionality, user demand, or business facts.
-2. Label material claims as `FACT`, `EVIDENCE`, `ESTIMATE`, `ASSUMPTION`, `INFERENCE`, or `UNKNOWN`. An estimate needs a method and range; an assumption needs sensitivity analysis.
-3. Treat founder statements and README claims as hypotheses until independently supported. Repository code proves implementation, not demand.
-4. Search for negative evidence with the same effort used for supporting evidence.
-5. Keep `Score`, `Confidence`, and `Evidence coverage` separate. Missing evidence lowers confidence and coverage; do not silently turn `UNKNOWN` into zero or an invented midpoint.
-6. Do not let the weighted score determine the verdict. Apply decision gates and deal breakers after scoring.
-7. Prefer `VALIDATE` when a high-impact uncertainty remains testable. Say that the evidence is insufficient when it is.
-8. Audit repositories read-only. Never print secret values, modify code, run destructive commands, or infer production readiness from documentation alone.
-9. Match technical depth to decision impact. Do not spend time on aesthetic refactors or low-impact implementation details.
+1. Nunca fabricar datos de mercado, números de clientes, precios, información de competidores, métricas financieras, citas, funcionalidad del repositorio, demanda de usuarios o hechos de negocio.
+2. Etiquetar afirmaciones materiales como `HECHO`, `EVIDENCIA`, `ESTIMACIÓN`, `SUPUESTO`, `INFERENCIA` o `DESCONOCIDO`. Una estimación necesita un método y rango; un supuesto necesita análisis de sensibilidad.
+3. Tratar declaraciones del fundador y afirmaciones del README como hipótesis hasta que estén respaldadas independientemente. El código del repositorio prueba implementación, no demanda.
+4. Buscar evidencia negativa con el mismo esfuerzo usado para evidencia de soporte.
+5. Mantener `Puntuación`, `Confianza` y `Cobertura de evidencia` separados. La evidencia faltante reduce la confianza y cobertura; no convertir silenciosamente `DESCONOCIDO` en cero o un punto medio inventado.
+6. No dejar que la puntuación ponderada determine el veredicto. Aplicar puertas de decisión y deal breakers después de puntuar.
+7. Preferir `VALIDAR` cuando una incertidumbre de alto impacto permanezca testeable. Decir que la evidencia es insuficiente cuando lo es.
+8. Auditar repositorios en solo lectura. Nunca imprimir valores secretos, modificar código, ejecutar comandos destructivos o inferir preparación para producción solo de la documentación.
+9. Igualar la profundidad técnica al impacto de la decisión. No gastar tiempo en refactorizaciones estéticas o detalles de implementación de bajo impacto.
 
-## Inputs and mode
+## Entradas y modo
 
-Accept any combination of repository path, URL, README, description, pricing, customer evidence, analytics, financial data, and founder/team context. Inventory what is present before asking questions.
+Aceptar cualquier combinación de ruta de repositorio, URL, README, descripción, precios, evidencia de clientes, analítica, datos financieros y contexto del fundador/equipo. Inventario lo que está presente antes de hacer preguntas.
 
-Select one mode:
+Seleccionar un modo:
 
-- `rapid`: time-boxed triage using available evidence; clearly limited confidence.
-- `standard`: full workflow with external research, repository audit when available, scenarios, and red team. Default.
-- `deep`: standard plus source triangulation, sensitivity analysis, and independent agent perspectives.
-- `compare`: evaluate projects with the same horizon, currency, evidence standard, and founder constraints.
+- `rápido`: triaje limitado en tiempo usando evidencia disponible; confianza claramente limitada.
+- `estándar`: flujo completo con investigación externa, auditoría de repositorio cuando esté disponible, escenarios y equipo rojo. Por defecto.
+- `profundo`: estándar más triangulación de fuentes, análisis de sensibilidad y perspectivas independientes de agentes.
+- `comparar`: evaluar proyectos con el mismo horizonte, moneda, estándar de evidencia y restricciones del fundador.
 
-Ask at most one question at a time, and only when its answer has high decision impact. Otherwise proceed with `UNKNOWN` and state how to resolve it. Founder context is decision-critical, but its absence must not block an initial opportunity assessment.
+Hacer como máximo una pregunta a la vez, y solo cuando su respuesta tenga alto impacto en la decisión. De lo contrario proceder con `DESCONOCIDO` y declarar cómo resolverlo. El contexto del fundador es crítico para la decisión, pero su ausencia no debe bloquear una evaluación inicial de la oportunidad.
 
-Read [references/input-and-classification.md](references/input-and-classification.md) before classifying the project or interviewing the founder.
+Leer [references/input-and-classification.md](references/input-and-classification.md) antes de clasificar el proyecto o entrevistar al fundador.
 
-## Required workflow
+## Flujo de trabajo requerido
 
-### 1. Inspect and frame
+### 1. Inspeccionar y enmarcar
 
-1. Inventory supplied artifacts, dates, currencies, geographies, and evidence access.
-2. State the decision, decision owner, time horizon, target outcome, and alternatives, including doing nothing.
-3. Classify the project type and confidence. Use a primary type plus modifiers such as `AI product`, `enterprise`, or `open source` when needed.
-4. Capture founder constraints and opportunity cost. Keep opportunity viability distinct from founder-specific viability.
-5. Create an evidence ledger before analysis. Give every source and material claim an ID.
+1. Inventariar artefactos suministrados, fechas, monedas, geografías y acceso a evidencia.
+2. Declarar la decisión, propietario de la decisión, horizonte temporal, resultado objetivo y alternativas, incluyendo no hacer nada.
+3. Clasificar el tipo de proyecto y confianza. Usar un tipo primario más modificadores como `producto AI`, `empresa` u `open source` cuando sea necesario.
+4. Capturar restricciones del fundador y costo de oportunidad. Mantener la viabilidad de la oportunidad distinta de la viabilidad específica del fundador.
+5. Crear un registro de evidencia antes del análisis. Dar a cada fuente y afirmación material un ID.
 
-### 2. Build the evidence base
+### 2. Construir la base de evidencia
 
-Read [references/evidence-and-research.md](references/evidence-and-research.md).
+Leer [references/evidence-and-research.md](references/evidence-and-research.md).
 
-1. Form explicit hypotheses for problem, customer, willingness to pay, reachable market, differentiation, distribution, retention, economics, execution, and founder fit.
-2. Research direct competitors, indirect alternatives, substitutes, official prices, demand signals, regulation, and reachable buyer counts.
-3. Prefer primary, dated, attributable sources. Triangulate consequential claims; explain when only one source exists.
-4. Use bottom-up TAM/SAM/SOM where possible. Never use a large top-down TAM as proof of viability.
-5. Record contradictory and negative evidence, source date, geography, quality, and limitations.
+1. Formar hipótesis explícitas para problema, cliente, disposición de pago, mercado alcanzable, diferenciación, distribución, retención, economía, ejecución y ajuste del fundador.
+2. Investigar competidores directos, alternativas indirectas, sustitutos, precios oficiales, señales de demanda, regulación y números de compradores alcanzables.
+3. Preferir fuentes primarias, fechadas y atribuibles. Triangular afirmaciones consecuentes; explicar cuando solo existe una fuente.
+4. Usar TAM/SAM/SOM de abajo hacia arriba cuando sea posible. Nunca usar un TAM grande de arriba hacia abajo como prueba de viabilidad.
+5. Registrar evidencia contradictoria y negativa, fecha de fuente, geografía, calidad y limitaciones.
 
-If internet access is unavailable, do not simulate research. List the searches and sources needed, mark affected claims `UNKNOWN`, and cap confidence accordingly.
+Si el acceso a internet no está disponible, no simular investigación. Listar las búsquedas y fuentes necesarias, marcar afirmaciones afectadas como `DESCONOCIDO` y limitar la confianza en consecuencia.
 
-### 3. Audit the product and repository
+### 3. Auditar el producto y repositorio
 
-When a repository or product is available, read [references/repository-audit.md](references/repository-audit.md).
+Cuando un repositorio o producto esté disponible, leer [references/repository-audit.md](references/repository-audit.md).
 
-1. Verify implemented behavior in source, tests, configuration, and safe inspection output.
-2. Classify each relevant capability as `VERIFIED`, `PRESENT_WITH_RISK`, `INCOMPLETE`, `DOCUMENTED_ONLY`, `MISSING_CRITICAL`, or `UNNECESSARY`.
-3. Trace only technical issues that affect adoption, security, compliance, reliability, cost, delivery time, support, or differentiation.
-4. Separate product maturity from business attractiveness. Never reward code quality as a proxy for demand.
+1. Verificar comportamiento implementado en código fuente, tests, configuración y salida segura de inspección.
+2. Clasificar cada capacidad relevante como `VERIFICADA`, `PRESENTE_CON_RIESGO`, `INCOMPLETA`, `SOLO_DOCUMENTADA`, `FALTANTE_CRÍTICA` o `INNECESARIA`.
+3. Rastrear solo problemas técnicos que afecten adopción, seguridad, cumplimiento, fiabilidad, costo, tiempo de entrega, soporte o diferenciación.
+4. Separar madurez del producto de atractivo de negocio. Nunca recompensar calidad de código como proxy de demanda.
 
-### 4. Analyze and model
+### 4. Analizar y modelar
 
-Read these references progressively:
+Leer estas referencias progresivamente:
 
-- [references/scoring-and-confidence.md](references/scoring-and-confidence.md) for dimensions, adaptive weights, evidence coverage, confidence, and deterministic calculation.
-- [references/business-model-profiles.md](references/business-model-profiles.md) for type-specific questions and weights.
-- [references/financial-modeling.md](references/financial-modeling.md) for scenarios, unit economics, return on time, and sensitivity analysis.
+- [references/scoring-and-confidence.md](references/scoring-and-confidence.md) para dimensiones, pesos adaptativos, cobertura de evidencia, confianza y cálculo determinista.
+- [references/business-model-profiles.md](references/business-model-profiles.md) para preguntas y pesos específicos por tipo.
+- [references/financial-modeling.md](references/financial-modeling.md) para escenarios, economía unitaria, retorno sobre el tiempo y análisis de sensibilidad.
 
-Score every applicable dimension with positive factors, negative factors, evidence IDs, unknowns, confidence, and rationale. Include `Founder fit / personal ROI` as a first-class dimension. If it is not applicable, explain why rather than deleting it silently.
+Puntuar cada dimensión aplicable con factores positivos, factores negativos, IDs de evidencia, desconocidos, confianza y justificación. Incluir `Ajuste del fundador / ROI personal` como una dimensión de primera clase. Si no es aplicable, explicar por qué en vez de eliminarla silenciosamente.
 
-Create pessimistic, base, and optimistic scenarios only when inputs can be supported or transparently assumed. Keep historical facts, forecasts, and goals separate. Use ranges when point precision would be false.
+Crear escenarios pesimista, base y optimista solo cuando las entradas puedan ser soportadas o asumidas transparentemente. Mantener hechos históricos, pronósticos y metas separados. Usar rangos cuando la precisión puntual sería falsa.
 
-For deterministic calculation, create an assessment JSON conforming to [schemas/assessment.schema.json](schemas/assessment.schema.json), then run:
+Para cálculo determinista, crear un JSON de evaluación conforme a [schemas/assessment.schema.json](schemas/assessment.schema.json), luego ejecutar:
 
 ```bash
 node <skill-directory>/scripts/calculate-score.mjs <assessment.json>
 ```
 
-The script validates weights, computes weighted score, evidence coverage, confidence, financial metrics, and verdict ceilings. Treat its output as calculation support, not autonomous judgment.
+El script valida pesos, calcula puntuación ponderada, cobertura de evidencia, confianza, métricas financieras y techos de veredicto. Tratar su salida como soporte de cálculo, no juicio autónomo.
 
-### 5. Run the mandatory red team
+### 5. Ejecutar el equipo rojo obligatorio
 
-Read [references/red-team-and-decision.md](references/red-team-and-decision.md).
+Leer [references/red-team-and-decision.md](references/red-team-and-decision.md).
 
-Perform this after the initial score so it can challenge a concrete case. Build the strongest plausible case that the project should not receive further investment. Attack demand, buyer access, willingness to pay, switching behavior, retention, distribution, unit economics, hidden costs, legal constraints, dependencies, and founder fit.
+Realizar esto después de la puntuación inicial para que pueda desafiar un caso concreto. Construir el caso plausible más fuerte de que el proyecto no debería recibir más inversión. Atacar demanda, acceso al comprador, disposición de pago, comportamiento de cambio, retención, distribución, economía unitaria, costos ocultos, restricciones legales, dependencias y ajuste del fundador.
 
-For each attack, state the challenged claim, contrary evidence, failure mechanism, severity, likelihood, falsification test, and score impact. A red team that changes nothing requires an explicit explanation.
+Para cada ataque, declarar la afirmación desafiada, evidencia contraria, mecanismo de fallo, severidad, probabilidad, test de falsificación e impacto en la puntuación. Un equipo rojo que no cambia nada requiere una explicación explícita.
 
-Resolve disagreements between the initial analysis and red team. Recalculate changed dimensions and preserve both pre-red-team and final scores.
+Resolver desacuerdos entre el análisis inicial y el equipo rojo. Recalcular dimensiones cambiadas y preservar tanto las puntuaciones pre-equipo-rojo como las finales.
 
-### 6. Decide with gates
+### 6. Decidir con puertas
 
-Apply deal breakers and verdict ceilings after scoring:
+Aplicar deal breakers y techos de veredicto después de puntuar:
 
-- `BUILD`: sufficient evidence supports demand, reachable buyers, a plausible economic path, execution fit, and no unresolved critical gate.
-- `VALIDATE`: potential exists, but one or more high-impact testable hypotheses remain unresolved.
-- `PIVOT`: the problem or market has evidence, but the current customer, offer, product, pricing, or channel is structurally weak.
-- `RECONSIDER`: evidence, risk-adjusted return, founder fit, or opportunity cost is unattractive, but not conclusively fatal.
-- `ABANDON`: strong evidence shows the expected return does not justify further investment or a non-remediable deal breaker exists.
+- `CONSTRUIR`: evidencia suficiente soporta demanda, compradores alcanzables, un camino económico plausible, ajuste de ejecución y sin puerta crítica sin resolver.
+- `VALIDAR`: el potencial existe, pero una o más hipótesis testeables de alto impacto permanecen sin resolver.
+- `PIVOTAR`: el problema o mercado tiene evidencia, pero el cliente actual, oferta, producto, precios o canal son estructuralmente débiles.
+- `RECONSIDERAR`: la evidencia, el retorno ajustado al riesgo, el ajuste del fundador o el costo de oportunidad son poco atractivos, pero no fatalmente concluyentes.
+- `ABANDONAR`: evidencia fuerte muestra que el retorno esperado no justifica más inversión o existe un deal breaker no remediable.
 
-Do not use score-only verdict bands. A project with a high score but unverified willingness to pay, inaccessible distribution, critical compliance exposure, or impossible founder constraints cannot receive `BUILD`.
+No usar rangos de veredicto basados solo en puntuación. Un proyecto con alta puntuación pero disposición de pago no verificada, distribución inaccesible, exposición crítica de cumplimiento o restricciones imposibles del fundador no puede recibir `CONSTRUIR`.
 
-### 7. Design validation experiments
+### 7. Diseñar experimentos de validación
 
-Identify the most dangerous unvalidated hypothesis. Rank experiments by:
+Identificar la hipótesis no validada más peligrosa. Rankear experimentos por:
 
-`priority = decision impact x uncertainty x expected information gain / cost`
+`prioridad = impacto en decisión x incertidumbre x ganancia esperada de información / costo`
 
-For each recommended experiment define hypothesis, method, target segment, sample or exposure, duration, cost/time budget, success threshold, failure threshold, decision changed, and owner. Prefer behavioral evidence such as payment, signed pilot, migration, repeated use, or qualified replies over stated interest.
+Para cada experimento recomendado definir hipótesis, método, segmento objetivo, muestra o exposición, duración, presupuesto de costo/tiempo, umbral de éxito, umbral de fallo, decisión cambiada y responsable. Preferir evidencia conductual como pago, piloto firmado, migración, uso repetido o respuestas calificadas sobre interés declarado.
 
-### 8. Report
+### 8. Reportar
 
-Use [templates/report.md](templates/report.md) for a single project and [templates/comparison.md](templates/comparison.md) for multiple projects. The executive block is mandatory even when the detailed report is shortened.
+Usar [templates/report.md](templates/report.md) para un proyecto individual y [templates/comparison.md](templates/comparison.md) para múltiples proyectos. El bloque ejecutivo es obligatorio incluso cuando el reporte detallado se acorta.
 
-Validate a structured report artifact when one is produced:
+Validar un artefacto de reporte estructurado cuando se produce uno:
 
 ```bash
 node <skill-directory>/scripts/validate-assessment.mjs <assessment.json>
 ```
 
-Do not validate an intentionally partial triage artifact as a complete assessment. Mark it partial, list unavailable sections, and validate only after the required evidence, red-team, and experiment records exist.
+No validar un artefacto de triaje intencionalmente parcial como una evaluación completa. Marcarlo como parcial, listar secciones no disponibles y validar solo después de que existan los registros de evidencia, equipo rojo y experimentos requeridos.
 
-## Multi-agent execution
+## Ejecución multi-agente
 
-If independent agents are available, read [references/multi-agent.md](references/multi-agent.md). Read [config/agents.json](config/agents.json) for the role to agent mapping and delegate evidence research, technical inspection, finance, commercial analysis, and skepticism to the agent named for each role, running them in parallel where the workflow allows. Keep source IDs and a shared schema. The synthesizer must resolve disagreements rather than vote or average opinions.
+Si hay agentes independientes disponibles, leer [references/multi-agent.md](references/multi-agent.md). Leer [config/agents.json](config/agents.json) para el mapeo de rol a agente y delegar investigación de evidencia, inspección técnica, finanzas, análisis comercial y escepticismo al agente nombrado para cada rol, ejecutándolos en paralelo donde el flujo de trabajo lo permita. Mantener IDs de fuente y un esquema compartido. El sintetizador debe resolver desacuerdos en vez de votar u opinar promediando.
 
-The Skill never names a model. Each agent file binds its own model at the host level; edit that model there to change the model of a phase, then restart opencode.
+La skill nunca nombra un modelo. Cada archivo de agente vincula su propio modelo a nivel de host; editar ese modelo allí para cambiar el modelo de una fase, luego reiniciar opencode.
 
-If an agent in `config/agents.json` is missing or only one model is available, use separate passes with fresh notes: `Analyst`, `Researcher`, `Financial analyst`, `Skeptic`, then `Synthesizer`. Do not expose hidden chain-of-thought; report evidence, calculations, assumptions, disagreements, and concise rationale.
+Si un agente en `config/agents.json` falta o solo hay un modelo disponible, usar pasadas separadas con notas frescas: `Analista`, `Investigador`, `Analista financiero`, `Escéptico`, luego `Sintetizador`. No exponer cadena de pensamiento oculta; reportar evidencia, cálculos, supuestos, desacuerdos y justificación concisa.
 
-## Comparison mode
+## Modo comparación
 
-Normalize projects to the same founder, horizon, currency, tax treatment, salary/opportunity-cost assumption, and confidence standard. Compare score and confidence separately, then include capital at risk, time to first revenue, expected value range, return per founder hour, downside, reversibility, and strategic option value. Do not rank a larger outcome above a smaller but much more efficient opportunity without explaining the tradeoff.
+Normalizar proyectos al mismo fundador, horizonte, moneda, tratamiento fiscal, supuesto de salario/costo-de-oportunidad y estándar de confianza. Comparar puntuación y confianza por separado, luego incluir capital en riesgo, tiempo hasta primer ingreso, rango de valor esperado, retorno por hora del fundador, desventaja, reversibilidad y valor de opción estratégica. No rankear un resultado mayor sobre uno menor pero mucho más eficiente sin explicar el tradeoff.
 
-## Completion gate
+## Puerta de completitud
 
-Before returning a verdict, verify that the report contains:
+Antes de devolver un veredicto, verificar que el reporte contiene:
 
-- project type and classification confidence;
-- founder context or explicit missing founder data;
-- adaptive weights summing to 100 and justification;
-- score, confidence, and evidence coverage;
-- source ledger with claim labels and dates;
-- direct, indirect, and substitute competition;
-- acquisition paths for first 10, 100, and 1,000 customers, or why a scale is inapplicable;
-- financial scenarios or a precise explanation of why they cannot be modeled;
-- return on time and opportunity cost;
-- pre- and post-red-team conclusions;
-- deal breakers and verdict ceilings;
-- unknowns and how to obtain them;
-- most dangerous hypothesis and one next experiment with pass/fail thresholds;
-- an explicit statement of what evidence would change the verdict.
+- tipo de proyecto y confianza de clasificación;
+- contexto del fundador o datos faltantes explícitos del fundador;
+- pesos adaptativos sumando 100 y justificación;
+- puntuación, confianza y cobertura de evidencia;
+- registro de fuentes con etiquetas de afirmación y fechas;
+- competencia directa, indirecta y sustitutos;
+- rutas de adquisición para los primeros 10, 100 y 1.000 clientes, o por qué una escala es inaplicable;
+- escenarios financieros o una explicación precisa de por qué no pueden modelarse;
+- retorno sobre el tiempo y costo de oportunidad;
+- conclusiones pre y post equipo rojo;
+- deal breakers y techos de veredicto;
+- desconocidos y cómo obtenerlos;
+- hipótesis más peligrosa y un próximo experimento con umbrales de éxito/fallo;
+- una declaración explícita de qué evidencia cambiaría el veredicto.
 
-If these cannot be completed, return the partial assessment with its limits. Never fill gaps with plausible-sounding facts.
+Si estos no pueden completarse, devolver la evaluación parcial con sus límites. Nunca llenar gaps con hechos que suenan plausibles.
 
-## Configuration and maintenance
+## Configuración y mantenimiento
 
-Read [references/configuration-and-extension.md](references/configuration-and-extension.md) before changing weights, verdict policy, schemas, financial formulas, business types, or agent roles. Read [references/methodology-review.md](references/methodology-review.md) for the specification critique, methodological corrections, and architecture rationale behind this version.
+Leer [references/configuration-and-extension.md](references/configuration-and-extension.md) antes de cambiar pesos, política de veredicto, esquemas, fórmulas financieras, tipos de negocio o roles de agentes. Leer [references/methodology-review.md](references/methodology-review.md) para la crítica de especificación, correcciones metodológicas y justificación de arquitectura detrás de esta versión.

@@ -10,8 +10,9 @@ Enfoque: desarrollo frontend con React, TypeScript, Waku/Astro, Netlify, Firebas
 
 Cada carpeta es una skill autocontenida con su `SKILL.md`.
 
-| Skill | Descripción |
-|-------|-------------|
+| Skill                        | Descripción                         |
+| ---------------------------- | ----------------------------------- |
+| `pwa-splash-icon` | Generación de iconos de splash para PWA |
 | `product-viability-evaluator` | Evaluación multi-agente de viabilidad de productos/SaaS con red team adversario, scoring objetivo y veredicto BUILD/VALIDATE/PIVOT/RECONSIDER/ABANDON. Incluye schemas, scripts de scoring y evals |
 | `security-audit-webapp` | Auditoría de seguridad para webapps serverless (Waku/React/Netlify/Firebase) contra OWASP |
 | `chatbot-openai-builder` | Chatbots accesibles con OpenAI: streaming, rate limiting, UI flotante |
@@ -27,15 +28,15 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 
 Subagentes en formato markdown compatibles con OpenCode y CommandCode (ver diferencias de instalación más abajo).
 
-| Agente | Rol |
-|--------|-----|
-| `architecture-reviewer` | Revisa arquitectura: complejidad innecesaria, escalabilidad, simplificación |
-| `chatbot-security-reviewer` | Audita endpoints y UI de chatbots LLM contra OWASP LLM Top 10 |
-| `firestore-auditor` | Detecta consultas costosas, modelado deficiente y riesgos de costo en Firestore |
-| `netlify-costs` | Estima gastos de sitios desplegados en Netlify vía API REST |
-| `waku-deploy-auditor` | Revisión pre-deploy como Staff Engineer (Waku/React/Netlify) |
-| `convex-teacher` | Enseña Convex desde cero con analogías a Firebase |
-| `viability-*` (6 roles) | Roles del sistema product-viability-evaluator: researcher, commercial/financial/product analyst, skeptic (red team) y synthesizer |
+| Agente                      | Rol                                                                                                                               |
+| --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `architecture-reviewer`     | Revisa arquitectura: complejidad innecesaria, escalabilidad, simplificación                                                       |
+| `chatbot-security-reviewer` | Audita endpoints y UI de chatbots LLM contra OWASP LLM Top 10                                                                     |
+| `firestore-auditor`         | Detecta consultas costosas, modelado deficiente y riesgos de costo en Firestore                                                   |
+| `netlify-costs`             | Estima gastos de sitios desplegados en Netlify vía API REST                                                                       |
+| `waku-deploy-auditor`       | Revisión pre-deploy como Staff Engineer (Waku/React/Netlify)                                                                      |
+| `convex-teacher`            | Enseña Convex desde cero con analogías a Firebase                                                                                 |
+| `viability-*` (6 roles)     | Roles del sistema product-viability-evaluator: researcher, commercial/financial/product analyst, skeptic (red team) y synthesizer |
 
 ### Comandos (`commands/`)
 
@@ -50,15 +51,15 @@ Comandos rápidos para OpenCode (`~/.config/opencode/commands/`).
 
 Soluciones reales documentadas en producción, complementarias a las skills.
 
-| Doc | Complementa | Tema |
-|-----|-------------|------|
-| `opencode-guia.md` | Todo el repo | Guía de uso y configuración de OpenCode: MCPs, modos de trabajo, flujo recomendado |
-| `rate-limiting-netlify-blobs.md` | `chatbot-openai-builder` | Rate limiting con Netlify Blobs |
-| `race-condition-rate-limiting.md` | `chatbot-openai-builder` | Race condition en contadores distribuidos y su solución |
-| `cache-datos-chatbot-ia.md` | `chatbot-openai-builder` | Caché en memoria para reducir consumo de tokens |
-| `csp-con-nonces.md` | `security-audit-webapp`, `waku-netlify-firebase-deploy` | CSP con nonces por request en Edge Functions |
-| `firebase-admin-bundling-waku-netlify.md` | `waku-netlify-firebase-deploy` | Solución definitiva al bundling de firebase-admin en Netlify Lambda |
-| `firebase-admin-cjs-interop.md` | `waku-netlify-firebase-deploy` | Interop CJS/ESM de firebase-admin con Vite/Waku |
+| Doc                                       | Complementa                                             | Tema                                                                               |
+| ----------------------------------------- | ------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `opencode-guia.md`                        | Todo el repo                                            | Guía de uso y configuración de OpenCode: MCPs, modos de trabajo, flujo recomendado |
+| `rate-limiting-netlify-blobs.md`          | `chatbot-openai-builder`                                | Rate limiting con Netlify Blobs                                                    |
+| `race-condition-rate-limiting.md`         | `chatbot-openai-builder`                                | Race condition en contadores distribuidos y su solución                            |
+| `cache-datos-chatbot-ia.md`               | `chatbot-openai-builder`                                | Caché en memoria para reducir consumo de tokens                                    |
+| `csp-con-nonces.md`                       | `security-audit-webapp`, `waku-netlify-firebase-deploy` | CSP con nonces por request en Edge Functions                                       |
+| `firebase-admin-bundling-waku-netlify.md` | `waku-netlify-firebase-deploy`                          | Solución definitiva al bundling de firebase-admin en Netlify Lambda                |
+| `firebase-admin-cjs-interop.md`           | `waku-netlify-firebase-deploy`                          | Interop CJS/ESM de firebase-admin con Vite/Waku                                    |
 
 ## Instalación
 

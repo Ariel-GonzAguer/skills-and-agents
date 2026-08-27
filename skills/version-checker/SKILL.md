@@ -1,54 +1,54 @@
 ---
 name: version-checker
 description: >
-  Implement a real-time version checking system for React web apps using
-  Zustand + Firebase Firestore + toast notifications. Compares a local
-  package version against a remote Firestore document and shows an update
-  banner when a new version is available. Use when the user asks to "add
-  version checking", "auto-update detection", "version checker", "new
-  version banner", "real-time version sync", "detect remote updates", or
-  any request to notify users when a new app version is deployed.
+  Implementa un sistema de verificación de versión en tiempo real para apps web React
+  usando Zustand + Firebase Firestore + notificaciones toast. Compara la versión local
+  del paquete contra un documento remoto de Firestore y muestra un banner de actualización
+  cuando hay una nueva versión disponible. Usar cuando el usuario pida "agregar verificación
+  de versión", "detección de auto-actualización", "version checker", "banner de nueva versión",
+  "sincronización de versión en tiempo real", "detectar actualizaciones remotas", o cualquier
+  solicitud para notificar a los usuarios cuando se despliega una nueva versión de la app.
 ---
 
-# Version Checker — Real-time Update Detection for React Apps
+# Version Checker — Detección de actualizaciones en tiempo real para apps React
 
-This skill implements a production-ready version checking system that compares
-a local app version against a remote version stored in Firebase Firestore and
-prompts the user to update when a new version is available.
+Esta skill implementa un sistema de verificación de versión listo para producción que compara
+la versión local de la app contra una versión remota almacenada en Firebase Firestore y
+solicita al usuario actualizar cuando hay una nueva versión disponible.
 
-## Architecture Overview
+## Visión de la arquitectura
 
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌─────────────────┐
 │  version.ts  │────▶│ useVersionStore   │────▶│ UpdateBanner    │
-│  (constant)  │     │ (Zustand+persist) │     │ (UI component)  │
+│  (constante) │     │ (Zustand+persist) │     │ (componente UI) │
 └──────────────┘     └──────────────────┘     └─────────────────┘
                               ▲                        │
                               │                        │
-                     ┌────────┴──────────┐             │
-                     │ useVersionWebApp  │             │
-                     │ (Firestore hook)  │◀────────────┘
-                     └───────────────────┘
+                      ┌───────┴───────────┐            │
+                      │ useVersionWebApp  │            │
+                      │ (hook Firestore)  │◀───────────┘
+                      └───────────────────┘
                               │
-                     ┌────────▼──────────┐
-                     │  Firebase         │
-                     │  Firestore        │
-                     │  version/version  │
-                     └───────────────────┘
+                      ┌───────▼───────────┐
+                      │  Firebase         │
+                      │  Firestore        │
+                      │  version/version  │
+                      └───────────────────┘
 ```
 
-## Prerequisites
+## Prerrequisitos
 
-- React 18+ or 19+
-- Zustand (`zustand` v4+ or v5)
+- React 18+ o 19+
+- Zustand (`zustand` v4+ o v5)
 - Firebase SDK (`firebase/firestore`, `firebase/auth`)
-- A toast library (`sonner` recommended, or `react-hot-toast`)
-- An existing Firebase project with Firestore enabled
-- An existing Firebase auth setup (the version listener is auth-gated)
+- Una librería de toast (`sonner` recomendado, o `react-hot-toast`)
+- Un proyecto Firebase existente con Firestore habilitado
+- Una configuración de auth de Firebase existente (el listener de versión está limitado por auth)
 
-## Firestore Document
+## Documento de Firestore
 
-Create a Firestore document at path `version/version` with:
+Crear un documento de Firestore en la ruta `version/version` con:
 
 ```json
 {
@@ -56,27 +56,27 @@ Create a Firestore document at path `version/version` with:
 }
 ```
 
-This is the **only** backend requirement. No Cloud Functions needed.
+Este es el **único** requisito del backend. No se necesitan Cloud Functions.
 
-## Implementation Steps
+## Pasos de implementación
 
-### Step 1: Create `src/version.ts`
+### Paso 1: Crear `src/version.ts`
 
-This file is the single source of truth for the local version. It must be
-kept in sync with `package.json` manually (or via a build script).
+Este archivo es la fuente única de verdad para la versión local. Debe mantenerse
+sincronizado con `package.json` manualmente (o vía un script de build).
 
 ```typescript
 /**
- * App version. Keep in sync with package.json.
- * Used as the initial local version in the version store.
+ * Versión de la app. Mantener sincronizado con package.json.
+ * Usado como versión local inicial en el store de versión.
  */
 export const APP_VERSION = "1.0.0" as const;
 ```
 
-### Step 2: Create `src/store/useVersionStore.ts`
+### Paso 2: Crear `src/store/useVersionStore.ts`
 
-Zustand store with localStorage persistence. Handles local vs remote version
-state with SSR safety and schema migration support.
+Store de Zustand con persistencia en localStorage. Maneja el estado de versión local vs remota
+con seguridad SSR y soporte de migración de esquema.
 
 ```typescript
 import { create } from "zustand";
@@ -95,9 +95,9 @@ const safeStorage = createJSONStorage(() => {
 });
 
 interface VersionState {
-  /** Local app version (persisted in localStorage). */
+  /** Versión local de la app (persistida en localStorage). */
   versionLocal: string;
-  /** Remote version from Firestore (not persisted). */
+  /** Versión remota de Firestore (no persistida). */
   versionRemota: string | null;
   setVersionLocal: (v: string) => void;
   setVersionRemota: (v: string) => void;
@@ -130,17 +130,17 @@ export const useVersionStore = create<VersionState>()(
 );
 ```
 
-**Key design decisions:**
-- `safeStorage` prevents SSR crashes by providing a no-op storage when
-  `window` is undefined.
-- `partialize` only persists `versionLocal` — the remote version is
-  ephemeral and re-fetched on each session.
-- `version: 1` with `migrate` enables future store schema upgrades.
+**Decisiones clave de diseño:**
+- `safeStorage` previene crashes de SSR proporcionando un storage no-op cuando
+  `window` es undefined.
+- `partialize` solo persiste `versionLocal` — la versión remota es
+  efímera y se re-obtiene en cada sesión.
+- `version: 1` con `migrate` permite futuras actualizaciones del esquema del store.
 
-### Step 3: Create `src/hooks/useVersionWebApp.ts`
+### Paso 3: Crear `src/hooks/useVersionWebApp.ts`
 
-Hook that listens to the Firestore document in real-time. Auth-gated:
-only subscribes after the user is authenticated.
+Hook que escucha el documento de Firestore en tiempo real. Limitado por auth:
+solo se suscribe después de que el usuario se autentica.
 
 ```typescript
 import { useEffect } from "react";
@@ -193,18 +193,18 @@ export function useVersionWebApp(versionLocal: string | null): void {
 }
 ```
 
-**Key design decisions:**
-- Auth-gated: Firestore rules typically require auth; this avoids permission
-  errors for anonymous visitors.
-- Cleanup pattern: inner `unsubscribeSnapshot` is cleaned up on both unmount
-  and auth state change (user logs out → subscription cancelled).
-- Real-time: `onSnapshot` fires immediately and on every remote change, so
-  the user sees the update banner within seconds of a deployment.
+**Decisiones clave de diseño:**
+- Limitado por auth: las reglas de Firestore típicamente requieren auth; esto evita
+  errores de permisos para visitantes anónimos.
+- Patrón de limpieza: el `unsubscribeSnapshot` interno se limpia tanto al desmontar
+  como al cambiar el estado de auth (usuario cierra sesión → suscripción cancelada).
+- Tiempo real: `onSnapshot` se dispara inmediatamente y en cada cambio remoto, así
+  que el usuario ve el banner de actualización segundos después de un despliegue.
 
-### Step 4: Create `src/components/ui/UpdateBanner.tsx`
+### Paso 4: Crear `src/components/ui/UpdateBanner.tsx`
 
-Visual banner that shows when versions differ. On "Update" click, persists
-the remote version locally and reloads the page.
+Banner visual que se muestra cuando las versiones difieren. Al hacer clic en "Actualizar",
+persiste la versión remota localmente y recarga la página.
 
 ```typescript
 "use client";
@@ -246,12 +246,12 @@ export function UpdateBanner() {
 }
 ```
 
-**Note:** Adapt the Tailwind classes to match your design system (colors,
-spacing, etc.). The example uses amber tones as a generic "info" style.
+**Nota:** Adaptar las clases de Tailwind para coincidir con el sistema de diseño (colores,
+espaciado, etc.). El ejemplo usa tonos ámbar como estilo genérico de "info".
 
-### Step 5: Create `src/components/ui/VersionChecker.tsx`
+### Paso 5: Crear `src/components/ui/VersionChecker.tsx`
 
-Orchestrator component that wires everything together.
+Componente orquestador que conecta todo.
 
 ```typescript
 "use client";
@@ -268,9 +268,9 @@ export function VersionChecker() {
 }
 ```
 
-### Step 6: Mount `<VersionChecker />` in the root layout
+### Paso 6: Montar `<VersionChecker />` en el layout raíz
 
-Add the component to your root layout so it's active on every page:
+Agregar el componente al layout raíz para que esté activo en cada página:
 
 ```typescript
 import { VersionChecker } from "../components/ui/VersionChecker";
@@ -286,59 +286,57 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-### Step 7: Update `package.json` and `src/version.ts`
+### Paso 7: Actualizar `package.json` y `src/version.ts`
 
-When releasing a new version, update **both** files:
+Al lanzar una nueva versión, actualizar **ambos** archivos:
 
 ```bash
-# Example: bump to 1.1.0
-# 1. Update package.json "version" field
-# 2. Update src/version.ts APP_VERSION constant
-# 3. Deploy the app
-# 4. Update the Firestore document version/version to { "version": "1.1.0" }
+# Ejemplo: subir a 1.1.0
+# 1. Actualizar campo "version" de package.json
+# 2. Actualizar constante APP_VERSION en src/version.ts
+# 3. Desplegar la app
+# 4. Actualizar documento Firestore version/version a { "version": "1.1.0" }
 ```
 
-## Deployment Workflow
+## Flujo de despliegue
 
-1. Bump version in `package.json` and `src/version.ts` (keep them in sync).
-2. Build and deploy the app.
-3. Update the Firestore document `version/version` with the new version
-   string. This can be done manually in the Firebase Console, via a
-   post-deploy script, or via the Firebase Admin SDK in CI.
+1. Subir versión en `package.json` y `src/version.ts` (mantenerlos sincronizados).
+2. Construir y desplegar la app.
+3. Actualizar el documento Firestore `version/version` con el nuevo string de versión.
+   Esto puede hacerse manualmente en la Firebase Console, vía un script post-despliegue,
+   o vía el Firebase Admin SDK en CI.
 
-**Order matters:** Deploy the app first, then update Firestore. If you
-update Firestore first, existing users will see the update banner but the
-"new version" they download will be the old one.
+**El orden importa:** Desplegar la app primero, luego actualizar Firestore. Si se
+actualiza Firestore primero, los usuarios existentes verán el banner de actualización pero la
+"nueva versión" que descarguen será la anterior.
 
-## Customization Points
+## Puntos de personalización
 
-| What | Where | How |
+| Qué | Dónde | Cómo |
 |---|---|---|
-| Toast library | `useVersionWebApp.ts` | Replace `sonner` with `react-hot-toast`, `react-toastify`, etc. |
-| Banner styling | `UpdateBanner.tsx` | Replace Tailwind classes with your design system |
-| Forced update | `UpdateBanner.tsx` | Add a modal that blocks interaction instead of a dismissible banner |
-| Version comparison | `useVersionWebApp.ts` | Use semver comparison (`semver.gt()`) instead of strict equality |
-| Polling instead of realtime | `useVersionWebApp.ts` | Replace `onSnapshot` with `getDoc` on an interval |
-| Firestore path | `useVersionWebApp.ts` | Change `doc(db, "version", "version")` to your preferred path |
-| Non-Firebase backend | `useVersionWebApp.ts` | Replace Firestore listener with a fetch/WebSocket to your API |
+| Librería de toast | `useVersionWebApp.ts` | Reemplazar `sonner` con `react-hot-toast`, `react-toastify`, etc. |
+| Estilo del banner | `UpdateBanner.tsx` | Reemplazar clases de Tailwind con el sistema de diseño |
+| Actualización forzada | `UpdateBanner.tsx` | Agregar un modal que bloquee la interacción en vez de un banner descartable |
+| Comparación de versión | `useVersionWebApp.ts` | Usar comparación semver (`semver.gt()`) en vez de igualdad estricta |
+| Polling en vez de tiempo real | `useVersionWebApp.ts` | Reemplazar `onSnapshot` con `getDoc` en un intervalo |
+| Ruta de Firestore | `useVersionWebApp.ts` | Cambiar `doc(db, "version", "version")` a la ruta preferida |
+| Backend no Firebase | `useVersionWebApp.ts` | Reemplazar listener de Firestore con un fetch/WebSocket a tu API |
 
-## File Checklist
+## Lista de verificación
 
-After applying this skill, you should have these files:
+Después de aplicar esta skill, se deben tener estos archivos:
 
-- [ ] `src/version.ts` — version constant
-- [ ] `src/store/useVersionStore.ts` — Zustand store with persistence
-- [ ] `src/hooks/useVersionWebApp.ts` — Firestore real-time listener
-- [ ] `src/components/ui/UpdateBanner.tsx` — update banner UI
-- [ ] `src/components/ui/VersionChecker.tsx` — orchestrator component
-- [ ] Root layout mounts `<VersionChecker />`
-- [ ] Firestore document `version/version` exists with `{ "version": "..." }`
+- [ ] `src/version.ts` — constante de versión
+- [ ] `src/store/useVersionStore.ts` — store de Zustand con persistencia
+- [ ] `src/hooks/useVersionWebApp.ts` — listener en tiempo real de Firestore
+- [ ] `src/components/ui/UpdateBanner.tsx` — UI del banner de actualización
+- [ ] `src/components/ui/VersionChecker.tsx` — componente orquestador
+- [ ] El layout raíz monta `<VersionChecker />`
+- [ ] El documento Firestore `version/version` existe con `{ "version": "..." }`
 
-## Assumptions
+## Suposiciones
 
-- Firebase is already configured in `src/lib/firebase.ts` exporting `auth`
-  and `db`.
-- Zustand is already installed.
-- A toast library (sonner or equivalent) is already installed.
-- Tailwind CSS is used for styling (adapt if using CSS modules, styled-
-  components, etc.).
+- Firebase ya está configurado en `src/lib/firebase.ts` exportando `auth` y `db`.
+- Zustand ya está instalado.
+- Una librería de toast (sonner o equivalente) ya está instalada.
+- Se usa Tailwind CSS para estilos (adaptar si se usan CSS modules, styled-components, etc.).

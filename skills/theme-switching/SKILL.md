@@ -1,26 +1,26 @@
 ---
 name: theme-switching
-description: Implement light/dark theme switching in React apps using Zustand for state management with localStorage persistence and Tailwind CSS v4 class-based dark mode. Use this skill whenever the user asks to add dark mode, theme toggle, light/dark mode, night mode, theme switching, color scheme switching, or a dark theme to a React project. Also use when the user mentions persisting theme preferences, SSR-safe theme stores, ThemeProvider components, or wants to convert an existing project to support dark mode. Triggers on phrases like "agregar modo oscuro", "cambiar tema", "dark mode", "toggle theme", "light/dark", "modo noche", even if the user doesn't explicitly say "skill" or "theme-switching".
+description: Implementa cambio de tema claro/oscuro en apps React usando Zustand para gestión de estado con persistencia en localStorage y modo oscuro basado en clases de Tailwind CSS v4. Usar esta skill cuando el usuario pida agregar modo oscuro, toggle de tema, modo claro/oscuro, modo nocturno, cambio de tema, cambio de esquema de color, o un tema oscuro a un proyecto React. También usar cuando el usuario mencione persistir preferencias de tema, stores de tema seguros para SSR, componentes ThemeProvider, o quiera convertir un proyecto existente para soportar modo oscuro. Activa con frases como "agregar modo oscuro", "cambiar tema", "dark mode", "toggle theme", "light/dark", "modo noche".
 ---
 
-# Theme Switching (Light/Dark Mode)
+# Cambio de tema (Modo claro/oscuro)
 
-Implement a complete light/dark theme system in React apps using **Zustand** (state + persistence) + **ThemeProvider** (DOM sync) + **Tailwind CSS v4** (class-based dark mode).
+Implementa un sistema completo de temas claro/oscuro en apps React usando **Zustand** (estado + persistencia) + **ThemeProvider** (sincronización DOM) + **Tailwind CSS v4** (modo oscuro basado en clases).
 
-## Architecture
+## Arquitectura
 
-The system works as follows: a Zustand store holds `isDark` and persists it to localStorage. A `ThemeProvider` component subscribes to the store and adds/removes the `dark` class on `<html>`. Tailwind's `dark:` variants activate based on that class. No React Context is needed — the Zustand store is the single source of truth, and any component can read the theme directly.
+El sistema funciona así: un store de Zustand mantiene `isDark` y lo persiste en localStorage. Un componente `ThemeProvider` se suscribe al store y agrega/remueve la clase `dark` en `<html>`. Las variantes `dark:` de Tailwind se activan basándose en esa clase. No se necesita React Context — el store de Zustand es la fuente única de verdad, y cualquier componente puede leer el tema directamente.
 
 ```
-User clicks toggle
-  → toggleTheme() updates isDark in Zustand store
-  → persist middleware writes to localStorage
-  → ThemeProvider re-renders, useEffect adds/removes "dark" class on <html>
-  → Tailwind activates all dark: utilities
-  → Components re-render with dark colors
+Usuario hace clic en toggle
+  → toggleTheme() actualiza isDark en el store de Zustand
+  → middleware persist escribe en localStorage
+  → ThemeProvider re-renderiza, useEffect agrega/remueve clase "dark" en <html>
+  → Tailwind activa todas las utilidades dark:
+  → Componentes re-renderizan con colores oscuros
 ```
 
-## Dependencies
+## Dependencias
 
 ```json
 {
@@ -35,22 +35,22 @@ User clicks toggle
 }
 ```
 
-## Implementation steps
+## Pasos de implementación
 
-### Step 1 — Configure Tailwind v4 for class-based dark mode
+### Paso 1 — Configurar Tailwind v4 para modo oscuro basado en clases
 
-Tailwind v4 is configured entirely in CSS (no `tailwind.config.js`). In the main CSS file:
+Tailwind v4 se configura completamente en CSS (sin `tailwind.config.js`). En el archivo CSS principal:
 
 ```css
 @import "tailwindcss";
 
-/* Dark mode using the .dark class on <html> */
+/* Modo oscuro usando la clase .dark en <html> */
 @custom-variant dark (&:where(.dark, .dark *));
 ```
 
-The `@custom-variant` line defines the `dark:` variant so it activates when the element or any ancestor has the `.dark` class. This replaces Tailwind v3's `darkMode: 'class'` config.
+La línea `@custom-variant` define la variante `dark:` para que se active cuando el elemento o cualquier ancestro tenga la clase `.dark`. Esto reemplaza la configuración `darkMode: 'class'` de Tailwind v3.
 
-Define color variables in an `@theme` block. These are for light mode only — dark mode colors come from `dark:` utilities in components, not from separate CSS variables:
+Definir variables de color en un bloque `@theme`. Estas son solo para modo claro — los colores del modo oscuro vienen de utilidades `dark:` en los componentes, no de variables CSS separadas:
 
 ```css
 @theme {
@@ -60,11 +60,11 @@ Define color variables in an `@theme` block. These are for light mode only — d
   --color-text: #4a4a4a;
   --color-muted: #9b8fa0;
   --color-border: #edd9e5;
-  /* Add your project's colors here */
+  /* Agregar los colores del proyecto aquí */
 }
 ```
 
-Set base body styles. The body uses light-mode variables directly; dark backgrounds are applied per-page via `dark:` utilities:
+Establecer estilos base del body. El body usa variables de modo claro directamente; los fondos oscuros se aplican por página vía utilidades `dark:`:
 
 ```css
 body {
@@ -75,15 +75,15 @@ body {
 }
 ```
 
-### Step 2 — Create the Zustand store with persistence
+### Paso 2 — Crear el store de Zustand con persistencia
 
-Create `src/store/themeStore.ts`:
+Crear `src/store/themeStore.ts`:
 
 ```typescript
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
-// SSR-safe storage: returns no-ops when window is undefined (server render)
+// Storage seguro para SSR: retorna no-ops cuando window es undefined (render del servidor)
 const safeStorage = createJSONStorage(() => {
   if (typeof window === "undefined") {
     return {
@@ -109,7 +109,7 @@ export const useThemeStore = create<ThemeState>()(
       setDark: (value) => set({ isDark: value }),
     }),
     {
-      name: "app-theme", // localStorage key — change to your project's name
+      name: "app-theme", // clave de localStorage — cambiar al nombre del proyecto
       storage: safeStorage,
       migrate: (persistedState, version) => {
         if (version === 0) {
@@ -123,22 +123,22 @@ export const useThemeStore = create<ThemeState>()(
 );
 ```
 
-Key design decisions:
-- **`safeStorage`** prevents crashes during SSR. If the project doesn't use SSR, replace with `createJSONStorage(() => localStorage)`.
-- **`isDark: boolean`** is the single source of truth. `false` = light, `true` = dark.
-- **`toggleTheme()`** flips the boolean — this is what the toggle button calls.
-- **`setDark(value)`** sets the theme explicitly — useful for detecting OS preference.
-- **`persist`** automatically syncs the store to localStorage under the given key.
-- **`migrate`** handles version upgrades so existing users get sensible defaults.
+Decisiones clave de diseño:
+- **`safeStorage`** previene crashes durante SSR. Si el proyecto no usa SSR, reemplazar con `createJSONStorage(() => localStorage)`.
+- **`isDark: boolean`** es la fuente única de verdad. `false` = claro, `true` = oscuro.
+- **`toggleTheme()`** invierte el booleano — esto es lo que llama el botón toggle.
+- **`setDark(value)`** establece el tema explícitamente — útil para detectar la preferencia del SO.
+- **`persist`** sincroniza automáticamente el store con localStorage bajo la clave dada.
+- **`migrate`** maneja actualizaciones de versión para que los usuarios existentes obtengan valores predeterminados sensatos.
 
-Any component can access the theme reactively:
+Cualquier componente puede acceder al tema reactivamente:
 ```typescript
 const { isDark, toggleTheme } = useThemeStore();
 ```
 
-### Step 3 — Create the ThemeProvider component
+### Paso 3 — Crear el componente ThemeProvider
 
-Create `src/components/ui/ThemeProvider.tsx`:
+Crear `src/components/ui/ThemeProvider.tsx`:
 
 ```typescript
 "use client";
@@ -148,8 +148,8 @@ import { useThemeStore } from "../../store/themeStore";
 
 const STORAGE_KEY = "app-theme";
 
-// Reads the persisted theme directly from localStorage.
-// Fallback for when Zustand persists hasn't rehydrated yet.
+// Lee el tema persistido directamente de localStorage.
+// Respaldo para cuando Zustand persist no se ha rehidratado aún.
 function readPersistedTheme() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -165,7 +165,7 @@ export function ThemeProvider() {
   const { isDark } = useThemeStore();
 
   useLayoutEffect(() => {
-    // If store hasn't rehydrated, read localStorage synchronously
+    // Si el store no se ha rehidratado, leer localStorage sincrónicamente
     const dark = readPersistedTheme() ?? isDark;
     if (dark) {
       document.documentElement.classList.add("dark");
@@ -178,13 +178,13 @@ export function ThemeProvider() {
 }
 ```
 
-This component renders nothing — it exists purely for its side effect. It subscribes to `isDark` and, whenever it changes, adds or removes the `dark` class on `document.documentElement` (the `<html>` element). The `"use client"` directive is needed for SSR frameworks (Waku, Next.js); omit it if not using SSR.
+Este componente no renderiza nada — existe puramente por su efecto secundario. Se suscribe a `isDark` y, cuando cambia, agrega o remueve la clase `dark` en `document.documentElement` (el elemento `<html>`). La directiva `"use client"` es necesaria para frameworks SSR (Waku, Next.js); omitir si no se usa SSR.
 
-Use `useLayoutEffect` (not `useEffect`). In RSC frameworks (Waku, Next.js), navigating to `render: 'dynamic'` pages can cause the server to re-render the root tree, which may remount the ThemeProvider on the client. `useLayoutEffect` applies the `.dark` class synchronously during React's commit phase, before the browser paints, preventing the flash. See "Prevent FOUC" below.
+Usar `useLayoutEffect` (no `useEffect`). En frameworks RSC (Waku, Next.js), navegar a páginas con `render: 'dynamic'` puede causar que el servidor re-renderice el árbol raíz, lo que puede remontar el ThemeProvider en el cliente. `useLayoutEffect` aplica la clase `.dark` sincrónicamente durante la fase de commit de React, antes de que el navegador pinte, previniendo el flash. Ver "Prevenir FOUC" más abajo.
 
-### Step 4 — Mount ThemeProvider at the app root
+### Paso 4 — Montar ThemeProvider en la raíz de la app
 
-Mount the provider once, inside `<body>`, in the root layout:
+Montar el proveedor una vez, dentro de `<body>`, en el layout raíz:
 
 ```tsx
 import { ThemeProvider } from "../components/ui/ThemeProvider";
@@ -202,9 +202,9 @@ export default function RootLayout({ children }) {
 }
 ```
 
-### Step 5 — Create the theme toggle UI
+### Paso 5 — Crear la UI del toggle de tema
 
-A pill-shaped switch button. Extract it into its own component or inline it:
+Un botón con forma de píldora. Extraerlo a su propio componente o inlinarlo:
 
 ```tsx
 import { useThemeStore } from "../../store/themeStore";
@@ -235,32 +235,32 @@ function ThemeToggle() {
 }
 ```
 
-The toggle uses `aria-pressed={isDark}` for accessibility (indicates on/off state to screen readers). The white circle slides via `translate-x-5` / `translate-x-0` with a 200ms transition. Adjust the colors (`bg-coral`, `bg-border`) to match the project's palette.
+El toggle usa `aria-pressed={isDark}` para accesibilidad (indica estado on/off a lectores de pantalla). El círculo blanco se desliza vía `translate-x-5` / `translate-x-0` con una transición de 200ms. Ajustar los colores (`bg-coral`, `bg-border`) para coincidir con la paleta del proyecto.
 
-### Step 6 — Apply dark mode styles to components
+### Paso 6 — Aplicar estilos de modo oscuro a los componentes
 
-Dark mode is applied per-component using Tailwind `dark:` variants with the built-in `gray` palette. There are no separate dark-mode CSS variables — each component specifies its own dark colors.
+El modo oscuro se aplica por componente usando variantes `dark:` de Tailwind con la paleta `gray` incorporada. No hay variables CSS separadas para modo oscuro — cada componente especifica sus propios colores oscuros.
 
-Use this mapping consistently across all components:
+Usar este mapeo consistentemente en todos los componentes:
 
-| Usage | Light class | Dark class |
+| Uso | Clara | Oscura |
 |---|---|---|
-| Page background | `bg-cream` | `dark:bg-gray-900` |
-| Cards / headers | `bg-warm-white` | `dark:bg-gray-800` |
-| Input fields | `bg-cream` | `dark:bg-gray-700` |
-| Borders | `border-border` | `dark:border-gray-700` |
-| Primary text | `text-text` | `dark:text-gray-100` |
-| Secondary text | `text-muted` | `dark:text-gray-400` |
+| Fondo de página | `bg-cream` | `dark:bg-gray-900` |
+| Tarjetas / encabezados | `bg-warm-white` | `dark:bg-gray-800` |
+| Campos de input | `bg-cream` | `dark:bg-gray-700` |
+| Bordes | `border-border` | `dark:border-gray-700` |
+| Texto primario | `text-text` | `dark:text-gray-100` |
+| Texto secundario | `text-muted` | `dark:text-gray-400` |
 
-Example card with dark mode:
+Ejemplo de tarjeta con modo oscuro:
 ```tsx
 <div className="bg-warm-white dark:bg-gray-800 border border-border dark:border-gray-700 rounded-xl p-4">
-  <h2 className="text-base font-semibold text-text dark:text-gray-100">Title</h2>
-  <p className="mt-1 text-sm text-muted dark:text-gray-400">Description</p>
+  <h2 className="text-base font-semibold text-text dark:text-gray-100">Título</h2>
+  <p className="mt-1 text-sm text-muted dark:text-gray-400">Descripción</p>
 </div>
 ```
 
-Example input with dark mode:
+Ejemplo de input con modo oscuro:
 ```tsx
 <input
   type="text"
@@ -268,7 +268,7 @@ Example input with dark mode:
 />
 ```
 
-For elements with semantic status colors (e.g. calendar states), define a record with both light and dark classes:
+Para elementos con colores de estado semánticos (ej: estados de calendario), definir un registro con ambas clases clara y oscura:
 ```typescript
 const STATUS_INFO = {
   active: {
@@ -277,43 +277,43 @@ const STATUS_INFO = {
   },
 };
 
-// Usage:
+// Uso:
 <span className={`${status.color} ${status.darkColor}`}>{status.label}</span>
 ```
 
-## Cleanup on logout / account deletion
+## Limpieza al cerrar sesión / eliminar cuenta
 
-When a user logs out or deletes their account, clear the theme from localStorage so the next user starts fresh:
+Cuando un usuario cierra sesión o elimina su cuenta, limpiar el tema de localStorage para que el siguiente usuario empiece limpio:
 
 ```typescript
 localStorage.removeItem("app-theme");
 ```
 
-## Optional improvements
+## Mejoras opcionales
 
-### Prevent FOUC (Flash of Unstyled Content)
+### Prevenir FOUC (Flash de contenido sin estilo)
 
-**No inline script or `useLayoutEffect` is needed.** The no-flash behavior between page navigations comes from the SPA routing architecture, not from timing tricks. Three conditions must be met:
+**No se necesita script inline ni `useLayoutEffect`.** El comportamiento sin flash entre navegaciones de página viene de la arquitectura de routing SPA, no de trucos de temporización. Tres condiciones deben cumplirse:
 
-1. **ThemeProvider must be a leaf component.** It must return `null` and be mounted self-closing (`<ThemeProvider />`). Never wrap `{children}` inside it. If ThemeProvider wraps children, it becomes part of React's reconciliation tree for route changes — any RSC re-evaluation of the root layout (e.g. from a `render: 'dynamic'` layout deeper in the tree) can cause the component to re-mount or its `useEffect` to re-execute, briefly losing the `.dark` class and producing a flash. A leaf component stays isolated from route reconciliation.
+1. **ThemeProvider debe ser un componente hoja.** Debe retornar `null` y montarse auto-cerrado (`<ThemeProvider />`). Nunca envolver `{children}` dentro de él. Si ThemeProvider envuelve hijos, se convierte parte del árbol de reconciliación de React para cambios de ruta — cualquier re-evaluación RSC del layout raíz (ej: de un layout `render: 'dynamic'` más profundo en el árbol) puede causar que el componente se remonte o que su `useEffect` se re-ejecute, perdiendo brevemente la clase `.dark` y produciendo un flash. Un componente hoja permanece aislado de la reconciliación de rutas.
 
-2. **Use `<head />` self-closing in `_root.tsx`.** Waku includes the full `<html>` → `<head>` subtree in the RSC payload when `<head>` has explicit children. During client-side navigation, React reconciles this payload and may overwrite the `.dark` class on `<html>`. With `<head />` (self-closing), Waku delegates head management to the framework and excludes the root tree from RSC reconciliation, preserving the `.dark` class across all navigations.
+2. **Usar `<head />` auto-cerrado en `_root.tsx`.** Waku incluye el subárbol completo `<html>` → `<head>` en el payload RSC cuando `<head>` tiene hijos explícitos. Durante la navegación del lado del cliente, React reconcilia este payload y puede sobrescribir la clase `.dark` en `<html>`. Con `<head />` (auto-cerrado), Waku delega la gestión del head al framework y excluye el árbol raíz de la reconciliación RSC, preservando la clase `.dark` en todas las navegaciones.
 
-3. **`<html>` must NOT have `className`.** Even with `<head />`, if `<html>` has a `className` prop, React will set it on the real element during initial reconciliation, potentially interfering with the `.dark` class. Remove all `className` from `<html>`; put any needed layout classes on `<body>` instead.
+3. **`<html>` NO debe tener `className`.** Incluso con `<head />`, si `<html>` tiene una prop `className`, React la establecerá en el elemento real durante la reconciliación inicial, interfiriendo potencialmente con la clase `.dark`. Remover todo `className` de `<html>`; poner cualquier clase de layout necesaria en `<body>` en su lugar.
 
-4. **Move head metadata to `_layout.tsx`.** Put `<meta>`, `<link>`, `<title>`, and CSS imports in `_layout.tsx` as React Fragment children (`<>`). React 19 automatically hoists these to `<head>` without involving the root tree in RSC reconciliation.
+4. **Mover metadata del head a `_layout.tsx`.** Poner `<meta>`, `<link>`, `<title>` e importaciones de CSS en `_layout.tsx` como hijos de React Fragment (`<>`). React 19 automáticamente sube estos a `<head>` sin involucrar el árbol raíz en la reconciliación RSC.
 
-5. **ThemeProvider lives in the root layout.** Mount it outside the route boundary (in the root layout component, not in page-level components) so it never unmounts during navigation. Its `useEffect` stays active across all page transitions.
+5. **ThemeProvider vive en el layout raíz.** Montarlo fuera del límite de ruta (en el componente del layout raíz, no en componentes a nivel de página) para que nunca se desmonte durante la navegación. Su `useEffect` permanece activo en todas las transiciones de página.
 
-Correct mounting pattern:
+Patrón de montaje correcto:
 ```tsx
-// _root.tsx — minimal, no className, self-closing head
+// _root.tsx — mínimo, sin className, head auto-cerrado
 export default function RootElement({ children }) {
   return (
     <html lang="es">
-      <head />                          {/* self-closing — Waku manages it */}
+      <head />                          {/* auto-cerrado — Waku lo gestiona */}
       <body className="min-h-screen">
-        <ThemeProvider />               {/* leaf, self-closing, no children */}
+        <ThemeProvider />               {/* hoja, auto-cerrado, sin hijos */}
         <Toaster />
         {children}
       </body>
@@ -321,7 +321,7 @@ export default function RootElement({ children }) {
   );
 }
 
-// _layout.tsx — head metadata + CSS import
+// _layout.tsx — metadata del head + importación de CSS
 export default function RootLayout({ children }) {
   return (
     <>
@@ -335,28 +335,28 @@ export default function RootLayout({ children }) {
 }
 ```
 
-Wrong mounting patterns that cause flash on SPA navigation:
+Patrones de montaje incorrectos que causan flash en navegación SPA:
 ```tsx
-<html className="min-h-screen">      {/* React overwrites className → removes .dark */}
+<html className="min-h-screen">      {/* React sobrescribe className → remueve .dark */}
   <head>
-    <meta ... />                      {/* explicit head — Waku includes root in RSC payload */}
+    <meta ... />                      {/* head explícito — Waku incluye raíz en payload RSC */}
     <title>Mi App</title>
   </head>
   <body>
-    <ThemeProvider>                   {/* wrapper — becomes part of route reconciliation */}
+    <ThemeProvider>                   {/* wrapper — se convierte parte de reconciliación de ruta */}
       {children}
     </ThemeProvider>
   </body>
 </html>
 ```
 
-Use `useLayoutEffect` (not `useEffect`) in the ThemeProvider. This is critical for `render: 'dynamic'` pages: navigating to them triggers an RSC server re-render that may remount the ThemeProvider on the client. `useLayoutEffect` applies the `.dark` class synchronously during React's commit phase, before the browser paints. With `useEffect`, the re-mount would cause a visible `dark → light → dark` flash because the effect runs asynchronously after paint.
+Usar `useLayoutEffect` (no `useEffect`) en el ThemeProvider. Esto es crítico para páginas `render: 'dynamic'`: navegar a ellas dispara un re-render del servidor RSC que puede remontar el ThemeProvider en el cliente. `useLayoutEffect` aplica la clase `.dark` sincrónicamente durante la fase de commit de React, antes de que el navegador pinte. Con `useEffect`, el re-mount causaría un flash visible `dark → light → dark` porque el efecto se ejecuta asíncronamente después de pintar.
 
-The initial-load flash (hard refresh) is masked by the app's loading state (e.g. a "Verifying session…" placeholder) rather than by an inline script. `useLayoutEffect` does not cause SSR hydration warnings because `ThemeProvider` returns `null` — there is no DOM to mismatch on the server vs. client.
+El flash de carga inicial (hard refresh) se enmascara por el estado de carga de la app (ej: un placeholder "Verificando sesión...") en vez de un script inline. `useLayoutEffect` no causa advertencias de hidratación de SSR porque `ThemeProvider` retorna `null` — no hay DOM que no coincida entre servidor y cliente.
 
-### Detect OS preference
+### Detectar preferencia del SO
 
-To respect the user's system theme preference, add a `'system'` option to the store alongside `'light'` and `'dark'`. A `resolveTheme()` helper converts `'system'` to a concrete value by querying `matchMedia`:
+Para respetar la preferencia de tema del sistema del usuario, agregar una opción `'system'` junto a `'light'` y `'dark'` en el store. Un helper `resolveTheme()` convierte `'system'` a un valor concreto consultando `matchMedia`:
 
 ```typescript
 type Theme = 'light' | 'dark' | 'system';
@@ -368,11 +368,11 @@ export function resolveTheme(theme: Theme): 'light' | 'dark' {
 }
 ```
 
-The `ThemeProvider` calls `resolveTheme()` in its `useEffect` and, when `theme === 'system'`, adds a `matchMedia` change listener so the DOM updates live when the user toggles their OS theme. Default the store to `'system'` so new visitors follow their OS preference automatically.
+El `ThemeProvider` llama a `resolveTheme()` en su `useEffect` y, cuando `theme === 'system'`, agrega un listener de cambio de `matchMedia` para que el DOM se actualice en vivo cuando el usuario cambia el tema del SO. Establecer el store por defecto a `'system'` para que los nuevos visitantes sigan automáticamente la preferencia de su SO.
 
-### Alternative: CSS variables for dark mode
+### Alternativa: Variables CSS para modo oscuro
 
-Instead of `dark:` utilities, you can define CSS variables that change with the `.dark` class:
+En vez de utilidades `dark:`, se pueden definir variables CSS que cambian con la clase `.dark`:
 
 ```css
 :root {
@@ -385,19 +385,19 @@ Instead of `dark:` utilities, you can define CSS variables that change with the 
 }
 ```
 
-Then use them in Tailwind v4: `bg-[var(--bg-primary)]`. This centralizes dark colors but requires all components to use the variable-based classes.
+Luego usarlas en Tailwind v4: `bg-[var(--bg-primary)]`. Esto centraliza los colores oscuros pero requiere que todos los componentes usen las clases basadas en variables.
 
 ## Checklist
 
-- [ ] Install `zustand` and `tailwindcss` v4 with `@tailwindcss/vite`
-- [ ] Configure `@custom-variant dark` in the main CSS file
-- [ ] Define color variables in `@theme`
-- [ ] Create `themeStore.ts` with `persist` and `safeStorage`
-- [ ] Create `ThemeProvider.tsx` with `useEffect`
-- [ ] Mount `<ThemeProvider />` at the app root
-- [ ] Create the toggle component
-- [ ] Apply `dark:` variants to all components
-- [ ] Mount ThemeProvider in root layout (outside route boundary) — prevents FOUC between page navigations without inline scripts
-- [ ] (Optional) Add `prefers-color-scheme` detection
-- [ ] Clear localStorage on logout / account deletion
-- [ ] Audit all components for dark mode coverage
+- [ ] Instalar `zustand` y `tailwindcss` v4 con `@tailwindcss/vite`
+- [ ] Configurar `@custom-variant dark` en el archivo CSS principal
+- [ ] Definir variables de color en `@theme`
+- [ ] Crear `themeStore.ts` con `persist` y `safeStorage`
+- [ ] Crear `ThemeProvider.tsx` con `useEffect`
+- [ ] Montar `<ThemeProvider />` en la raíz de la app
+- [ ] Crear el componente toggle
+- [ ] Aplicar variantes `dark:` a todos los componentes
+- [ ] Montar ThemeProvider en el layout raíz (fuera del límite de ruta) — previene FOUC entre navegaciones de página sin scripts inline
+- [ ] (Opcional) Agregar detección de `prefers-color-scheme`
+- [ ] Limpiar localStorage al cerrar sesión / eliminar cuenta
+- [ ] Auditar todos los componentes para cobertura de modo oscuro
