@@ -26,10 +26,12 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 
 ### Agentes (`agents/`)
 
-Subagentes en formato markdown compatibles con OpenCode y CommandCode (ver diferencias de instalación más abajo).
+Agentes en Markdown diseñados principalmente para OpenCode. Las adaptaciones para CommandCode se documentan por separado.
 
 | Agente                      | Rol                                                                                                                               |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| `pnpm-auditor` | Audita varios repos con pnpm; propone update/override y limpieza mínima del workspace. Correcciones solo con permiso por repo |
+| `code-reviewer` | Revisa cambios staged, unstaged y nuevos: mantenibilidad, seguridad, performance, type-safety y accesibilidad. Solo lectura |
 | `architecture-reviewer`     | Revisa arquitectura: complejidad innecesaria, escalabilidad, simplificación                                                       |
 | `chatbot-security-reviewer` | Audita endpoints y UI de chatbots LLM contra OWASP LLM Top 10                                                                     |
 | `firestore-auditor`         | Detecta consultas costosas, modelado deficiente y riesgos de costo en Firestore                                                   |
@@ -90,7 +92,7 @@ Diferencias de frontmatter a tener en cuenta:
 
 ## Notas
 
-- Los agentes declaran un `model` por defecto; ajustalo según los modelos disponibles en tu proveedor.
+- Algunos agentes declaran un `model` por defecto; ajustalo según los modelos disponibles en tu proveedor.
 - El sistema `product-viability-evaluator` funciona mejor con sus 6 agentes `viability-*` instalados junto a la skill.
 - No se incluye ningún secreto ni configuración privada; revisá siempre lo que publicás de tu entorno.
 
