@@ -1,7 +1,7 @@
 {
   "name": "wiki-docs",
-  "description": "Genera documentación técnica completa para proyectos de software siguiendo una estructura wiki organizada por dominios técnicos. Usa cuando el usuario pida documentar un proyecto, crear wiki, o generar documentación estructurada.",
-  "version": "1.0.0",
+  "description": "Genera documentación técnica avanzada, completa y detallada para proyectos de software en Markdown. Crea una wiki estructurada por dominios técnicos orientada al onboarding de desarrolladores nuevos y a la referencia del equipo actual.",
+  "version": "2.0.0",
   "author": [
     "Ariel GonzAgüer"
   ],
@@ -9,17 +9,41 @@
     "documentation",
     "wiki",
     "technical-writing",
-    "project-docs"
+    "project-docs",
+    "onboarding",
+    "advanced-docs"
   ],
   "triggers": [
     "documentar proyecto",
+    "documentar el proyecto",
+    "documentar este repo",
+    "documentar este repositorio",
+    "documentar el repositorio",
     "crear wiki",
     "generar documentación",
+    "generar documentacion",
+    "documentación técnica",
+    "documentacion tecnica",
     "document this project",
+    "document this repo",
     "create wiki",
     "generate documentation",
-    "documentación técnica"
+    "technical documentation",
+    "onboarding docs",
+    "documentar para nuevos devs",
+    "crear documentación de onboarding",
+    "wiki del proyecto"
   ],
   "category": "documentation",
-  "complexity": "medium"
+  "complexity": "high",
+  "inputs": [
+    {
+      "name": "language",
+      "description": "Idioma en el que se generará la documentación.",
+      "type": "string",
+      "required": true,
+      "default": "es",
+      "options": ["es", "en"]
+    }
+  ]
 }

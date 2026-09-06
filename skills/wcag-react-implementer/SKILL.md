@@ -1,44 +1,44 @@
 ---
 name: wcag-react-implementer
-description: Implementa correcciones de accesibilidad WCAG 2.2 Nivel AA en proyectos React + TypeScript + Tailwind CSS. Usar cuando el usuario pida agregar o corregir accesibilidad (a11y), etiquetas ARIA, soporte para lectores de pantalla, navegación por teclado, gestión de foco, modales/diálogos accesibles, anuncios de errores en formularios, o cuando el código use <div>/<span> como elementos interactivos. Activa con "corregir accesibilidad", "etiquetas aria", "lector de pantalla", "a11y", "accesibilidad", "WCAG".
+description: Implement WCAG 2.2 Level AA accessibility fixes in React + TypeScript + Tailwind CSS projects. Use when the user asks to add or fix accessibility (a11y), ARIA labels, screen reader support, keyboard navigation, focus management, accessible modals/dialogs, form error announcements, or when code uses <div>/<span> as interactive elements. Triggers include "fix accessibility", "aria labels", "screen reader", "a11y", "lector de pantalla", "accesibilidad", "WCAG".
 ---
 
-# Implementador WCAG para React
+# WCAG React Implementer
 
-Implementación sistemática de patrones de accesibilidad WCAG 2.2 Nivel AA para codebases React + TypeScript + Tailwind CSS, incluyendo todos los atributos ARIA, navegación por teclado, gestión de foco y anuncios para lectores de pantalla.
+Systematic implementation of WCAG 2.2 Level AA accessibility patterns for React + TypeScript + Tailwind CSS codebases, including all ARIA attributes, keyboard navigation, focus management, and screen reader announcements.
 
-## Cuándo usar esta skill
+## When to Use This Skill
 
-- Corregir elementos `<div>` o `<span>` usados como controles interactivos (botones, enlaces)
-- Agregar roles, estados y propiedades ARIA a componentes existentes
-- Hacer modales/diálogos completamente accesibles (focus trap, tecla Escape, role=dialog)
-- Implementar regiones live para mensajes de error y anuncios de estado
-- Agregar etiquetas accesibles a campos de formulario, botones de carga, controles con solo ícono
-- Hacer grupos de radio/checkbox semánticamente agrupados con `<fieldset><legend>`
-- Implementar utilidades `focusRing` para indicadores de foco por teclado visibles
-- Auditar y corregir contraste, tamaño de objetivos táctiles y visibilidad del foco
-- Anotar enlaces externos con texto "abre en nueva pestaña" solo para lectores de pantalla
+- Fixing `<div>` or `<span>` elements used as interactive controls (buttons, links)
+- Adding ARIA roles, states, and properties to existing components
+- Making modals/dialogs fully accessible (focus trap, Escape key, role=dialog)
+- Implementing live regions for error messages and status announcements
+- Adding accessible labels to form fields, loading buttons, icon-only controls
+- Making radio/checkbox groups semantically grouped with `<fieldset><legend>`
+- Implementing `focusRing` utilities for visible keyboard focus indicators
+- Auditing and fixing contrast, touch target size, and focus visibility issues
+- Annotating external links with screen-reader-only "opens in new tab" text
 
 ---
 
-## Fase 1 — Auditoría
+## Phase 1 — Audit
 
-Antes de implementar, leer todos los archivos relevantes y producir una tabla priorizada:
+Before implementing, read all relevant files and produce a prioritized table:
 
-| Prioridad | WCAG | Problema | Archivo | Descripción |
+| Priority | WCAG | Issue | File | Description |
 |---|---|---|---|---|
-| Alto (A) | 2.1.1 | Sin acceso por teclado | Component.tsx | `<div onClick>` sin manejador de teclado |
-| Alto (A) | 4.1.2 | Falta role | Modal.tsx | `<div>` de diálogo sin `role="dialog"` |
-| Alto (A) | 1.3.1 | Sin etiqueta de grupo | Form.tsx | Radio buttons sin `<fieldset>` |
-| Medio (AA) | 2.4.7 | Sin anillo de foco | Button.tsx | `focus:outline-none` sin reemplazo |
-| Medio (AA) | 1.4.3 | Bajo contraste | Button.tsx | `bg-yellow-300 text-white` falla 4.5:1 |
-| Medio (AA) | 2.5.8 | Objetivo pequeño | Button.tsx | Altura del botón < 44px |
+| High (A) | 2.1.1 | No keyboard access | Component.tsx | `<div onClick>` without keyboard handler |
+| High (A) | 4.1.2 | Missing role | Modal.tsx | Dialog `<div>` without `role="dialog"` |
+| High (A) | 1.3.1 | No group label | Form.tsx | Radio buttons not inside `<fieldset>` |
+| Med (AA) | 2.4.7 | No focus ring | Button.tsx | `focus:outline-none` without replacement |
+| Med (AA) | 1.4.3 | Low contrast | Button.tsx | `bg-yellow-300 text-white` fails 4.5:1 |
+| Med (AA) | 2.5.8 | Small target | Button.tsx | Button height < 44px |
 
 ---
 
-## Fase 2 — Utilidades primero
+## Phase 2 — Utility First
 
-Siempre crear/verificar `src/utils/a11y.ts` antes de implementar correcciones:
+Always create/verify `src/utils/a11y.ts` before implementing fixes:
 
 ```ts
 /**
@@ -62,16 +62,16 @@ export function focusClassName(colorRing: 'red' | 'amber' = 'red'): string {
 }
 ```
 
-Agregar al CSS global (ej: `src/styles/index.css`):
+Add to global CSS (e.g. `src/styles/index.css`):
 
 ```css
-/* WCAG 2.4.7 — indicador de foco de respaldo para navegadores que no soportan :focus-visible */
+/* WCAG 2.4.7 — fallback focus indicator for browsers that don't support :focus-visible */
 :focus-visible {
   outline: 2px solid #38bdf8;
   outline-offset: 2px;
 }
 
-/* WCAG 1.4.12 / 2.3.3 — respetar preferencias de movimiento reducido */
+/* WCAG 1.4.12 / 2.3.3 — respect reduced motion preferences */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
@@ -84,615 +84,88 @@ Agregar al CSS global (ej: `src/styles/index.css`):
 
 ---
 
-## Fase 3 — Implementaciones de patrones
+## Phase 3 — Pattern Implementations
 
-### Patrón A — Modal / Diálogo (WCAG 2.1.2, 4.1.2)
+Use the relevant pattern as a starting point, then verify behavior in the actual component and browser. Read [react-patterns.md](references/react-patterns.md) when you need the detailed commands, templates, or implementation examples.
 
-**Problema**: `<div>` overlay sin role, sin tecla Escape, sin gestión de foco.
+## Phase 4 — Contrast & Touch Target Checklist
 
-```tsx
-import { useEffect, useId, useRef } from 'react';
-import { focusRing } from '../utils/a11y';
+### Color Contrast (WCAG 1.4.3 — 4.5:1 for body text, 3:1 for large text)
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-}
+Common Tailwind pairs and their compliance for **normal text (< 18px not bold)**:
 
-export function AccessibleModal({ isOpen, onClose, title, children }: ModalProps) {
-  const titleId = useId();
-  const closeBtnRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    // WCAG 2.4.3: Mover foco al modal al abrir
-    closeBtnRef.current?.focus();
-    // WCAG 2.1.2: Cerrar con Escape
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
-  }, [isOpen, onClose]);
-
-  if (!isOpen) return null;
-
-  return (
-    // Backdrop: aria-hidden para que los lectores de pantalla ignoren el overlay
-    <div
-      aria-hidden="true"
-      className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onClick={onClose}
-    >
-      {/* WCAG 4.1.2: role=dialog + aria-modal + aria-labelledby */}
-      <div
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby={titleId}
-        aria-hidden="false"
-        className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto relative"
-        onClick={e => e.stopPropagation()}
-      >
-        {/* WCAG 2.4.6: Título visible vinculado a la etiqueta del diálogo */}
-        <h2 id={titleId} className="text-xl font-bold mb-4 pr-10">{title}</h2>
-
-        {/* Botón de cerrar en la esquina superior derecha */}
-        <button
-          ref={closeBtnRef}
-          type="button"
-          onClick={onClose}
-          aria-label="Cerrar diálogo"
-          className={`absolute top-3 right-3 min-h-11 px-3 rounded ${focusRing()}`}
-        >
-          <span aria-hidden="true">✕</span>
-        </button>
-
-        {children}
-
-        <div className="flex justify-end mt-4">
-          <button
-            type="button"
-            onClick={onClose}
-            className={`bg-gray-600 text-white px-4 py-2 rounded min-h-11 ${focusRing('white')}`}
-          >
-            Cerrar
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
-```
-
-**Reglas clave**:
-- El `div` del backdrop recibe `aria-hidden="true"` — los lectores de pantalla nunca lo ven
-- El `div` interior del diálogo recibe `role="dialog" aria-modal="true" aria-labelledby={id} aria-hidden="false"`
-- `useId()` para ID único del título (requerido cuando pueden existir múltiples diálogos)
-- `useRef` en el botón de cerrar → `.focus()` al abrir
-- `useEffect` agrega listener `keydown` para Escape
-- `onClick` en el backdrop → cerrar; el div interior detiene la propagación
-- Botón de cerrar: `aria-label` + `<span aria-hidden="true">✕</span>`
-
----
-
-### Patrón B — Formulario accesible (WCAG 1.3.1, 1.3.5, 4.1.2)
-
-```tsx
-import { focusRing } from '../utils/a11y';
-
-export function AccessibleForm() {
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-
-  return (
-    // noValidate: deshabilitar la UI de validación por defecto del navegador — la manejamos nosotros
-    <form onSubmit={handleSubmit} noValidate>
-      {/* WCAG 4.1.3: role=alert anuncia errores a lectores de pantalla inmediatamente */}
-      {error && (
-        <div
-          role="alert"
-          aria-live="assertive"
-          aria-atomic="true"
-          className="bg-red-100 text-red-700 px-4 py-3 rounded"
-        >
-          {error}
-        </div>
-      )}
-
-      {/* Patrón de etiqueta para campo requerido */}
-      <label htmlFor="nombre">
-        Nombre
-        {/* aria-hidden oculta el * visual del SR; sr-only proporciona el texto */}
-        <span aria-hidden="true" className="text-red-400 ml-1">*</span>
-        <span className="sr-only">(requerido)</span>
-      </label>
-      <input
-        id="nombre"
-        type="text"
-        required
-        aria-required="true"
-        className={`text-black bg-blue-100 rounded p-2 ${focusRing()}`}
-      />
-
-      {/* Campo opcional — no se necesita aria-required */}
-      <label htmlFor="notas">Notas</label>
-      <textarea
-        id="notas"
-        className={`text-black bg-blue-100 rounded p-2 ${focusRing()}`}
-      />
-
-      {/* Botón de envío/carga */}
-      <button
-        type="submit"
-        disabled={isLoading}
-        aria-busy={isLoading}
-        aria-disabled={isLoading}
-        aria-label={isLoading ? 'Guardando, por favor espere' : 'Guardar'}
-        className={`min-h-11 px-4 py-2 bg-blue-600 text-white rounded ${focusRing('white')}`}
-      >
-        {isLoading ? 'Guardando...' : 'Guardar'}
-      </button>
-    </form>
-  );
-}
-```
-
-**Reglas clave**:
-- `noValidate` en `<form>` — elimina el tooltip del navegador; tu JS/aria maneja los errores
-- Contenedor de error: `role="alert" aria-live="assertive" aria-atomic="true"` — assertive para errores que bloquean el progreso; usar `aria-live="polite"` para estado/éxito
-- Campos requeridos: `aria-required="true"` en el input Y patrón visual de asterisco con `aria-hidden="true"` + `sr-only`
-- `aria-busy={isLoading}` + `aria-disabled={isLoading}` + `aria-label` dinámico en el botón de envío
-
----
-
-### Patrón C — Select e inputs agrupados (WCAG 1.3.1)
-
-**Grupos de Radio / Checkbox DEBEN usar `<fieldset>` + `<legend>`**:
-
-```tsx
-{/* INCORRECTO ✕ */}
-<div>
-  <label>Modo:</label>
-  <label><input type="radio" name="m" value="a" /> Opción A</label>
-  <label><input type="radio" name="m" value="b" /> Opción B</label>
-</div>
-
-{/* CORRECTO ✓ */}
-<fieldset className="border-0 p-0 m-0">
-  <legend className="font-semibold mb-1">Modo de vista</legend>
-  <div className="flex gap-4">
-    <label className="flex items-center gap-2">
-      <input type="radio" name="viewMode" value="cards" />
-      Tarjetas
-    </label>
-    <label className="flex items-center gap-2">
-      <input type="radio" name="viewMode" value="list" />
-      Lista
-    </label>
-  </div>
-</fieldset>
-
-{/* legend sr-only cuando el contexto visual ya proporciona la etiqueta */}
-<fieldset className="border-0 p-0 m-0">
-  <legend className="sr-only">Preferencias de notificación</legend>
-  ...
-</fieldset>
-```
-
-**Select con etiqueta accesible**:
-
-```tsx
-<label htmlFor="producto">
-  Producto
-  <span aria-hidden="true" className="text-red-400 ml-1">*</span>
-  <span className="sr-only">(requerido)</span>
-</label>
-<select
-  id="producto"
-  aria-required="true"
-  required
-  className={`text-black rounded p-2 ${focusRing()}`}
->
-  <option value="">-- Seleccione un producto --</option>
-  {productos.map(p => (
-    <option key={p.id} value={p.id}>{p.nombre}</option>
-  ))}
-</select>
-```
-
----
-
-### Patrón D — Toast / Región live accesible (WCAG 4.1.3)
-
-Usar estas reglas para elegir entre `assertive` y `polite`:
-
-| Situación | aria-live | Cuándo usar |
-|---|---|---|
-| Error bloqueante | `assertive` | Error que impide continuar (validación, red) |
-| Estado de carga | `polite` | "Cargando...", "Guardando..." |
-| Éxito / confirmación | `polite` | "¡Guardado correctamente!" |
-| Alerta destructiva | `assertive` | "El archivo será eliminado permanentemente" |
-
-**Patrón de anuncio de error estático**:
-```tsx
-{/* Se monta inmediatamente → el lector de pantalla anuncia de inmediato */}
-{error && (
-  <p role="alert" aria-live="assertive" aria-atomic="true">
-    {error}
-  </p>
-)}
-
-{/* Estado / éxito */}
-{status && (
-  <p role="status" aria-live="polite" aria-atomic="true">
-    {status}
-  </p>
-)}
-```
-
-**Región live persistente con toast de Sonner** — para librerías que renderizan fuera del árbol de componentes, agregar una región live oculta visualmente y reflejar el mensaje:
-```tsx
-const [announcement, setAnnouncement] = useState('');
-
-function showSuccess(msg: string) {
-  toast.success(msg);           // toast visual
-  setAnnouncement(msg);         // anuncio para SR
-  setTimeout(() => setAnnouncement(''), 5000);
-}
-
-return (
-  <>
-    {/* región live sr-only — siempre en el DOM */}
-    <div
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      className="sr-only"
-    >
-      {announcement}
-    </div>
-    ...
-  </>
-);
-```
-
----
-
-### Patrón E — Acordeón (WCAG 4.1.2, 2.1.1)
-
-```tsx
-function Accordion({ items }: { items: { title: string; content: string }[] }) {
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
-
-  return (
-    <div>
-      {items.map((item, i) => {
-        const panelId = `panel-${i}`;
-        const headerId = `header-${i}`;
-        const isOpen = openIndex === i;
-
-        return (
-          <div key={i} className="border-b">
-            {/* WCAG 4.1.2: el botón controla el panel */}
-            <h3>
-              <button
-                id={headerId}
-                type="button"
-                aria-expanded={isOpen}
-                aria-controls={panelId}
-                onClick={() => setOpenIndex(isOpen ? null : i)}
-                className={`w-full text-left py-3 px-4 font-semibold min-h-11 ${focusRing()}`}
-              >
-                {item.title}
-                {/* Indicador visual — oculto del SR ya que aria-expanded lleva el estado */}
-                <span aria-hidden="true" className="ml-2">
-                  {isOpen ? '▲' : '▼'}
-                </span>
-              </button>
-            </h3>
-
-            {/* Panel: oculto del SR y teclado cuando está cerrado */}
-            <div
-              id={panelId}
-              role="region"
-              aria-labelledby={headerId}
-              hidden={!isOpen}
-              className="px-4 py-3"
-            >
-              {item.content}
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-```
-
-**Reglas clave**:
-- El trigger es siempre un `<button>` (nunca `<div>` o `<h*>` directamente)
-- `aria-expanded={boolean}` en el botón
-- `aria-controls={panelId}` en el botón; `aria-labelledby={headerId}` en el panel
-- Usar atributo `hidden` (no `display:none` vía JS) — los lectores de pantalla respetan `hidden` nativamente
-- Flecha visual: `aria-hidden="true"` para que el SR no diga "triángulo abajo"
-
----
-
-### Patrón F — span/div → button (WCAG 2.1.1, 4.1.2)
-
-**Nunca usar elementos no interactivos como botones**:
-
-```tsx
-{/* INCORRECTO ✕ — no accesible por teclado, sin role, sin enter/space */}
-<span onClick={handleClick}>Agregar Cliente</span>
-<div onClick={handleClick}>Ver más</div>
-<p role="button" onClick={handleClick}>Volver</p>
-
-{/* CORRECTO ✓ */}
-<button
-  type="button"
-  onClick={handleClick}
-  className={`... min-h-11 ${focusRing()}`}
->
-  Agregar Cliente
-</button>
-
-{/* CORRECTO ✓ — navegación */}
-<button
-  type="button"
-  onClick={() => navigate('/ruta')}
-  className={`... min-h-11 ${focusRing()}`}
->
-  Agregar Cliente
-</button>
-```
-
-**Regla `<a>` vs `<button>`**:
-- Usar `<a href="...">` para enlaces que navegan a URLs (rutas internas o externas)
-- Usar `<button>` para todo lo que dispara una acción (abrir modal, enviar, toggle)
-
----
-
-### Patrón G — Enlaces externos (WCAG 2.4.4)
-
-```tsx
-{/* CORRECTO ✓ — el lector de pantalla escucha "Ver en YouTube (abre en nueva pestaña)" */}
-<a
-  href="https://youtube.com/..."
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label="Ver tutorial de Llenar Keg (abre en nueva pestaña)"
-  className={`... ${focusRing()}`}
->
-  Ver tutorial
-  <span className="sr-only">(abre en nueva pestaña)</span>
-</a>
-
-{/* Patrón más corto cuando el texto del enlace ya es descriptivo */}
-<a
-  href={wazeUrl}
-  target="_blank"
-  rel="noopener noreferrer"
-  aria-label={`Navegar a ${cliente.nombre} en Waze (abre en nueva pestaña)`}
-  className={focusRing()}
->
-  Waze
-  <span className="sr-only">(abre en nueva pestaña)</span>
-</a>
-```
-
----
-
-### Patrón H — Botones con imagen / ícono (WCAG 1.1.1)
-
-```tsx
-{/* Imagen decorativa dentro de botón — ocultar imagen, etiquetar el botón */}
-<button
-  type="button"
-  aria-label="Actualizar datos"
-  onClick={handleUpdate}
-  className={`min-h-11 ${focusRing()}`}
->
-  <img src="/icon-refresh.svg" alt="" aria-hidden="true" />
-</button>
-
-{/* Imagen con significado — usar texto alt */}
-<img src="/logo.png" alt="SuperKeg — gestión de kegs de cerveza" />
-
-{/* Imagen decorativa — alt vacío fuerza al SR a saltarla */}
-<img src="/decoration.svg" alt="" aria-hidden="true" />
-```
-
----
-
-### Patrón I — Landmarks de navegación (WCAG 1.3.6, 2.4.1)
-
-```tsx
-{/* Skip link — primer elemento focusable en la página */}
-<a
-  href="#main-content"
-  className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4
-             focus:z-[9999] focus:px-4 focus:py-2 focus:bg-sky-700 focus:text-white
-             focus:rounded focus:shadow-lg"
->
-  Saltar al contenido principal
-</a>
-
-{/* Navegación principal */}
-<nav aria-label="Navegación principal">
-  <ul role="list">
-    {links.map(link => (
-      <li key={link.to}>
-        <a
-          href={link.to}
-          aria-current={currentPath === link.to ? 'page' : undefined}
-          className={focusRing()}
-        >
-          {link.label}
-        </a>
-      </li>
-    ))}
-  </ul>
-</nav>
-
-{/* Contenido principal destino */}
-<main id="main-content" tabIndex={-1} className="focus-visible:outline-none">
-  ...
-</main>
-```
-
----
-
-### Patrón J — Accesibilidad de tablas / listas (WCAG 1.3.1)
-
-```tsx
-{/* Tabla de datos */}
-<table>
-  <caption className="sr-only">Lista de clientes con sus kegs asignados</caption>
-  <thead>
-    <tr>
-      <th scope="col">Cliente</th>
-      <th scope="col">Kegs</th>
-      <th scope="col">
-        <span className="sr-only">Acciones</span>
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    {items.map(item => (
-      <tr key={item.id}>
-        <td>{item.nombre}</td>
-        <td>{item.kegs}</td>
-        <td>
-          {/* aria-label identifica SOBRE QUÉ elemento actúa el botón */}
-          <button
-            aria-label={`Editar ${item.nombre}`}
-            className={`... ${focusRing()}`}
-          >
-            Editar
-          </button>
-          <button
-            aria-label={`Eliminar ${item.nombre}`}
-            className={`... ${focusRing()}`}
-          >
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-```
-
----
-
-### Patrón K — Estados de carga y regiones ocupadas (WCAG 4.1.3, 2.2.1)
-
-```tsx
-{/* Botón con estado de carga */}
-<button
-  type="submit"
-  disabled={isLoading}
-  aria-busy={isLoading}
-  aria-disabled={isLoading}
-  aria-label={
-    isLoading
-      ? 'Actualizando keg, por favor espere'
-      : 'Actualizar Keg'
-  }
-  className={`... min-h-11 ${focusRing('white')}`}
->
-  {isLoading ? 'Actualizando...' : 'Actualizar Keg'}
-</button>
-
-{/* Estado ocupado a nivel de sección */}
-<section aria-busy={isLoading} aria-label="Lista de productos">
-  {isLoading ? <Spinner /> : <ProductList />}
-</section>
-```
-
----
-
-## Fase 4 — Checklist de contraste y objetivos táctiles
-
-### Contraste de color (WCAG 1.4.3 — 4.5:1 para texto normal, 3:1 para texto grande)
-
-Pares comunes de Tailwind y su cumplimiento para **texto normal (< 18px no negrita)**:
-
-| Fondo | Texto | Ratio | Estado |
+| Background | Text | Ratio | Status |
 |---|---|---|---|
-| `bg-sky-800` | `text-white` | 9.1:1 | ✓ AA + AAA |
-| `bg-green-600` | `text-white` | 5.7:1 | ✓ AA |
-| `bg-blue-700` | `text-white` | 7.2:1 | ✓ AA + AAA |
-| `bg-red-700` | `text-white` | 6.2:1 | ✓ AA |
-| `bg-amber-300` | `text-black` | 11.5:1 | ✓ AA + AAA |
-| `bg-yellow-500` | `text-black` | 6.1:1 | ✓ AA |
-| `bg-green-400` | `text-white` | 2.8:1 | ✕ FALLA — usar `bg-green-600` |
-| `bg-red-400` | `text-white` | 3.0:1 | ✕ FALLA — usar `bg-red-600` |
-| `bg-blue-400` | `text-white` | 2.7:1 | ✕ FALLA — usar `bg-blue-700` |
-| `bg-yellow-300` | `text-white` | 1.5:1 | ✕ FALLA — usar `text-black` |
+| `bg-sky-800` | `text-white` | 9.1:1 | ✅ AA + AAA |
+| `bg-green-600` | `text-white` | 5.7:1 | ✅ AA |
+| `bg-blue-700` | `text-white` | 7.2:1 | ✅ AA + AAA |
+| `bg-red-700` | `text-white` | 6.2:1 | ✅ AA |
+| `bg-amber-300` | `text-black` | 11.5:1 | ✅ AA + AAA |
+| `bg-yellow-500` | `text-black` | 6.1:1 | ✅ AA |
+| `bg-green-400` | `text-white` | 2.8:1 | ❌ FAIL — use `bg-green-600` |
+| `bg-red-400` | `text-white` | 3.0:1 | ❌ FAIL — use `bg-red-600` |
+| `bg-blue-400` | `text-white` | 2.7:1 | ❌ FAIL — use `bg-blue-700` |
+| `bg-yellow-300` | `text-white` | 1.5:1 | ❌ FAIL — use `text-black` |
 
-### Objetivos táctiles (WCAG 2.5.8 — 24×24px mínimo, 2.5.5 AAA — 44×44px)
+### Touch Targets (WCAG 2.5.8 — 24×24px minimum, 2.5.5 AAA — 44×44px)
 
 ```tsx
-{/* Mínimo (AA) — 24px */}
+{/* Minimum (AA) — 24px */}
 className="min-h-6 min-w-6"
 
-{/* Recomendado (AAA) — 44px — usar esto por defecto */}
+{/* Recommended (AAA) — 44px — use this by default */}
 className="min-h-11 min-w-11"   // Tailwind: min-h-11 = 44px
 ```
 
-**Regla**: Todos los elementos interactivos (botones, enlaces, inputs) deben tener `min-h-11` a menos que el espacio esté deliberadamente restringido (ej: ícono inline en tabla densa).
+**Rule**: All interactive elements (buttons, links, inputs) must have `min-h-11` unless space is deliberately constrained (e.g. inline icon in dense table).
 
 ---
 
-## Fase 5 — Formato de salida de la auditoría
+## Phase 5 — Audit Output Format
 
-Después de completar las correcciones, generar este resumen:
+After completing fixes, generate this summary:
 
 ```
-## Auditoría de Accesibilidad — Reporte post-corrección
+## Accessibility Audit — Post-Fix Report
 
-### Corregidos (N problemas)
-| WCAG | Componente | Corrección aplicada |
+### Fixed (N issues)
+| WCAG | Component | Fix Applied |
 |---|---|---|
-| 2.1.1 | BotonAyudaVideos | Modal se cierra con tecla Escape |
+| 2.1.1 | BotonAyudaVideos | Modal closes on Escape key |
 | 4.1.2 | Clientes | <span onClick> → <button type="button"> |
-| 1.3.1 | Clientes | Radio buttons envueltos en <fieldset><legend> |
-| 2.4.3 | BotonAyudaVideos | El foco se mueve al botón de cerrar al abrir el modal |
-| 4.1.3 | FormularioLlenarKeg | El div de error tiene role="alert" aria-live="assertive" |
-| 1.4.3 | SeleccionAccion | Colores de botón cambiados para cumplir ratio de contraste 4.5:1 |
-| 2.5.8 | Todos los botones | Agregado min-h-11 (objetivo táctil de 44px) |
-| 2.4.7 | Todos los interactivos | Utilidad focusRing() aplicada |
+| 1.3.1 | Clientes | Radio buttons wrapped in <fieldset><legend> |
+| 2.4.3 | BotonAyudaVideos | Focus moves to close button on modal open |
+| 4.1.3 | FormularioLlenarKeg | Error div has role="alert" aria-live="assertive" |
+| 1.4.3 | SeleccionAccion | Button colors changed to meet 4.5:1 contrast ratio |
+| 2.5.8 | All buttons | Added min-h-11 (44px touch target) |
+| 2.4.7 | All interactive | focusRing() utility applied |
 
-### Aún pendientes (si los hay)
-- Problema X: Requiere corrección de librería de terceros o decisión de diseño
+### Still Pending (if any)
+- Issue X: Requires third-party library fix or design decision
 ```
 
 ---
 
-## Reglas críticas (Nunca romper)
+## Critical Rules (Never Break)
 
-1. **Nunca usar `onClick` solo** en un elemento no interactivo — siempre convertir a `<button>` o `<a>`
-2. **Nunca usar `aria-hidden="true"` en elementos con foco** — esto crea trampas de teclado
-3. **`role="dialog"` requiere `aria-labelledby` o `aria-label`**
-4. **Las regiones `aria-live` deben estar en el DOM antes de que el contenido cambie** — montarlas vacías, luego actualizar
-5. **`aria-required` NO reemplaza el atributo HTML `required`** — usar ambos
-6. **NO usar `tabIndex={0}`** en elementos que ya reciben foco nativamente (botones, inputs, enlaces)
-7. **`useId()` para cualquier ID que identifique relación** entre elementos (`htmlFor`, `aria-labelledby`, `aria-controls`, `aria-describedby`) — previene duplicados en listas
-8. **`aria-disabled` ≠ `disabled`** — `disabled` remueve el elemento del orden de tabulación; `aria-busy` + `aria-disabled` lo mantiene en el orden de tabulación mientras comunica el estado ocupado
-9. **`noValidate` en cada formulario** donde se maneja la validación manualmente
-10. **`alt=""` en imágenes decorativas** — no `alt="decorative"` o faltante; string vacío le dice al SR que la salte
-11. **`aria-live` debe estar en un contenedor, nunca en `<img>` o elementos void** — ponerlo en `<img src="loader.svg" aria-live="polite">` es ignorado silenciosamente por todos los lectores de pantalla; mover el atributo al `<p>` o `<div>` contenedor
-12. **Los valores de `aria-label` deben usar lenguaje natural** — guiones y guiones bajos se verbalizan literalmente; `aria-label="Contact-Form"` se lee como "Contact guion Form"; usar `aria-label="Contact Form"`
-13. **Los modificadores de opacidad reducen el contraste** — `text-gray-300/60` sobre fondo oscuro NO es el mismo ratio que `text-gray-300`; siempre calcular el contraste sobre el color mezclado: `efectivo = opacidad * fg + (1-opacidad) * bg`
-14. **Los enlaces sobre fondos oscuros necesitan valores de azul más claros** — `text-blue-600` (#2563eb) sobre casi negro da ~3.78:1 (falla AA para texto normal); usar `text-blue-300` o `text-blue-400` en su lugar
+1. **Never use `onClick` alone** on a non-interactive element — always convert to `<button>` or `<a>`
+2. **Never use `aria-hidden="true"` on focused elements** — this creates keyboard traps
+3. **`role="dialog"` requires `aria-labelledby` or `aria-label`**
+4. **`aria-live` regions must be in the DOM before content changes** — mount them empty, then update
+5. **`aria-required` does NOT replace the HTML `required` attribute** — use both
+6. **Do NOT use `tabIndex={0}`** on elements that already receive focus natively (buttons, inputs, links)
+7. **`useId()` for any ID that identifies relationship** between elements (`htmlFor`, `aria-labelledby`, `aria-controls`, `aria-describedby`) — prevents duplicates in lists
+8. **`aria-disabled` ≠ `disabled`** — `disabled` removes the element from tab order; `aria-busy` + `aria-disabled` keeps it in tab order while communicating the busy state
+9. **`noValidate` on every form** where you handle validation manually
+10. **`alt=""` on decorative images** — not `alt="decorative"` or missing; empty string tells SR to skip
+11. **`aria-live` must be on a container, never on `<img>` or void elements** — placing it on `<img src="loader.svg" aria-live="polite">` is silently ignored by all screen readers; move the attribute to the wrapping `<p>` or `<div>`
+12. **`aria-label` values must use natural language** — hyphens and underscores are verbalized literally; `aria-label="Contact-Form"` reads as "Contact hyphen Form"; use `aria-label="Contact Form"`
+13. **Opacity modifiers lower contrast** — `text-gray-300/60` on a dark background is NOT the same ratio as `text-gray-300`; always calculate contrast on the blended color: `effective = opacity * fg + (1-opacity) * bg`
+14. **Links on dark backgrounds need lighter blue values** — `text-blue-600` (#2563eb) on near-black yields ~3.78:1 (fails AA for normal text); use `text-blue-300` or `text-blue-400` instead
 
 ---
 
-## Patrón E — Chat en vivo / Chatbot accesible (WCAG 4.1.2, 4.1.3, 2.1.2)
+## Pattern E — Accessible Live Chat / Chatbot (WCAG 4.1.2, 4.1.3, 2.1.2)
 
 ```tsx
 import { useId, useRef, useState, useEffect } from 'react';
@@ -707,13 +180,13 @@ export function AccessibleChatbot() {
   const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // WCAG 2.4.3: gestión de foco — input al abrir, botón toggle al cerrar
+  // WCAG 2.4.3: focus management — input on open, toggle button on close
   useEffect(() => {
     if (isOpen) inputRef.current?.focus();
     else if (!isOpen) toggleBtnRef.current?.focus();
   }, [isOpen]);
 
-  // WCAG 2.1.2: Escape cierra el diálogo
+  // WCAG 2.1.2: Escape closes the dialog
   useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setIsOpen(false); };
@@ -723,12 +196,12 @@ export function AccessibleChatbot() {
 
   return (
     <>
-      {/* WCAG 4.1.3: anunciar apertura/cierre a lectores de pantalla */}
+      {/* WCAG 4.1.3: announce open/close to screen readers */}
       <div aria-live="polite" aria-atomic="true" className="sr-only">
         {isOpen ? 'Chat abierto' : ''}
       </div>
 
-      {/* Botón toggle */}
+      {/* Toggle button */}
       <button
         ref={toggleBtnRef}
         onClick={() => setIsOpen(p => !p)}
@@ -738,10 +211,10 @@ export function AccessibleChatbot() {
         type="button"
         className={focusClassName('amber')}
       >
-        {/* ícono */}
+        {/* icon */}
       </button>
 
-      {/* Ventana de chat — WCAG 4.1.2: role=dialog + aria-modal */}
+      {/* Chat window — WCAG 4.1.2: role=dialog + aria-modal */}
       <div
         ref={dialogRef}
         id="chat-window"
@@ -753,7 +226,7 @@ export function AccessibleChatbot() {
       >
         <h3 id={titleId}>Asistente Virtual</h3>
 
-        {/* WCAG 4.1.3: role=log para transcripción del chat */}
+        {/* WCAG 4.1.3: role=log for chat transcript */}
         <div
           role="log"
           aria-live="polite"
@@ -766,15 +239,15 @@ export function AccessibleChatbot() {
             </div>
           ))}
 
-          {/* WCAG 4.1.3: role=status para indicador de carga */}
+          {/* WCAG 4.1.3: role=status for loading indicator */}
           {isLoading && (
             <div role="status" aria-label="El asistente está escribiendo">
-              {/* puntos animados */}
+              {/* animated dots */}
             </div>
           )}
         </div>
 
-        {/* Formulario de input */}
+        {/* Input form */}
         <form onSubmit={() => {}}>
           <input
             ref={inputRef}
@@ -783,7 +256,7 @@ export function AccessibleChatbot() {
             disabled={isLoading}
           />
           <button type="submit" disabled={isLoading} aria-label="Enviar mensaje">
-            {/* ícono de enviar */}
+            {/* send icon */}
           </button>
         </form>
       </div>
@@ -792,17 +265,17 @@ export function AccessibleChatbot() {
 }
 ```
 
-**Reglas clave para chat en vivo**:
-- `role="log"` (no `role="region"`) en el contenedor de mensajes — los lectores de pantalla saben que es una transcripción
-- `aria-live="polite" aria-relevant="additions"` — solo se anuncian mensajes nuevos, no ediciones
-- `role="status"` en el indicador de carga — menos intrusivo que `role="alert"`
-- Div de anuncio `aria-live` (`sr-only`) para cambios de estado de apertura/cierre
-- `aria-expanded` + `aria-controls` en el botón toggle
-- El foco va a `inputRef` cuando el chat se abre; retorna a `toggleBtnRef` cuando se cierra
+**Key rules for live chat**:
+- `role="log"` (not `role="region"`) on the messages container — screen readers know it's a transcript
+- `aria-live="polite" aria-relevant="additions"` — only new messages are announced, not edits
+- `role="status"` on the loading indicator — less intrusive than `role="alert"`
+- `aria-live` announcement div (`sr-only`) for open/close state changes
+- `aria-expanded` + `aria-controls` on the toggle button
+- Focus goes to `inputRef` when chat opens; returns to `toggleBtnRef` when it closes
 
 ---
 
-## Patrón F — Toast accesible con pausa al pasar el mouse (WCAG 2.2.1, 4.1.3)
+## Pattern F — Accessible Toast with Pause-on-Hover (WCAG 2.2.1, 4.1.3)
 
 ```tsx
 import { useEffect, useRef, useId } from 'react';
@@ -822,7 +295,7 @@ export function AccessibleToast({ id, message, variant, duration = 5000, onDismi
   const startRef = useRef(Date.now());
   const remainingRef = useRef(duration);
 
-  // WCAG 2.2.1: temporizador pausable
+  // WCAG 2.2.1: pausable timer
   function startTimer() {
     startRef.current = Date.now();
     timerRef.current = setTimeout(() => onDismiss(id), remainingRef.current);
@@ -841,7 +314,7 @@ export function AccessibleToast({ id, message, variant, duration = 5000, onDismi
   }
 
   useEffect(() => {
-    // los errores nunca se auto-cierran
+    // errors never auto-dismiss
     if (variant !== 'error') startTimer();
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, []);
@@ -850,18 +323,18 @@ export function AccessibleToast({ id, message, variant, duration = 5000, onDismi
 
   return (
     <div
-      // WCAG 4.1.3: assertive para errores, polite para todo lo demás
+      // WCAG 4.1.3: assertive for errors, polite for everything else
       role={variant === 'error' ? 'alert' : 'status'}
       aria-live={variant === 'error' ? 'assertive' : 'polite'}
       aria-atomic="true"
       aria-describedby={msgId}
-      // WCAG 2.2.1: pausar temporizador al pasar el mouse y al enfocar
+      // WCAG 2.2.1: pause timer on hover and focus
       onMouseEnter={pauseTimer}
       onMouseLeave={resumeTimer}
       onFocus={pauseTimer}
       onBlur={resumeTimer}
     >
-      {/* Etiqueta de variante solo para lectores de pantalla */}
+      {/* Screen-reader-only variant label */}
       <span className="sr-only">{variantLabel[variant]}:</span>
 
       <p id={msgId}>{message}</p>
@@ -869,7 +342,7 @@ export function AccessibleToast({ id, message, variant, duration = 5000, onDismi
       <button
         onClick={() => onDismiss(id)}
         aria-label="Cerrar notificación"
-        // WCAG 2.5.8: objetivo mínimo 24x24px
+        // WCAG 2.5.8: minimum 24x24px target
         className="min-w-11 min-h-11"
       >
         <span aria-hidden="true">✕</span>
@@ -879,9 +352,9 @@ export function AccessibleToast({ id, message, variant, duration = 5000, onDismi
 }
 ```
 
-**Reglas clave**:
-- `role="alert"` + `aria-live="assertive"` solo para errores; `role="status"` + `aria-live="polite"` para el resto
-- `onMouseEnter`/`onFocus` pausan el temporizador de auto-cierre (WCAG 2.2.1)
-- `onMouseLeave`/`onBlur` reanudan — pero los errores nunca se auto-cierran
-- `<span className="sr-only">` etiqueta el tipo de variante antes del texto del mensaje
-- Botón de cerrar: `aria-label` + `aria-hidden` en el símbolo × decorativo
+**Key rules**:
+- `role="alert"` + `aria-live="assertive"` for errors only; `role="status"` + `aria-live="polite"` for the rest
+- `onMouseEnter`/`onFocus` pause the auto-dismiss timer (WCAG 2.2.1)
+- `onMouseLeave`/`onBlur` resume — but errors never auto-dismiss
+- `<span className="sr-only">` labels the variant type before the message text
+- Dismiss button: `aria-label` + `aria-hidden` on the decorative × symbol
