@@ -23,6 +23,7 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 | `wcag-react-implementer` | Implementación sistemática de WCAG 2.2 AA en React + TS + Tailwind |
 | `waku-netlify-firebase-deploy` | Deploy de Waku a Netlify con Firebase Admin SDK (serve.js, CSP nonce) |
 | `waku-netlify-convex-deploy` | Deploy de Waku a Netlify con Convex |
+| `sdd-agentic-workflow` | Orquestación de Spec-Driven Development (SDD): constitución, feature specs, implementación, validación y merge |
 
 ### Agentes (`agents/`)
 
@@ -39,6 +40,7 @@ Agentes en Markdown diseñados principalmente para OpenCode. Las adaptaciones pa
 | `waku-deploy-auditor`       | Revisión pre-deploy como Staff Engineer (Waku/React/Netlify)                                                                      |
 | `convex-teacher`            | Enseña Convex desde cero con analogías a Firebase                                                                                 |
 | `viability-*` (6 roles)     | Roles del sistema product-viability-evaluator: researcher, commercial/financial/product analyst, skeptic (red team) y synthesizer |
+| `sdd-agent`                | Orquestador autónomo de Spec-Driven Development: constitución, feature specs, implementación, validación y merge. Incluye 6 comandos (`/sdd`, `/sdd-constitution`, `/sdd-feature-spec`, `/sdd-implement`, `/sdd-validate`, `/sdd-merge`) |
 
 ### Comandos (`commands/`)
 
@@ -48,6 +50,12 @@ Comandos rápidos para OpenCode (`~/.config/opencode/commands/`).
 - `testing`: generación de tests con Vitest + Testing Library
 - `react-doctor`: análisis de código React
 - `summarize`: resumen rápido del proyecto actual
+- `/sdd`: orquestador autónomo de Spec-Driven Development
+- `/sdd-constitution`: crear constitución del proyecto (mission, tech-stack, roadmap)
+- `/sdd-feature-spec`: escribir el siguiente feature spec desde el roadmap
+- `/sdd-implement`: implementar el feature spec actual
+- `/sdd-validate`: validar la rama contra su feature spec
+- `/sdd-merge`: actualizar changelog y mergear la fase
 
 ### Documentos técnicos (`docs/`)
 
@@ -75,6 +83,17 @@ cp -r skills/<nombre> ~/.config/opencode/skills/
 cp agents/*.md ~/.config/opencode/agents/
 cp commands/*.md ~/.config/opencode/commands/
 ```
+
+**SDD Agent** (excepción): este agente se recomienda copiarlo a la raíz de tu proyecto, no al directorio de configuración:
+
+```bash
+cp -r agents/sdd-agent/.opencode ./.opencode
+cp agents/sdd-agent/AGENTS.md ./AGENTS.md
+```
+
+Ver `agents/sdd-agent/README.md` para instrucciones detalladas.
+
+Esta excepción se hace por la posibilidad de que ya tengas un agente o flujo de trabajo SDD en tu proyecto, y no quieras sobreescribirlo. Si no tenés un flujo SDD, podés copiarlo sin problemas en la carpeta de configuración de OpenCode.
 
 **CommandCode**: los agentes son compatibles ([docs oficiales](https://commandcode.ai/docs/agents)). Copiá los `.md` a `~/.commandcode/agents/`:
 
