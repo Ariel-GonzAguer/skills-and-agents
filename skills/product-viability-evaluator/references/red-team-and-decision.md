@@ -1,119 +1,119 @@
-# Red Team, Conflict Resolution, and Decision
+# Red team, resolución de conflictos y decisión
 
-## Red-team charter
+## Contrato del red team
 
-Assume the initial viability case is wrong. Try to identify the failure mechanism before the founder spends more. Do not invent objections; every attack must be grounded in evidence, a disclosed inference, or a testable unknown.
+Asume que el caso de viabilidad inicial está mal. Intenta identificar el mecanismo de falla antes de que el fundador gaste más. No inventes objeciones; cada ataque debe estar fundamentado en evidencia, una inferencia divulgada o un unknown testeable.
 
-Use a separate pass or independent agent when possible. Do not reveal private chain-of-thought. Return concise claims, evidence, tests, and impacts.
+Usa una pasada separada o un agente independiente cuando sea posible. No reveles el chain-of-thought privado. Devuelve afirmaciones, evidencia, tests e impactos concisos.
 
-## Attack surface
+## Superficie de ataque
 
-### Demand and customer
+### Demanda y cliente
 
-- The problem is infrequent, tolerable, or solved adequately by inaction.
-- Interview or signup evidence is selected, polite, or non-behavioral.
-- User, buyer, approver, and payer are confused.
-- Budget exists in theory but not in the target account or current cycle.
-- The segment combines buyers with different needs and channels.
+- El problema es infrecuente, tolerable o está suficientemente resuelto por la inacción.
+- La evidencia de entrevistas o signups es seleccionada, cortés o no conductual.
+- Se confunden usuario, comprador, aprobador y pagador.
+- El presupuesto existe en teoría pero no en la cuenta objetivo ni en el ciclo actual.
+- El segmento combina compradores con necesidades y canales distintos.
 
-### Market and competition
+### Mercado y competencia
 
-- TAM substitutes broad category spend for reachable buyers.
-- SOM ignores sales capacity, geography, regulation, or implementation limits.
-- An incumbent bundles the feature or owns distribution.
-- Spreadsheet, labor, agency, open source, or doing nothing is good enough.
-- Switching cost exceeds incremental value.
+- El TAM sustituye el gasto de categoría amplio por compradores alcanzables.
+- El SOM ignora capacidad de venta, geografía, regulación o límites de implementación.
+- Un incumbente empaqueta la funcionalidad o es dueño de la distribución.
+- Una hoja de cálculo, mano de obra, agencia, open source o no hacer nada es suficiente.
+- El costo de cambio excede el valor incremental.
 
-### Product and differentiation
+### Producto y diferenciación
 
-- Better UI does not create measurable economic value.
-- The moat is an easily copied model prompt, feature, or integration.
-- The workflow depends on founder-operated manual work.
-- Trust, accuracy, latency, accessibility, security, or integrations block adoption.
-- Product novelty is mistaken for retention.
+- Una mejor UI no crea valor económico medible.
+- La moat es un prompt, funcionalidad o integración de modelo fácil de copiar.
+- El workflow depende de trabajo manual operado por el fundador.
+- La confianza, precisión, latencia, accesibilidad, seguridad o integraciones bloquean la adopción.
+- La novedad del producto se confunde con retención.
 
-### Monetization and acquisition
+### Monetización y adquisición
 
-- Stated willingness to pay does not survive a payment request.
-- Pricing metric conflicts with delivered value or variable cost.
-- Freemium attracts non-buyers and increases support.
-- First customers come from founder relationships that do not scale.
-- Channel economics omit labor, sales cycle, content lag, platform fees, or saturation.
+- La disposición a pagar declarada no sobrevive a una solicitud de pago.
+- La métrica de precio entra en conflicto con el valor entregado o el costo variable.
+- Freemium atrae no-compradores y aumenta el soporte.
+- Los primeros clientes vienen de relaciones del fundador que no escalan.
+- La economía de canal omite mano de obra, ciclo de venta, desfase de contenido, comisiones de plataforma o saturación.
 
-### Economics and execution
+### Economía y ejecución
 
-- Churn is understated or unobserved.
-- CAC excludes founder time, failed leads, commissions, onboarding, or discounts.
-- AI/API, support, refunds, compliance, or payment costs destroy contribution margin.
-- Required runway exceeds available capital before learning arrives.
-- Regulation, certification, procurement, data rights, or platform policy blocks sale.
-- A single provider, platform, customer, or founder is an existential dependency.
+- El churn está subestimado o no observado.
+- El CAC excluye tiempo del fundador, leads fallidos, comisiones, onboarding o descuentos.
+- El costo de IA/API, soporte, refunds, cumplimiento o pagos destruye el margen de contribución.
+- El runway requerido excede el capital disponible antes de que llegue el aprendizaje.
+- La regulación, certificación, procurement, derechos de datos o política de plataforma bloquean la venta.
+- Un solo proveedor, plataforma, cliente o fundador es una dependencia existencial.
 
-### Founder fit and opportunity cost
+### Fit del fundador y costo de oportunidad
 
-- The founder avoids the binding work, usually sales, support, or operations.
-- Domain credibility or network is missing and expensive to acquire.
-- Weekly hours cannot support the sales cycle or service level.
-- A smaller alternative has better return per hour and downside.
-- Founder interest will not survive repetitive maintenance.
+- El fundador evita el trabajo vinculante, usualmente ventas, soporte u operaciones.
+- La credibilidad de dominio o la red faltan y son caras de adquirir.
+- Las horas semanales no pueden sostener el ciclo de venta ni el nivel de servicio.
+- Una alternativa más pequeña tiene mejor retorno por hora y mejor downside.
+- El interés del fundador no sobrevivirá al mantenimiento repetitivo.
 
-## Attack record
+## Registro de ataques
 
-For every material attack record:
+Para cada ataque material registra:
 
-- ID and challenged claim;
-- contrary evidence IDs;
-- label: `FACT`, `EVIDENCE`, `ASSUMPTION`, `INFERENCE`, or `UNKNOWN`;
-- failure mechanism;
-- likelihood and severity;
-- affected dimensions;
-- score changes;
-- deal-breaker implication;
-- cheapest falsification test.
+- ID y afirmación desafiada;
+- IDs de evidencia contraria;
+- etiqueta: `FACT`, `EVIDENCE`, `ASSUMPTION`, `INFERENCE` o `UNKNOWN`;
+- mecanismo de falla;
+- probabilidad y severidad;
+- dimensiones afectadas;
+- cambios de score;
+- implicación de deal breaker;
+- test de falsificación más barato.
 
-The red team may raise, lower, or leave a dimension unchanged. Negative evidence must have equal standing, but forced pessimism is also bias.
+El red team puede subir, bajar o dejar una dimensión sin cambios. La evidencia negativa debe tener el mismo pie, pero el pesimismo forzado también es sesgo.
 
-## Conflict resolution
+## Resolución de conflictos
 
-When analyst and skeptic disagree:
+Cuando el analista y el skeptic discrepan:
 
-1. State the disputed claim precisely.
-2. List evidence for each position and compare scope, source quality, date, and behavioral proximity.
-3. Identify whether they use different definitions, segments, horizons, or assumptions.
-4. Seek one additional high-value source if tools and time allow.
-5. Define a falsifiable hypothesis and threshold.
-6. Re-score the affected dimensions.
-7. Preserve unresolved disagreement and lower confidence.
+1. Enuncia la afirmación disputada con precisión.
+2. Lista evidencia para cada posición y compara alcance, calidad de fuente, fecha y proximidad conductual.
+3. Identifica si usan definiciones, segmentos, horizontes o supuestos distintos.
+4. Busca una fuente adicional de alto valor si las herramientas y el tiempo lo permiten.
+5. Define una hipótesis falsificable y un umbral.
+6. Re-puntúa las dimensiones afectadas.
+7. Preserva el desacuerdo sin resolver y baja la confianza.
 
-Do not average contradictory opinions. Resolve with evidence or keep the uncertainty visible.
+No promedies opiniones contradictorias. Resuelve con evidencia o mantén la incertidumbre visible.
 
-## Verdict gates
+## Gates de veredicto
 
-Check these before `BUILD`:
+Verifica esto antes de `BUILD`:
 
-- Problem evidence is behavioral or otherwise strong enough for the commitment size.
-- ICP, user, buyer, and payer are concrete.
-- At least one reachable acquisition path has evidence or a bounded experiment.
-- Pricing or willingness to pay has behavioral evidence appropriate to stage.
-- Economics have a plausible path with no structural negative contribution.
-- Critical product, legal, security, compliance, and dependency risks are remediable within constraints.
-- Founder fit supports the binding work.
-- Evidence coverage is normally at least 70 and confidence at least 60.
+- La evidencia del problema es conductual o suficientemente fuerte para el tamaño del compromiso.
+- El ICP, usuario, comprador y pagador son concretos.
+- Al menos un camino de adquisición alcanzable tiene evidencia o un experimento acotado.
+- El precio o la disposición a pagar tienen evidencia conductual acorde a la etapa.
+- La economía tiene un camino plausible sin contribución negativa estructural.
+- Los riesgos críticos de producto, legal, seguridad, cumplimiento y dependencias son remediables dentro de las restricciones.
+- El fit del fundador respalda el trabajo vinculante.
+- La cobertura de evidencia normalmente es al menos 70 y la confianza al menos 60.
 
-Early-stage projects can rarely satisfy `BUILD` for a full product. Interpret `BUILD` as permission for the next bounded commitment, such as a paid pilot or constrained MVP, and state that scope.
+Los proyectos en etapa temprana rara vez pueden satisfacer `BUILD` para un producto completo. Interpreta `BUILD` como permiso para el próximo compromiso acotado, como un piloto pagado o un MVP acotado, y declara ese alcance.
 
-Use `PIVOT` only when evidence supports the problem/opportunity but rejects the current solution, segment, price, or channel. Use `RECONSIDER` when the opportunity itself or founder-specific return is weak. Use `ABANDON` only with strong negative evidence or a non-remediable blocker; lack of evidence alone normally means `VALIDATE` or `RECONSIDER`.
+Usa `PIVOT` solo cuando la evidencia respalda el problema/oportunidad pero rechaza la solución, segmento, precio o canal actuales. Usa `RECONSIDER` cuando la oportunidad en sí o el retorno específico del fundador es débil. Usa `ABANDON` solo con evidencia negativa fuerte o un bloqueador no remediable; la falta de evidencia sola normalmente significa `VALIDATE` o `RECONSIDER`.
 
-## Validation experiment quality
+## Calidad del experimento de validación
 
-Prefer tests that expose the project to reality:
+Prefiere tests que expongan el proyecto a la realidad:
 
-- paid pre-sale, deposit, or signed pilot;
-- outbound to a defined buyer list with reply and meeting thresholds;
-- migration or integration commitment;
-- repeated usage and retention cohort;
-- price test tied to checkout or sales call;
-- concierge delivery measuring actual effort and outcome;
-- channel test with tracked conversion and full cost.
+- preventa pagada, depósito o piloto firmado;
+- outbound a una lista de compradores definida con umbrales de respuesta y reuniones;
+- compromiso de migración o integración;
+- uso repetido y cohorte de retención;
+- test de precio atado a checkout o llamada de venta;
+- entrega concierge midiendo esfuerzo y resultado reales;
+- test de canal con conversión rastreada y costo completo.
 
-Avoid vanity experiments that can pass without proving the hypothesis. A landing-page click does not prove willingness to pay. Define success and failure before running the experiment.
+Evita experimentos de vanidad que pueden pasar sin probar la hipótesis. Un clic en la landing page no prueba la disposición a pagar. Define éxito y fracaso antes de ejecutar el experimento.

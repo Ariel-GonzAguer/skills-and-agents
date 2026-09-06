@@ -1,56 +1,56 @@
-# Input, Decision Frame, and Classification
+# Input, marco de decisión y clasificación
 
-## Start with the decision
+## Empieza por la decisión
 
-Define the actual decision before evaluating the object:
+Define la decisión real antes de evaluar el objeto:
 
-- Decision: build, continue, launch, fund, acquire, compare, pivot, or stop.
-- Decision owner: founder, team, investor, employer, or buyer.
-- Commitment under review: next experiment, MVP, launch, 12 months, or full company.
-- Horizon: date by which evidence, revenue, or return is required.
-- Success target: revenue, profit, users, strategic learning, community adoption, or internal savings.
-- Alternatives: another project, employment, consulting, no action, or existing process.
-- Reversibility: cost and time lost if the decision is wrong.
+- Decisión: construir, continuar, lanzar, financiar, adquirir, comparar, pivotear o detener.
+- Dueño de la decisión: fundador, equipo, inversor, empleador o comprador.
+- Compromiso bajo revisión: próximo experimento, MVP, lanzamiento, 12 meses o empresa completa.
+- Horizonte: fecha para la cual se requiere evidencia, ingreso o retorno.
+- Objetivo de éxito: ingreso, utilidad, usuarios, aprendizaje estratégico, adopción comunitaria o ahorro interno.
+- Alternativas: otro proyecto, empleo, consultoría, no hacer nada o proceso existente.
+- Reversibilidad: costo y tiempo perdidos si la decisión es incorrecta.
 
-Without this frame, the same opportunity can be viable for a venture-backed team and irrational for a solo founder.
+Sin este marco, la misma oportunidad puede ser viable para un equipo con capital de riesgo e irracional para un fundador en solitario.
 
-## Input inventory
+## Inventario de inputs
 
-Record each available item and whether it is current:
+Registra cada ítem disponible y si está al día:
 
-| Input | Examples | Reliability note |
+| Input | Ejemplos | Nota de confiabilidad |
 | --- | --- | --- |
-| Product description | pitch, README, issue, user prompt | Founder claim until verified |
-| Product artifact | repository, app, demo, screenshots | Proves current behavior only when inspected |
-| Customer evidence | interviews, contracts, usage, churn | Check sample, segment, date, and selection bias |
-| Commercial evidence | invoices, pipeline, win/loss data | Separate booked, collected, and projected revenue |
-| Financial evidence | bills, payroll, API usage, ad spend | Normalize period and currency |
-| External evidence | official prices, filings, statistics | Record source, date, geography, and method |
-| Founder context | time, skills, capital, channels | Self-report; still essential for fit |
+| Descripción del producto | pitch, README, issue, prompt de usuario | Afirmación del fundador hasta ser verificada |
+| Artefacto del producto | repositorio, app, demo, screenshots | Prueba el comportamiento actual solo cuando se inspecciona |
+| Evidencia de clientes | entrevistas, contratos, uso, churn | Revisa muestra, segmento, fecha y sesgo de selección |
+| Evidencia comercial | facturas, pipeline, datos win/loss | Separa ingreso contabilizado, cobrado y proyectado |
+| Evidencia financiera | facturas, nómina, uso de API, gasto en ads | Normaliza período y moneda |
+| Evidencia externa | precios oficiales, files, estadísticas | Registra fuente, fecha, geografía y método |
+| Contexto del fundador | tiempo, habilidades, capital, canales | Autorreporte; sigue siendo esencial para el fit |
 
-Never ask for everything. Ask for the missing input most likely to change the decision. A useful question names the consequence: "What percentage of the 20 pilots used the product again after four weeks? This determines whether retention is evidence or still unknown."
+Nunca pidas todo. Pide el input faltante con más probabilidad de cambiar la decisión. Una pregunta útil nombra la consecuencia: "¿Qué porcentaje de los 20 pilotos volvió a usar el producto después de cuatro semanas? Esto determina si la retención es evidencia o todavía es desconocida."
 
-## Founder and team context
+## Contexto del fundador y del equipo
 
-Capture these fields when available:
+Registra estos campos cuando estén disponibles:
 
-- people and roles;
-- technical and domain skills;
-- sales, marketing, operations, compliance, and support experience;
-- budget, runway, and maximum acceptable loss;
-- weekly hours split across development, sales, marketing, support, and administration;
-- target date and revenue/profit objective;
-- existing audience, customer relationships, partnerships, brand, data, IP, and distribution;
-- infrastructure and tooling already available;
-- geography, language, legal entity, and constraints;
-- risk tolerance, desired lifestyle, interest, and willingness to sell/support;
-- opportunity cost and credible alternatives.
+- personas y roles;
+- habilidades técnicas y de dominio;
+- experiencia en ventas, marketing, operaciones, cumplimiento y soporte;
+- presupuesto, runway y pérdida máxima aceptable;
+- horas semanales distribuidas entre desarrollo, ventas, marketing, soporte y administración;
+- fecha objetivo y objetivo de ingreso/utilidad;
+- audiencia existente, relaciones con clientes, partners, marca, datos, IP y distribución;
+- infraestructura y herramientas ya disponibles;
+- geografía, idioma, entidad legal y restricciones;
+- tolerancia al riesgo, estilo de vida deseado, interés y disposición a vender/dar soporte;
+- costo de oportunidad y alternativas creíbles.
 
-Distinguish missing founder data from poor founder fit. Missing data lowers confidence. Confirmed mismatch lowers the score and may cap the verdict.
+Distingue datos de fundador faltantes de un fit pobre del fundador. La falta de datos baja la confianza. Un desajuste confirmado baja el score y puede limitar el veredicto.
 
-## Project classification
+## Clasificación de proyecto
 
-Choose a primary type and optional modifiers:
+Elige un tipo primario y modificadores opcionales:
 
 - `saas_b2b`
 - `saas_b2c`
@@ -71,61 +71,61 @@ Choose a primary type and optional modifiers:
 - `other`
 - `unknown`
 
-Classification criteria:
+Criterios de clasificación:
 
-1. Who pays and through what transaction?
-2. Is value delivered through software, labor, content, access, transactions, or hardware?
-3. Is adoption individual, team, organization, community, or two-sided?
-4. Does revenue depend on subscription, usage, take rate, services, sponsorship, advertising, or internal savings?
-5. Are sales, procurement, liquidity, retention, or community contribution the binding constraint?
+1. ¿Quién paga y mediante qué transacción?
+2. ¿El valor se entrega con software, mano de obra, contenido, acceso, transacciones o hardware?
+3. ¿La adopción es individual, de equipo, de organización, comunitaria o de dos lados?
+4. ¿El ingreso depende de suscripción, uso, take rate, servicios, patrocinio, publicidad o ahorro interno?
+5. ¿Las ventas, las compras, la liquidez, la retención o la contribución comunitaria son la restricción vinculante?
 
-Use modifiers for overlapping economics. An open-source developer tool with enterprise contracts can be `open_source` with `developer_tool` and `enterprise` modifiers. An AI wrapper remains an `ai_product` modifier only if AI cost, reliability, dependency, or differentiation materially affects viability.
+Usa modificadores para economías superpuestas. Una herramienta de desarrollador open source con contratos enterprise puede ser `open_source` con modificadores `developer_tool` y `enterprise`. Un wrapper de IA sigue siendo un modificador `ai_product` solo si el costo, la confiabilidad, la dependencia o la diferenciación de la IA afectan materialmente la viabilidad.
 
-Report classification confidence. If below 60, mark it tentative and ask one question only if different classifications would materially change weights or decision gates.
+Reporta la confianza de clasificación. Si es menor a 60, márcala como tentativa y haz una sola pregunta solo si clasificaciones distintas cambiarían materialmente los pesos o los gates de decisión.
 
-## Improve the original specification
+## Mejorar la especificación original
 
-The evaluation must correct these common methodological traps:
+La evaluación debe corregir estas trampas metodológicas comunes:
 
-- Add founder fit explicitly rather than hiding it inside execution risk.
-- Separate product maturity from product desirability.
-- Distinguish evidence coverage from evidence quality and from model confidence.
-- Evaluate retention and switching behavior, not acquisition alone.
-- Include time to revenue, cash timing, runway, reversibility, and opportunity cost.
-- Model taxes only when jurisdiction and business form are known; otherwise show pre-tax results.
-- Treat privacy, security, compliance, and platform policy as business constraints when they can block adoption.
-- Avoid false precision. Use ranges and sensitivity analysis for forecasts.
-- Use gates for fatal risks instead of pretending every weakness can be averaged away.
+- Agregar el fit del fundador explícitamente en lugar de esconderlo dentro del riesgo de ejecución.
+- Separar la madurez del producto de la deseabilidad del producto.
+- Distinguir cobertura de evidencia, calidad de evidencia y confianza del modelo.
+- Evaluar retención y comportamiento de cambio, no solo adquisición.
+- Incluir tiempo hasta el ingreso, timing de caja, runway, reversibilidad y costo de oportunidad.
+- Modelar impuestos solo cuando se conocen jurisdicción y forma jurídica; si no, mostrar resultados pre-impuestos.
+- Tratar privacidad, seguridad, cumplimiento y política de plataforma como restricciones de negocio cuando pueden bloquear la adopción.
+- Evitar falsa precisión. Usa rangos y análisis de sensibilidad para los pronósticos.
+- Usar gates para riesgos fatales en lugar de fingir que toda debilidad puede promediarse.
 
-## Mandatory, configurable, and automatable
+## Obligatorio, configurable y automatizable
 
-Mandatory:
+Obligatorio:
 
-- evidence labels and source ledger;
-- founder context or explicit unknowns;
-- adaptive weights with rationale;
-- score, confidence, and coverage kept separate;
-- red team and conflict resolution;
-- deal-breaker gates;
-- validation experiment;
-- report of unknowns and what changes the verdict.
+- etiquetas de evidencia y registro de fuentes;
+- contexto del fundador o unknowns explícitos;
+- pesos adaptativos con fundamento;
+- score, confianza y cobertura mantenidos separados;
+- red team y resolución de conflictos;
+- gates de deal breaker;
+- experimento de validación;
+- reporte de unknowns y de qué cambiaría el veredicto.
 
 Configurable:
 
-- business profile and weights;
-- geography, currency, horizon, tax treatment, discount rate, salary/opportunity cost;
-- rapid, standard, or deep research depth;
-- confidence thresholds and verdict policy;
-- maximum research time and source recency;
-- required return and maximum loss.
+- perfil de negocio y pesos;
+- geografía, moneda, horizonte, tratamiento impositivo, tasa de descuento, salario/costo de oportunidad;
+- profundidad de investigación rápida, estándar o profunda;
+- umbrales de confianza y política de veredicto;
+- tiempo máximo de investigación y actualidad de fuentes;
+- retorno requerido y pérdida máxima.
 
-Automatable:
+Automatizable:
 
-- weight validation and weighted score;
-- confidence and evidence-coverage aggregation;
-- MRR, ARR, gross margin, CAC, LTV, payback, burn, runway, break-even, and return per hour;
-- schema and report completeness;
-- scenario consistency and arithmetic;
-- comparison table normalization.
+- validación de pesos y score ponderado;
+- agregación de confianza y cobertura de evidencia;
+- MRR, ARR, margen bruto, CAC, LTV, payback, burn, runway, break-even y retorno por hora;
+- completitud de esquema y reporte;
+- consistencia de escenarios y aritmética;
+- normalización de la tabla de comparación.
 
-Human or agent judgment remains necessary for source relevance, causal inference, buyer behavior, strategic fit, deal-breaker severity, and final verdict.
+El juicio humano o del agente sigue siendo necesario para relevancia de fuentes, inferencia causal, comportamiento del comprador, ajuste estratégico, severidad de deal breakers y el veredicto final.

@@ -1,8 +1,8 @@
-# Detailed reference
+# Referencia detallada
 
-This material was moved from `SKILL.md` to keep the loaded workflow focused.
+Este material se movió desde `SKILL.md` para mantener el workflow cargado enfocado.
 
-## Testing
+## Pruebas
 
 ### Pruebas unitarias del componente
 ```typescript

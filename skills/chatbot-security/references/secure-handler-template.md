@@ -1,10 +1,10 @@
-# Detailed reference
+# Referencia detallada
 
-This material was moved from `SKILL.md` to keep the loaded workflow focused.
+Este material se movió desde `SKILL.md` para mantener el workflow cargado enfocado.
 
-## Complete Secure Handler Template
+## Plantilla completa de handler seguro
 
-Copy this as the starting point for any new chatbot API endpoint:
+Copia esto como punto de partida para cualquier endpoint nuevo de API de chatbot:
 
 ```typescript
 import OpenAI from 'openai';

@@ -1,15 +1,15 @@
-# Project Opportunity Comparison
+# Comparación de oportunidades de proyecto
 
-## Decision Context
+## Contexto de decisión
 
-[Same founder/team, horizon, currency, opportunity cost, target, and evidence standard.]
+[Mismo fundador/equipo, horizonte, moneda, costo de oportunidad, objetivo y estándar de evidencia.]
 
-| Factor | Project A | Project B | Project C |
+| Factor | Proyecto A | Proyecto B | Proyecto C |
 | --- | ---: | ---: | ---: |
 | Verdict | | | |
-| Overall score | | | |
-| Confidence | | | |
-| Evidence coverage | | | |
+| Score general | | | |
+| Confianza | | | |
+| Cobertura de evidencia | | | |
 | Problem | | | |
 | Customer | | | |
 | Market | | | |
@@ -21,19 +21,19 @@
 | Economics | | | |
 | Execution | | | |
 | Founder fit | | | |
-| Time to first revenue | | | |
-| Capital required | | | |
-| Monthly founder hours | | | |
-| Return per hour | | | |
-| Downside / maximum loss | | | |
-| Reversibility | | | |
-| Most dangerous unknown | | | |
+| Tiempo hasta el primer ingreso | | | |
+| Capital requerido | | | |
+| Horas mensuales del fundador | | | |
+| Retorno por hora | | | |
+| Downside / pérdida máxima | | | |
+| Reversibilidad | | | |
+| Unknown más peligroso | | | |
 
-## Recommendation
+## Recomendación
 
-[Rank only after explaining confidence, opportunity cost, downside, and why a smaller outcome may be superior per hour or risk.]
+[Ordena solo después de explicar confianza, costo de oportunidad, downside y por qué un resultado más pequeño puede ser superior por hora o por riesgo.]
 
-## Next Experiment Per Project
+## Próximo experimento por proyecto
 
-| Project | Experiment | Success threshold | Failure threshold | Cost/time | Decision impact |
+| Proyecto | Experimento | Umbral de éxito | Umbral de fracaso | Costo/tiempo | Impacto en la decisión |
 | --- | --- | --- | --- | --- | --- |

@@ -1,8 +1,8 @@
 # Skills & Agents
 
-Skills, agentes y comandos propios para [OpenCode](https://opencode.ai) y agentes de código compatibles (Claude Code, CommandCode, etc.).
+Skills, agentes y comandos propios para diferentes `AI agent harness`, compatibles con OpenCode, CommandCode, Codex, Claude Code, Cursor y otros.
 
-Enfoque: desarrollo frontend con React, TypeScript, Waku/Astro, Netlify, Firebase, accesibilidad (WCAG 2.2), performance e integración de IA/LLMs en productos reales.
+Enfoque: desarrollo JAMStack, desarrollo frontend con React, TypeScript, Waku/Astro, Netlify, Firebase, accesibilidad (WCAG 2.2), performance e integración de IA/LLMs en productos reales.
 
 ## Contenido
 

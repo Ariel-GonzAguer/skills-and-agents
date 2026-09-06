@@ -1,50 +1,50 @@
-# Product Viability Assessment: [Project]
+# Evaluación de viabilidad de producto: [Proyecto]
 
-## Executive Decision
+## Decisión ejecutiva
 
 **VERDICT:** BUILD / VALIDATE / PIVOT / RECONSIDER / ABANDON  
-**COMMITMENT SCOPE:** [What this verdict authorizes]  
+**COMMITMENT SCOPE:** [Qué autoriza este veredicto]  
 **SCORE:** [0-100]  
 **CONFIDENCE:** [0-100]  
 **EVIDENCE COVERAGE:** [0-100]
 
-**TOP 3 REASONS**
-1. [Reason with evidence IDs]
-2. [Reason with evidence IDs]
-3. [Reason with evidence IDs]
+**TOP 3 RAZONES**
+1. [Razón con IDs de evidencia]
+2. [Razón con IDs de evidencia]
+3. [Razón con IDs de evidencia]
 
-**TOP 3 RISKS**
-1. [Risk, severity, evidence IDs]
-2. [Risk, severity, evidence IDs]
-3. [Risk, severity, evidence IDs]
+**TOP 3 RIESGOS**
+1. [Riesgo, severidad, IDs de evidencia]
+2. [Riesgo, severidad, IDs de evidencia]
+3. [Riesgo, severidad, IDs de evidencia]
 
-**MOST IMPORTANT UNKNOWN:** [Unknown and decision impact]  
-**MOST DANGEROUS ASSUMPTION:** [Assumption and failure consequence]  
-**NEXT EXPERIMENT:** [Experiment with pass/fail threshold]  
-**EXPECTED ROI:** [Range, horizon, basis, founder hours]  
-**RECOMMENDED ACTION:** [Concrete next commitment]
+**UNKNOWN MÁS IMPORTANTE:** [Unknown e impacto en la decisión]  
+**SUPUESTO MÁS PELIGROSO:** [Supuesto y consecuencia de falla]  
+**PRÓXIMO EXPERIMENTO:** [Experimento con umbral de pasar/fallar]  
+**ROI ESPERADO:** [Rango, horizonte, base, horas del fundador]  
+**ACCIÓN RECOMENDADA:** [Próximo compromiso concreto]
 
-## 1. Executive Summary
+## 1. Resumen ejecutivo
 
-[Decision, why, uncertainty, and what would change it.]
+[Decisión, por qué, incertidumbre y qué la cambiaría.]
 
-## 2. Decision Frame and Project Description
+## 2. Marco de decisión y descripción del proyecto
 
-- Decision owner:
-- Commitment under review:
-- Horizon and target:
-- Project type and classification confidence:
-- Geography and currency:
-- Available inputs:
-- Alternatives and opportunity cost:
+- Dueño de la decisión:
+- Compromiso bajo revisión:
+- Horizonte y objetivo:
+- Tipo de proyecto y confianza de clasificación:
+- Geografía y moneda:
+- Inputs disponibles:
+- Alternativas y costo de oportunidad:
 
-## 3. Founder Fit / Personal ROI
+## 3. Fit del fundador / ROI personal
 
-[Skills, capital, time allocation, channels, sales willingness, runway, return per hour, and fit constraints.]
+[Habilidades, capital, asignación de tiempo, canales, disposición a vender, runway, retorno por hora y restricciones de fit.]
 
 ## 4. Scorecard
 
-| Dimension | Weight | Pre-red-team | Final score | Confidence | Evidence | Key rationale |
+| Dimensión | Peso | Pre-red team | Score final | Confianza | Evidencia | Fundamento clave |
 | --- | ---: | ---: | ---: | ---: | --- | --- |
 | Problem | | | | | | |
 | Customer | | | | | | |
@@ -58,123 +58,123 @@
 | Execution risk | | | | | | |
 | Founder fit | | | | | | |
 
-Explain weight changes and every material score change.
+Explica los cambios de pesos y cada cambio material de score.
 
-## 5. Problem Analysis
+## 5. Análisis del problema
 
-[Frequency, severity, urgency, cost of inaction, alternatives, evidence, unknowns.]
+[Frecuencia, severidad, urgencia, costo de la inacción, alternativas, evidencia, unknowns.]
 
-## 6. Ideal Customer Profile
+## 6. Perfil de cliente ideal
 
-- Segment, industry, geography, and size:
-- User:
-- Buyer:
-- Decision-maker:
-- Payer:
-- Same person?:
-- Trigger, budget, current alternative, sensitivity, buying behavior:
+- Segmento, industria, geografía y tamaño:
+- Usuario:
+- Comprador:
+- Decisor:
+- Pagador:
+- ¿La misma persona?:
+- Disparador, presupuesto, alternativa actual, sensibilidad, comportamiento de compra:
 
-## 7. Market Analysis
+## 7. Análisis de mercado
 
-[Bottom-up TAM, SAM, SOM, reachable buyers, growth, barriers, regulation, and limitations.]
+[TAM, SAM y SOM bottom-up, compradores alcanzables, crecimiento, barreras, regulación y limitaciones.]
 
-## 8. Competitive Analysis
+## 8. Análisis competitivo
 
-| Alternative | Type | Price | Buyer | Distribution | Switching cost | Strength | Weakness | Evidence |
+| Alternativa | Tipo | Precio | Comprador | Distribución | Costo de cambio | Fortaleza | Debilidad | Evidencia |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
-Answer why a buyer would switch now.
+Responde por qué un comprador cambiaría ahora.
 
-## 9. Value Proposition and Defensibility
+## 9. Propuesta de valor y defendibilidad
 
-[Measurable advantage, differentiation source, easy/moderate/difficult to copy, durability.]
+[Ventaja medible, fuente de diferenciación, fácil/moderadamente/difícil de copiar, durabilidad.]
 
-## 10. Product / Technical Audit
+## 10. Auditoría de producto / técnica
 
-- Maturity:
-- Verified core flow:
-- Missing or risky critical capabilities:
-- Security/compliance/procurement impact:
-- Cost and scale drivers:
-- Time-to-market blockers:
+- Madurez:
+- Flujo central verificado:
+- Capacidades críticas faltantes o riesgosas:
+- Impacto de seguridad/cumplimiento/procurement:
+- Motores de costo y escala:
+- Bloqueadores de tiempo al mercado:
 
-| Capability | Status | Evidence | Business impact |
+| Capacidad | Estado | Evidencia | Impacto de negocio |
 | --- | --- | --- | --- |
 
-## 11. Monetization and Pricing
+## 11. Monetización y precios
 
-[Payer, model, plans, value metric, willingness-to-pay evidence, packaging, risks.]
+[Pagador, modelo, planes, métrica de valor, evidencia de disposición a pagar, empaquetado, riesgos.]
 
-## 12. Customer Acquisition
+## 12. Adquisición de clientes
 
-| Milestone | Channel | Reach | Conversion evidence | Cost/time | Bottleneck |
+| Hito | Canal | Alcance | Evidencia de conversión | Costo/tiempo | Cuello de botella |
 | --- | --- | ---: | --- | --- | --- |
-| First 10 | | | | | |
-| First 100 | | | | | |
-| First 1,000 or equivalent | | | | | |
+| Primeros 10 | | | | | |
+| Primeros 100 | | | | | |
+| Primeros 1.000 o equivalente | | | | | |
 
-## 13. Unit Economics
+## 13. Unidad económica
 
-[MRR/ARR or appropriate model, margin, CAC, churn/retention, LTV, payback, break-even, limitations.]
+[MRR/ARR o modelo apropiado, margen, CAC, churn/retención, LTV, payback, break-even, limitaciones.]
 
-## 14. Financial Scenarios
+## 14. Escenarios financieros
 
-| Metric | Pessimistic | Base | Optimistic |
+| Métrica | Pesimista | Base | Optimista |
 | --- | ---: | ---: | ---: |
-| Customers | | | |
-| ARPU / price | | | |
+| Clientes | | | |
+| ARPU / precio | | | |
 | MRR | | | |
 | ARR | | | |
-| Churn / retention | | | |
+| Churn / retención | | | |
 | CAC | | | |
-| Gross margin | | | |
-| Operating costs | | | |
-| Profit / loss | | | |
-| Capital required | | | |
-| Founder hours / month | | | |
-| Return / founder hour | | | |
+| Margen bruto | | | |
+| Costos operativos | | | |
+| Ganancia / pérdida | | | |
+| Capital requerido | | | |
+| Horas del fundador / mes | | | |
+| Retorno / hora del fundador | | | |
 
-List assumptions and sensitivity thresholds.
+Lista supuestos y umbrales de sensibilidad.
 
-## 15. Return on Time and Opportunity Cost
+## 15. Retorno sobre el tiempo y costo de oportunidad
 
-[Build hours, time to revenue, ongoing hours, return per hour, payback, alternatives.]
+[Horas de build, tiempo hasta el ingreso, horas en marcha, retorno por hora, payback, alternativas.]
 
-## 16. Risks and Deal Breakers
+## 16. Riesgos y deal breakers
 
-| Risk | Likelihood | Severity | Evidence | Mitigation | Verdict ceiling |
+| Riesgo | Probabilidad | Severidad | Evidencia | Mitigación | Límite de veredicto |
 | --- | --- | --- | --- | --- | --- |
 
-## 17. Unknowns and Assumptions
+## 17. Unknowns y supuestos
 
-| Item | Label | Decision impact | How to obtain/test | Deadline |
+| Ítem | Etiqueta | Impacto en la decisión | Cómo obtenerlo/testearlo | Fecha límite |
 | --- | --- | --- | --- | --- |
 
-## 18. Evidence Ledger
+## 18. Registro de evidencia
 
-| ID | Claim/source | Label/strength | Date | Supports/contradicts | Limitations |
+| ID | Afirmación/fuente | Etiqueta/fuerza | Fecha | Apoya/contradice | Limitaciones |
 | --- | --- | --- | --- | --- | --- |
 
-## 19. Red Team
+## 19. Red team
 
-[Strongest case against investment, attacks, score changes, and unresolved disagreement.]
+[El caso más fuerte en contra de invertir, ataques, cambios de score y desacuerdos sin resolver.]
 
-## 20. Most Dangerous Hypotheses
+## 20. Hipótesis más peligrosas
 
-| Rank | Hypothesis | Impact | Uncertainty | Current evidence |
+| Rango | Hipótesis | Impacto | Incertidumbre | Evidencia actual |
 | ---: | --- | --- | --- | --- |
 
-## 21. Validation Experiments
+## 21. Experimentos de validación
 
-| Priority | Hypothesis | Method | Success | Failure | Cost/time | Decision changed |
+| Prioridad | Hipótesis | Método | Éxito | Fracaso | Costo/tiempo | Decisión cambiada |
 | ---: | --- | --- | --- | --- | --- | --- |
 
-## 22. Recommended Next Steps
+## 22. Próximos pasos recomendados
 
-1. [Immediate action]
-2. [Action after result]
-3. [Stop condition]
+1. [Acción inmediata]
+2. [Acción después del resultado]
+3. [Condición de detención]
 
-## 23. What Would Change the Verdict
+## 23. Qué cambiaría el veredicto
 
-[Specific positive and negative evidence thresholds.]
+[Umbrales específicos de evidencia positiva y negativa.]

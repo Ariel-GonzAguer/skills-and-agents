@@ -1,14 +1,14 @@
-# Installation and Use
+# Instalación y uso
 
-## Location
+## Ubicación
 
-The installed Skill directory is:
+El directorio de la Skill instalada es:
 
 `C:\Users\arieg\.agents\skills\product-viability-evaluator`
 
-Agents that discover Skills from `.agents/skills` can load it directly. A packaged `.skill` archive can be copied to another compatible installation and extracted into its Skills directory.
+Los agentes que descubren Skills desde `.agents/skills` pueden cargarla directamente. Un archivo `.skill` empaquetado puede copiarse a otra instalación compatible y extraerse en su directorio de Skills.
 
-## Invocation examples
+## Ejemplos de invocación
 
 - `Evaluate this project using product-viability-evaluator.`
 - `Is this SaaS worth another six months for this founder?`
@@ -16,41 +16,41 @@ Agents that discover Skills from `.agents/skills` can load it directly. A packag
 - `Compare these three projects by risk-adjusted return per founder hour.`
 - `Evaluate this landing page, pricing, repository, and founder constraints.`
 
-The description is intentionally broad enough to trigger without naming the Skill when the user asks whether to build, continue, monetize, fund, pivot, or abandon a project.
+La descripción es intencionalmente amplia para dispararse sin nombrar la Skill cuando el usuario pregunta si construir, continuar, monetizar, financiar, pivotear o abandonar un proyecto.
 
-## Accepted inputs
+## Inputs aceptados
 
-Any combination of description, repository path, URL, README, product demo, landing page, pricing, analytics, customer interviews, contracts, costs, financials, and founder/team constraints. Missing data remains `UNKNOWN`.
+Cualquier combinación de descripción, ruta de repositorio, URL, README, demo de producto, landing page, precios, analytics, entrevistas de clientes, contratos, costos, finanzas y restricciones del fundador/equipo. Los datos faltantes siguen siendo `UNKNOWN`.
 
 ## Outputs
 
-- executive decision block;
-- BUILD, VALIDATE, PIVOT, RECONSIDER, or ABANDON;
-- overall score, confidence, and evidence coverage;
-- weighted dimension analysis;
-- ICP, market, competition, value, product, pricing, acquisition, and economics;
-- pessimistic, base, and optimistic scenarios when supportable;
-- founder fit, return on time, risks, unknowns, assumptions, evidence ledger;
-- mandatory red team and score reconciliation;
-- dangerous hypotheses and validation experiments.
+- bloque de decisión ejecutiva;
+- BUILD, VALIDATE, PIVOT, RECONSIDER o ABANDON;
+- score general, confianza y cobertura de evidencia;
+- análisis de dimensiones ponderadas;
+- ICP, mercado, competencia, valor, producto, precios, adquisición y economía;
+- escenarios pesimista, base y optimista cuando hay respaldo;
+- fit del fundador, retorno sobre el tiempo, riesgos, unknowns, supuestos y registro de evidencia;
+- red team obligatorio y conciliación de scores;
+- hipótesis peligrosas y experimentos de validación.
 
-## Change weights and policy
+## Cambiar pesos y política
 
-Edit `config/profiles.json` and `config/decision-policy.json`, then follow `references/configuration-and-extension.md`. Run tests after every change:
+Edita `config/profiles.json` y `config/decision-policy.json`, y luego sigue `references/configuration-and-extension.md`. Ejecuta los tests después de cada cambio:
 
 ```powershell
 node tests/run-tests.mjs
 node scripts/validate-assessment.mjs examples/minimal-assessment.json
 ```
 
-## Add models or agents
+## Agregar modelos o agentes
 
-This Skill never encodes model names. Each phase delegates to an agent defined at the host level (`~/.config/opencode/agents/`), and each agent binds its own model. The mapping lives in `config/agents.json`. To change the model of a phase, edit the `model` field in the matching agent file and restart opencode. To bind a role to a different agent, edit `config/agents.json`. Roles exchange the shared assessment schema and evidence IDs. Never average verdicts.
+Esta Skill nunca codifica nombres de modelo. Cada fase delega a un agente definido a nivel de host (`~/.config/opencode/agents/`), y cada agente vincula su propio modelo. El mapeo vive en `config/agents.json`. Para cambiar el modelo de una fase, edita el campo `model` en el archivo de agente correspondiente y reinicia opencode. Para vincular un rol a un agente distinto, edita `config/agents.json`. Los roles intercambian el esquema de evaluación compartido y los IDs de evidencia. Nunca promedies veredictos.
 
 ## Tests
 
-`tests/cases.json` contains the ten required deterministic archetypes. `evals/evals.json` contains behavioral prompts for full agent runs. The deterministic suite verifies arithmetic, confidence semantics, unknown handling, red-team gates, and expected verdict ceilings; it does not claim to prove real market outcomes.
+`tests/cases.json` contiene los diez arquetipos deterministas requeridos. `evals/evals.json` contiene prompts conductuales para corridas completas de agentes. La suite determinista verifica aritmética, semántica de confianza, manejo de unknowns, gates de red team y límites de veredicto esperados; no afirma probar resultados reales de mercado.
 
-## Package
+## Empaquetado
 
-Run `node scripts/package-skill.mjs` on Windows, macOS, or Linux. Windows uses PowerShell; macOS/Linux use the `zip` command. The default archive is written to the sibling `dist/product-viability-evaluator.skill` directory under the Skills root. Pass an output directory as the first argument to change the destination.
+Ejecuta `node scripts/package-skill.mjs` en Windows, macOS o Linux. Windows usa PowerShell; macOS/Linux usan el comando `zip`. El archivo por defecto se escribe en el directorio hermano `dist/product-viability-evaluator.skill` bajo la raíz de Skills. Pasa un directorio de salida como primer argumento para cambiar el destino.

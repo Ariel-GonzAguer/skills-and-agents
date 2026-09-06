@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://example.local/product-viability-assessment.schema.json",
-  "title": "Product Viability Assessment",
+  "title": "Evaluación de Viabilidad de Producto",
   "type": "object",
   "required": [
     "project",

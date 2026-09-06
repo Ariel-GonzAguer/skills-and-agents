@@ -1,129 +1,129 @@
-# Evidence and External Research
+# Evidencia e investigación externa
 
-## Claim labels
+## Etiquetas de afirmaciones
 
-Use exactly one primary label for every material claim:
+Usa exactamente una etiqueta primaria para cada afirmación material:
 
-- `FACT`: directly verified in a primary artifact or reproducible observation.
-- `EVIDENCE`: supported by an attributable source but still subject to the source's method and scope.
-- `ESTIMATE`: calculated range based on disclosed inputs and method.
-- `ASSUMPTION`: chosen input used to model an unknown.
-- `INFERENCE`: conclusion derived from facts, evidence, or estimates.
-- `UNKNOWN`: material information is unavailable or cannot be verified.
+- `FACT`: verificado directamente en un artefacto primario o en una observación reproducible.
+- `EVIDENCE`: respaldada por una fuente atribuible pero todavía sujeta al método y alcance de esa fuente.
+- `ESTIMATE`: rango calculado basado en inputs y método divulgados.
+- `ASSUMPTION`: input elegido para modelar una incógnita.
+- `INFERENCE`: conclusión derivada de hechos, evidencia o estimaciones.
+- `UNKNOWN`: información material no disponible o no verificable.
 
-`FACT` does not mean universally true. Include scope and date. A competitor's official price page is a fact about the displayed price at the access date, not proof of realized ARPU.
+`FACT` no significa universalmente verdadero. Incluye alcance y fecha. La página oficial de precios de un competidor es un hecho sobre el precio mostrado en la fecha de acceso, no una prueba del ARPU realizado.
 
-## Evidence strength
+## Fuerza de la evidencia
 
-Rate each evidence item from 0 to 4:
+Califica cada ítem de evidencia de 0 a 4:
 
-| Rating | Meaning | Examples |
+| Calificación | Significado | Ejemplos |
 | ---: | --- | --- |
-| 0 | No evidence | unsupported claim, inaccessible citation |
-| 1 | Weak | anecdote, model inference, unverified post, tiny convenience sample |
-| 2 | Moderate | credible secondary research, professional community data, limited customer study |
-| 3 | Strong | official pricing/docs, repository observation, verified customer behavior, government data |
-| 4 | Very strong | replicated behavioral data, paid contracts/retention cohort, audited filing, multiple independent primary sources |
+| 0 | Sin evidencia | afirmación sin respaldo, cita inaccesible |
+| 1 | Débil | anécdota, inferencia de modelo, post no verificado, muestra de conveniencia diminuta |
+| 2 | Moderada | investigación secundaria creíble, datos de comunidad profesional, estudio de cliente limitado |
+| 3 | Fuerte | precios/docs oficiales, observación de repositorio, comportamiento de cliente verificado, datos gubernamentales |
+| 4 | Muy fuerte | datos de comportamiento replicados, contratos pagados/cohorte de retención, file auditado, múltiples fuentes primarias independientes |
 
-Adjust for relevance, recency, geography, sample selection, conflicts of interest, and whether the evidence measures behavior or stated intent.
+Ajusta por relevancia, actualidad, geografía, selección de muestra, conflictos de interés, y si la evidencia mide comportamiento o intención declarada.
 
-## Evidence ledger
+## Registro de evidencia
 
-Give sources stable IDs such as `S01` and claims IDs such as `C01`.
+Asigna a las fuentes IDs estables como `S01` y a las afirmaciones IDs como `C01`.
 
-For each source record:
+Para cada fuente registra:
 
-- title and publisher;
-- URL or repository file and line;
-- publication date and access date;
-- source type and strength;
-- geography and segment;
-- claim supported or contradicted;
-- limitations.
+- título y editor;
+- URL, o archivo y línea del repositorio;
+- fecha de publicación y fecha de acceso;
+- tipo y fuerza de la fuente;
+- geografía y segmento;
+- afirmación respaldada o contradicha;
+- limitaciones.
 
-For each material claim record:
+Para cada afirmación material registra:
 
-- label;
-- statement;
-- source IDs;
-- confidence;
-- whether evidence is supporting, contrary, or mixed;
-- impact on the decision.
+- etiqueta;
+- declaración;
+- IDs de fuente;
+- confianza;
+- si la evidencia es de apoyo, contraria o mixta;
+- impacto en la decisión.
 
-Never cite a search-result snippet as the source when the underlying page is available. Never invent a URL or inaccessible citation.
+Nunca cites un snippet de resultados de búsqueda como fuente cuando la página subyacente está disponible. Nunca inventes una URL ni una cita inaccesible.
 
-## Research sequence
+## Secuencia de investigación
 
-Research hypotheses, not topics:
+Investiga hipótesis, no temas:
 
-1. Problem: who experiences it, how often, what it costs, and what behavior proves urgency?
-2. Buyer: who uses, decides, approves, and pays? What budget owns the purchase?
-3. Alternatives: what do buyers do now, including spreadsheets, labor, inaction, or bundled software?
-4. Switching: why would they change, what migration and learning costs exist, and what trigger creates motion?
-5. Market access: how many matching buyers are identifiable and reachable through realistic channels?
-6. Competition: official pricing, positioning, distribution, integrations, reputation, funding, and switching cost.
-7. Economics: realistic price, variable cost, support burden, sales effort, churn, payment fees, and AI/API exposure.
-8. Regulation and platform dependency: rules that can block sale, operation, or distribution.
-9. Contrary case: evidence that demand is weak, budgets are frozen, substitutes are sufficient, or incumbents bundle the feature.
+1. Problema: quién lo experimenta, con qué frecuencia, cuánto cuesta, y qué comportamiento prueba la urgencia.
+2. Comprador: quién usa, decide, aprueba y paga. ¿Qué presupuesto es dueño de la compra?
+3. Alternativas: qué hacen hoy los compradores, incluidas hojas de cálculo, mano de obra, inacción o software empaquetado.
+4. Cambio: por qué cambiarían, qué costos de migración y aprendizaje existen, y qué disparador genera movimiento.
+5. Acceso al mercado: cuántos compradores con el perfil correcto son identificables y alcanzables por canales realistas.
+6. Competencia: precios oficiales, posicionamiento, distribución, integraciones, reputación, financiamiento y costo de cambio.
+7. Economía: precio realista, costo variable, carga de soporte, esfuerzo de venta, churn, comisiones de pago y exposición a AI/API.
+8. Regulación y dependencia de plataforma: reglas que pueden bloquear la venta, operación o distribución.
+9. Caso contrario: evidencia de que la demanda es débil, los presupuestos están congelados, los sustitutos bastan o los incumbentes empaquetan la funcionalidad.
 
-## Source strategy
+## Estrategia de fuentes
 
-Prefer sources in this order when relevant:
+Cuando sea relevante, prefiere las fuentes en este orden:
 
-1. Customer behavior, contracts, retention, and transaction records supplied by the user.
-2. Official competitor pricing, product documentation, terms, status pages, filings, and changelogs.
-3. Government, regulator, standards body, procurement, and industry association data.
-4. Original surveys or datasets with disclosed methodology.
-5. Reputable secondary analyses and specialist publications.
-6. Communities, reviews, job posts, search trends, and social content as directional evidence only.
+1. Comportamiento de clientes, contratos, retención y registros de transacciones provistos por el usuario.
+2. Precios oficiales de competidores, documentación de producto, términos, páginas de status, files y changelogs.
+3. Datos de gobiernos, reguladores, organismos de estándares, compras públicas y asociaciones de industria.
+4. Encuestas o datasets propios con metodología divulgada.
+5. Análisis secundarios de reputación y publicaciones especializadas.
+6. Comunidades, reseñas, ofertas de trabajo, tendencias de búsqueda y contenido social, solo como evidencia direccional.
 
-Use at least two independent sources for a claim that can change the verdict, unless a single authoritative source is definitive. Report the exception.
+Usa al menos dos fuentes independientes para una afirmación que pueda cambiar el veredicto, salvo que una única fuente autoritativa sea definitiva. Reporta la excepción.
 
-## Market sizing
+## Dimensionamiento de mercado
 
-Use bottom-up sizing:
+Usa dimensionamiento bottom-up:
 
-`eligible buyers x problem incidence x ability to pay x reachable share x annual revenue per buyer`
+`compradores elegibles x incidencia del problema x capacidad de pago x cuota alcanzable x ingreso anual por comprador`
 
-- TAM: all eligible buyers under a clearly defined scope.
-- SAM: buyers the current product, geography, language, compliance, and delivery model can serve.
-- SOM: buyers plausibly reachable within the stated horizon and channel capacity.
+- TAM: todos los compradores elegibles bajo un alcance claramente definido.
+- SAM: compradores que el producto actual, la geografía, el idioma, el cumplimiento y el modelo de entrega pueden servir.
+- SOM: compradores alcanzables de forma plausible dentro del horizonte y la capacidad de canal declarados.
 
-Show each factor and source. Do not apply arbitrary market-share percentages. Capacity-constrain SOM using leads reachable, conversion rate, sales capacity, cycle length, onboarding capacity, and churn.
+Muestra cada factor y su fuente. No apliques porcentajes de cuota de mercado arbitrarios. Limita el SOM por capacidad usando leads alcanzables, tasa de conversión, capacidad de venta, duración del ciclo, capacidad de onboarding y churn.
 
-For marketplaces, size each side and calculate liquidity by segment or geography. For internal tools, replace market sizing with addressable cost savings and adoption scope.
+Para marketplaces, dimensiona cada lado y calcula la liquidez por segmento o geografía. Para herramientas internas, reemplaza el dimensionamiento de mercado por ahorro de costos abordable y alcance de adopción.
 
-## Competition research
+## Investigación de competencia
 
-Include direct competitors, indirect alternatives, substitutes, and doing nothing. For important alternatives compare:
+Incluye competidores directos, alternativas indirectas, sustitutos y la opción de no hacer nada. Para alternativas importantes compara:
 
-- target segment and buyer;
-- problem and job solved;
-- official price and pricing metric;
-- core workflow and integrations;
-- acquisition/distribution advantage;
-- migration and switching cost;
-- trust, security, compliance, support, and reputation;
-- strengths, weaknesses, and evidence date.
+- segmento objetivo y comprador;
+- problema y trabajo resuelto;
+- precio oficial y métrica de precio;
+- flujo de trabajo central e integraciones;
+- ventaja de adquisición/distribución;
+- costo de migración y cambio;
+- confianza, seguridad, cumplimiento, soporte y reputación;
+- fortalezas, debilidades y fecha de la evidencia.
 
-Answer: "What specific event and measurable benefit would make a buyer leave the current solution?" Better UI alone is weak differentiation unless it changes time, error rate, conversion, risk, or accessibility enough to overcome switching costs.
+Responde: "¿Qué evento específico y beneficio medible haría que un comprador abandone la solución actual?". Una mejor UI por sí sola es diferenciación débil salvo que cambie el tiempo, la tasa de error, la conversión, el riesgo o la accesibilidad lo suficiente como para superar los costos de cambio.
 
-## Demand evidence hierarchy
+## Jerarquía de evidencia de demanda
 
-Strongest to weakest:
+De más fuerte a más débil:
 
-1. repeat paid use and acceptable retention;
-2. paid contract, deposit, or signed pilot with a real implementation path;
-3. costly customer action such as migration, integration, or recurring workflow use;
-4. qualified pipeline with observed conversion;
-5. repeated organic use or referral;
-6. waitlist or qualified signup;
-7. interview statement or survey intent;
-8. search volume, social engagement, or broad trend;
-9. founder intuition.
+1. uso pagado repetido y retención aceptable;
+2. contrato pagado, depósito o piloto firmado con un camino real de implementación;
+3. acción costosa del cliente como migración, integración o uso recurrente del workflow;
+4. pipeline calificado con conversión observada;
+5. uso orgánico repetido o referidos;
+6. waitlist o registro calificado;
+7. declaración de entrevista o intención de encuesta;
+8. volumen de búsqueda, engagement social o tendencia amplia;
+9. intuición del fundador.
 
-Do not treat free signups as willingness to pay or interviews as retention evidence.
+No trates los registros gratuitos como disposición a pagar ni las entrevistas como evidencia de retención.
 
-## Research failure behavior
+## Comportamiento ante fallas de investigación
 
-When sources conflict, preserve the conflict, assess methods and scopes, and lower confidence. When external access is absent, list exact unanswered queries and likely primary sources. When data is stale, report the date and test sensitivity rather than updating it by intuition.
+Cuando las fuentes entran en conflicto, preserva el conflicto, evalúa métodos y alcances, y baja la confianza. Cuando el acceso externo no existe, lista las consultas exactas sin responder y las fuentes primarias probables. Cuando los datos están desactualizados, reporta la fecha y prueba sensibilidad en lugar de actualizarlos por intuición.

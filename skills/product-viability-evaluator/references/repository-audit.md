@@ -1,105 +1,105 @@
-# Product and Repository Audit
+# Auditoría de producto y repositorio
 
-## Purpose and safety
+## Propósito y seguridad
 
-Determine whether the current product can deliver the promised outcome reliably enough to support adoption and economics. Do not turn this into a generic code review.
+Determina si el producto actual puede entregar el resultado prometido con la confiabilidad suficiente para respaldar la adopción y la economía. No conviertas esto en una revisión de código genérica.
 
-Default to read-only inspection. Do not modify files, install packages, access production systems, print environment values, or run destructive commands. Prefer repository search, manifest inspection, existing test commands, static checks, and local builds only when safe and proportionate. Report secret names, never values.
+Por defecto usa inspección de solo lectura. No modifiques archivos, instales paquetes, accedas a sistemas de producción, imprimas valores de entorno ni ejecutes comandos destructivos. Prefiere búsqueda en repositorio, inspección de manifests, comandos de test existentes, chequeos estáticos y builds locales solo cuando sean seguros y proporcionados. Reporta nombres de secretos, nunca valores.
 
-## Evidence order
+## Orden de evidencia
 
-Use this hierarchy:
+Usa esta jerarquía:
 
-1. observed runtime behavior or passing focused test;
-2. implementation traced through source and configuration;
-3. existing tests without a current run;
-4. documentation or README claim;
-5. roadmap, issue, or comment.
+1. comportamiento de runtime observado o test focalizado que pasa;
+2. implementación rastreada por código fuente y configuración;
+3. tests existentes sin una corrida actual;
+4. afirmación de documentación o README;
+5. roadmap, issue o comentario.
 
-Documentation alone receives `DOCUMENTED_ONLY`.
+La documentación sola recibe `DOCUMENTED_ONLY`.
 
-## Product map
+## Mapa de producto
 
-Map the shortest path from target customer to realized value:
+Mapea el camino más corto del cliente objetivo al valor realizado:
 
-- discovery and landing proposition;
-- signup, authentication, and qualification;
-- onboarding and time to first value;
-- core job workflow;
-- collaboration, export, or integration needed for adoption;
-- payment and entitlement;
-- support, error recovery, and cancellation;
-- retention loop and reason to return.
+- descubrimiento y propuesta de landing;
+- signup, autenticación y calificación;
+- onboarding y tiempo hasta el primer valor;
+- workflow del trabajo central;
+- colaboración, export o integración necesaria para la adopción;
+- pago y entitlements;
+- soporte, recuperación de errores y cancelación;
+- loop de retención y razón para volver.
 
-Inspect only the routes, components, services, schemas, jobs, integrations, and tests supporting this path before widening scope.
+Inspecciona solo las rutas, componentes, servicios, esquemas, trabajos, integraciones y tests que respaldan este camino antes de ampliar el alcance.
 
-## Capability statuses
+## Estados de capacidad
 
-- `VERIFIED`: behavior is traced and supported by execution or focused tests.
-- `PRESENT_WITH_RISK`: implementation exists but has a material reliability, security, UX, cost, or scalability risk.
-- `INCOMPLETE`: part of the workflow exists but cannot deliver the promised outcome end to end.
-- `DOCUMENTED_ONLY`: claimed but not confirmed in implementation.
-- `MISSING_CRITICAL`: absent and required to sell, onboard, comply, collect revenue, or retain users.
-- `UNNECESSARY`: consumes material effort without supporting the target customer or decision.
+- `VERIFIED`: el comportamiento está rastreado y respaldado por ejecución o tests focalizados.
+- `PRESENT_WITH_RISK`: la implementación existe pero tiene un riesgo material de confiabilidad, seguridad, UX, costo o escalabilidad.
+- `INCOMPLETE`: parte del workflow existe pero no puede entregar el resultado prometido de punta a punta.
+- `DOCUMENTED_ONLY`: reclamado pero no confirmado en la implementación.
+- `MISSING_CRITICAL`: ausente y requerido para vender, onboard, cumplir, cobrar o retener usuarios.
+- `UNNECESSARY`: consume esfuerzo material sin respaldar al cliente objetivo ni a la decisión.
 
-## Decision-relevant audit areas
+## Áreas de auditoría relevantes a la decisión
 
-### Product and UX
+### Producto y UX
 
-- Is the value proposition visible and consistent with actual behavior?
-- Can the ICP reach first value without founder intervention?
-- Is onboarding effort acceptable for price and buyer type?
-- Are critical states, empty states, errors, cancellation, and recovery implemented?
-- Is the workflow responsive and accessible enough for the target context?
-- Does the product create a retention loop or only a one-time utility?
+- ¿La propuesta de valor es visible y consistente con el comportamiento real?
+- ¿El ICP puede alcanzar el primer valor sin intervención del fundador?
+- ¿El esfuerzo de onboarding es aceptable para el precio y el tipo de comprador?
+- ¿Los estados críticos, estados vacíos, errores, cancelación y recuperación están implementados?
+- ¿El workflow es responsivo y accesible lo suficiente para el contexto objetivo?
+- ¿El producto crea un loop de retención o solo una utilidad de una sola vez?
 
-### Technical delivery
+### Entrega técnica
 
-- Architecture and dependencies that affect delivery speed or operating risk.
-- Data model and migrations that affect core workflows.
-- Authentication, authorization, tenancy, and auditability required by the buyer.
-- Payment, plans, entitlements, invoicing, tax, and cancellation behavior.
-- External APIs, model providers, quotas, lock-in, and failure modes.
-- Deployment, rollback, backups, observability, and support diagnostics.
-- Tests around revenue, security, data integrity, and core customer value.
+- Arquitectura y dependencias que afectan velocidad de entrega o riesgo operativo.
+- Modelo de datos y migraciones que afectan workflows centrales.
+- Autenticación, autorización, tenancy y auditabilidad requeridas por el comprador.
+- Comportamiento de pago, planes, entitlements, facturación, impuestos y cancelación.
+- APIs externas, proveedores de modelo, cuotas, lock-in y modos de falla.
+- Despliegue, rollback, backups, observabilidad y diagnósticos de soporte.
+- Tests alrededor de ingreso, seguridad, integridad de datos y valor central del cliente.
 
-### Economics and scale
+### Economía y escala
 
-- variable infrastructure and AI/API cost per active customer or transaction;
-- unbounded workloads, abuse exposure, or manual operations hidden behind the product;
-- support and onboarding burden;
-- performance constraints that reduce conversion or retention;
-- limits that fail before the scenario customer count.
+- costo de infraestructura variable y de IA/API por cliente activo o transacción;
+- workloads sin límite, exposición al abuso u operaciones manuales escondidas detrás del producto;
+- carga de soporte y onboarding;
+- restricciones de rendimiento que reducen conversión o retención;
+- límites que fallan antes de la cantidad de clientes del escenario.
 
-### Trust and market access
+### Confianza y acceso al mercado
 
-- privacy, security, compliance, data residency, accessibility, and procurement requirements;
-- integrations or export required to displace the current alternative;
-- credibility signals and operational controls needed at the target price.
+- requisitos de privacidad, seguridad, cumplimiento, data residency, accesibilidad y procurement;
+- integraciones o export requeridos para desplazar la alternativa actual;
+- señales de credibilidad y controles operativos necesarios al precio objetivo.
 
-## Repository inspection sequence
+## Secuencia de inspección de repositorio
 
-1. Read repository instructions, README, manifests, lockfiles, directory map, and git status.
-2. Identify framework, runtime, deployment target, databases, payments, authentication, analytics, and third-party APIs.
-3. Map user-visible claims to source paths and tests.
-4. Inspect configuration and environment variable names without reading values.
-5. Inspect current test, lint, typecheck, build, audit, and deployment scripts.
-6. Run only safe, existing checks that materially improve confidence and do not require secrets or external writes.
-7. Cite file and line for consequential findings.
+1. Lee instrucciones del repositorio, README, manifests, lockfiles, mapa de directorios y estado de git.
+2. Identifica framework, runtime, destino de despliegue, bases de datos, pagos, autenticación, analytics y APIs de terceros.
+3. Mapea las afirmaciones visibles al usuario a rutas de código y tests.
+4. Inspecciona configuración y nombres de variables de entorno sin leer valores.
+5. Inspecciona los scripts actuales de test, lint, typecheck, build, auditoría y despliegue.
+6. Ejecuta solo chequeos seguros y existentes que mejoren materialmente la confianza y no requieran secretos ni escrituras externas.
+7. Cita archivo y línea para hallazgos de consecuencia.
 
-Do not claim that a feature works because a component, route, package, or environment variable exists. Trace the complete flow.
+No afirmes que una funcionalidad funciona porque existe un componente, una ruta, un paquete o una variable de entorno. Rastrea el flujo completo.
 
-## Technical viability output
+## Salida de viabilidad técnica
 
-Report:
+Reporta:
 
-- maturity stage: concept, prototype, MVP, beta, production, or unknown;
-- verified core flow and broken/missing steps;
-- capability table with statuses and evidence;
-- critical technical blockers and estimated remediation ranges;
-- operating-cost drivers and scale limits;
-- security/compliance issues that affect sale or trust;
-- technical debt that changes time to market or support burden;
-- irrelevant technical quality observations intentionally excluded.
+- etapa de madurez: concepto, prototipo, MVP, beta, producción o desconocida;
+- flujo central verificado y pasos rotos/faltantes;
+- tabla de capacidades con estados y evidencia;
+- bloqueadores técnicos críticos y rangos estimados de remediación;
+- motores de costo operativo y límites de escala;
+- problemas de seguridad/cumplimiento que afectan la venta o la confianza;
+- deuda técnica que cambia el tiempo al mercado o la carga de soporte;
+- observaciones irrelevantes de calidad técnica excluidas a propósito.
 
-Score product/UX and execution from their business consequences. Keep a technically elegant product with no demand commercially weak, and keep a commercially strong but rough MVP viable when remediation is affordable and bounded.
+Puntúa producto/UX y ejecución por sus consecuencias de negocio. Mantén comercialmente débil un producto técnicamente elegante sin demanda, y viable un MVP áspero pero comercialmente fuerte cuando la remediación sea accesible y acotada.

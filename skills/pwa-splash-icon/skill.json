@@ -1,6 +1,6 @@
 {
   "name": "pwa-splash-icon",
-  "description": "Generate a properly sized PWA splash screen icon from an existing app logo. Adds padding around the icon so it doesn't get cropped by the browser's circular mask, sets a custom background color, and updates the web app manifest and service worker.",
+  "description": "Genera un ícono de splash screen PWA con el tamaño correcto a partir del logo existente de la app. Agrega padding alrededor del ícono para que no se recorte con la máscara circular del navegador, define un color de fondo personalizado y actualiza el manifest de la web app y el service worker.",
   "version": "1.0.0",
   "author": [
     "Ariel GonzAgüer"

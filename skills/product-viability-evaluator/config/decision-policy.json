@@ -7,8 +7,8 @@
   "maximum_confidence_penalty": 20,
   "verdicts": ["BUILD", "VALIDATE", "PIVOT", "RECONSIDER", "ABANDON"],
   "notes": [
-    "The score never selects the verdict automatically.",
-    "Open deal breakers can impose a stricter verdict ceiling.",
-    "calculate-score.mjs reads these thresholds at runtime; run the complete test suite after changes."
+    "El score nunca selecciona el veredicto automáticamente.",
+    "Los deal breakers abiertos pueden imponer un límite de veredicto más estricto.",
+    "calculate-score.mjs lee estos umbrales en runtime; ejecuta la suite completa de tests después de cambios."
   ]
 }

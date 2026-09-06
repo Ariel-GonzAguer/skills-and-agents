@@ -1,97 +1,97 @@
-# Methodology Review and Architecture Rationale
+# Revisión de metodología y fundamento de arquitectura
 
-## Phase 1: Critical review of the specification
+## Fase 1: Revisión crítica de la especificación
 
-The original specification correctly rejects technical-quality bias, requires founder context, external evidence, scenarios, and an adversarial review. Its main methodological weaknesses were:
+La especificación original rechaza correctamente el sesgo de calidad técnica, y requiere contexto del fundador, evidencia externa, escenarios y una revisión adversaria. Sus principales debilidades metodológicas fueron:
 
-1. Founder fit and return on time were mandatory in prose but absent from the initial weighted dimensions.
-2. It did not define how `UNKNOWN` affects scoring, creating pressure to invent values, assign arbitrary midpoints, or punish missing evidence as failure.
-3. Score and confidence were required but evidence coverage was not, so a high score based on a small known subset could look complete.
-4. The requested evidence labels omitted `ESTIMATE`, despite requiring financial and market estimates.
-5. The score-to-verdict relationship was rejected conceptually but no explicit gate mechanism was defined.
-6. `PIVOT` and `RECONSIDER` can overlap unless the object of failure is defined: current offer versus opportunity/founder return.
-7. Financial formulas were subscription-heavy and needed model-specific alternatives plus cash timing, runway, working capital, and cohort caveats.
-8. Acquisition milestones of 10, 100, and 1,000 do not fit enterprise, high-ticket services, internal tools, or some marketplaces without equivalent milestones.
-9. Multi-agent roles risk correlated agreement, duplicate research, and score averaging unless they share evidence IDs and resolve conflicts explicitly.
-10. Ten realistic business outcomes cannot be proven by deterministic tests alone because market truth requires real evidence; testing must separate arithmetic invariants from model behavior and human judgment.
+1. El fit del fundador y el retorno sobre el tiempo eran obligatorios en prosa pero ausentes de las dimensiones ponderadas iniciales.
+2. No definía cómo `UNKNOWN` afecta el scoring, creando presión para inventar valores, asignar puntos medios arbitrarios o castigar la evidencia faltante como fracaso.
+3. Se requerían score y confianza pero no cobertura de evidencia, así un score alto basado en un subconjunto conocido pequeño podía parecer completo.
+4. Las etiquetas de evidencia solicitadas omitían `ESTIMATE`, a pesar de requerir estimaciones financieras y de mercado.
+5. La relación score-veredicto se rechazaba conceptualmente pero no se definía ningún mecanismo de gate explícito.
+6. `PIVOT` y `RECONSIDER` pueden solaparse salvo que se defina el objeto del fracaso: oferta actual versus oportunidad/retorno del fundador.
+7. Las fórmulas financieras cargaban peso en suscripciones y necesitaban alternativas por modelo, más timing de caja, runway, capital de trabajo y salvedades de cohortes.
+8. Los hitos de adquisición de 10, 100 y 1.000 no aplican a enterprise, servicios de ticket alto, herramientas internas o algunos marketplaces sin hitos equivalentes.
+9. Los roles multi-agente arriesgan acuerdo correlacionado, investigación duplicada y promedio de scores salvo que compartan IDs de evidencia y resuelvan conflictos explícitamente.
+10. Diez resultados de negocio realistas no pueden probarse solo con tests deterministas porque la verdad de mercado requiere evidencia real; el testing debe separar los invariantes aritméticos del comportamiento del modelo y del juicio humano.
 
-## Phase 2: Improvements applied
+## Fase 2: Mejoras aplicadas
 
-- Added `Founder fit / personal ROI` as an eleventh dimension.
-- Added `Evidence coverage` as a separate metric.
-- Defined null scoring: unknown dimensions are excluded from the provisional weighted score but reduce coverage and verdict permissions.
-- Added `ESTIMATE` and required method, range, and sensitivity.
-- Added deal breakers and verdict ceilings after scoring.
-- Defined `PIVOT` as evidence for the opportunity but rejection of the current offer, segment, price, product, or channel.
-- Defined `RECONSIDER` as weak risk-adjusted opportunity or founder-specific return.
-- Interpreted `BUILD` as authorization for a bounded next commitment, not unconditional scale.
-- Added behavior-based demand evidence hierarchy and equal treatment of contrary evidence.
-- Added model-specific economics for marketplaces, e-commerce, hardware, services, APIs/AI, open source, and internal tools.
-- Added return per founder hour, time to revenue, capital at risk, reversibility, and opportunity cost.
-- Added safe repository inspection statuses that distinguish code, tests, docs, and missing business-critical behavior.
-- Added structured conflict resolution instead of voting or averaging agents.
+- Agregó `Founder fit / personal ROI` como undécima dimensión.
+- Agregó `Evidence coverage` como métrica separada.
+- Definió el scoring nulo: las dimensiones desconocidas se excluyen del score ponderado provisional pero reducen la cobertura y los permisos de veredicto.
+- Agregó `ESTIMATE` y exigió método, rango y sensibilidad.
+- Agregó deal breakers y límites de veredicto después del scoring.
+- Definió `PIVOT` como evidencia de la oportunidad pero rechazo de la oferta, segmento, precio, producto o canal actuales.
+- Definió `RECONSIDER` como oportunidad de riesgo-ajuste débil o retorno específico del fundador.
+- Interpretó `BUILD` como autorización para un próximo compromiso acotado, no como escala incondicional.
+- Agregó jerarquía de evidencia de demanda basada en comportamiento y tratamiento igualitario de la evidencia contraria.
+- Agregó economías específicas de modelo para marketplaces, e-commerce, hardware, servicios, APIs/IA, open source y herramientas internas.
+- Agregó retorno por hora del fundador, tiempo hasta el ingreso, capital en riesgo, reversibilidad y costo de oportunidad.
+- Agregó estados seguros de inspección de repositorio que distinguen código, tests, docs y comportamiento crítico de negocio faltante.
+- Agregó resolución de conflictos estructurada en lugar de votación o promedio de agentes.
 
-## Phase 3: Architecture
+## Fase 3: Arquitectura
 
-The package uses progressive disclosure:
+El paquete usa divulgación progresiva:
 
-1. `SKILL.md`: runtime contract, phases, gates, and required references.
-2. `references/`: detailed methodology loaded only for the active phase or business type.
-3. `schemas/`: portable assessment contract.
-4. `config/`: editable weight profiles and decision policy.
-5. `scripts/`: dependency-free deterministic math and completeness validation.
-6. `templates/`: full report and project comparison output.
-7. `tests/`: synthetic scoring and gate regressions.
-8. `evals/`: behavioral prompts for agent-level evaluation.
-9. `examples/`: a complete but explicitly synthetic assessment.
+1. `SKILL.md`: contrato de runtime, fases, gates y referencias requeridas.
+2. `references/`: metodología detallada cargada solo para la fase o tipo de negocio activo.
+3. `schemas/`: contrato de evaluación portable.
+4. `config/`: perfiles de pesos y política de decisión editables.
+5. `scripts/`: matemática determinista sin dependencias y validación de completitud.
+6. `templates/`: reporte completo y comparación de proyectos.
+7. `tests/`: regresiones sintéticas de scoring y gates.
+8. `evals/`: prompts conductuales para evaluación a nivel de agente.
+9. `examples/`: una evaluación completa pero explícitamente sintética.
 
-This split keeps the activation context short while preserving rigorous details. Scripts calculate only what can be deterministic; they do not decide source credibility or market truth.
+Esta separación mantiene corto el contexto de activación mientras preserva los detalles rigurosos. Los scripts calculan solo lo que puede ser determinista; no deciden credibilidad de fuentes ni verdad de mercado.
 
-## Mandatory elements
+## Elementos obligatorios
 
-- evidence labels and source ledger;
-- adaptive weights with founder fit;
-- score, confidence, and coverage separation;
-- repository claims verified beyond README when access exists;
-- financial uncertainty and scenario disclosure;
-- mandatory red team after initial scoring;
-- deal-breaker gates;
-- most dangerous hypothesis and behavioral validation experiment;
-- explicit evidence that would change the verdict.
+- etiquetas de evidencia y registro de fuentes;
+- pesos adaptativos con fit del fundador;
+- separación de score, confianza y cobertura;
+- afirmaciones de repositorio verificadas más allá del README cuando hay acceso;
+- incertidumbre financiera y divulgación de escenarios;
+- red team obligatorio después del scoring inicial;
+- gates de deal breaker;
+- hipótesis más peligrosa y experimento de validación conductual;
+- evidencia explícita que cambiaría el veredicto.
 
-## Configurable elements
+## Elementos configurables
 
-- business profile and weights;
-- research mode, time budget, recency, geography, and source requirements;
-- currency, horizon, tax basis, founder time cost, target return, and maximum loss;
-- confidence and coverage thresholds;
-- business-specific financial fields and milestone scales;
-- multi-agent roles and execution order.
+- perfil de negocio y pesos;
+- modo de investigación, presupuesto de tiempo, actualidad, geografía y requisitos de fuente;
+- moneda, horizonte, base impositiva, costo del tiempo del fundador, retorno objetivo y pérdida máxima;
+- umbrales de confianza y cobertura;
+- campos financieros específicos de negocio y escalas de hitos;
+- roles multi-agente y orden de ejecución.
 
-## Automatable elements
+## Elementos automatizables
 
-- weight totals, weighted score, confidence, and coverage;
-- arithmetic for common financial metrics;
-- scenario completeness and null propagation;
-- deal-breaker ceilings and verdict consistency;
-- schema, evidence-reference, and experiment completeness;
-- synthetic regression cases and cross-model behavioral eval structure.
+- totales de pesos, score ponderado, confianza y cobertura;
+- aritmética de métricas financieras comunes;
+- completitud de escenarios y propagación de nulos;
+- límites de deal breaker y consistencia de veredicto;
+- completitud de esquema, referencias de evidencia y experimentos;
+- casos de regresión sintéticos y estructura de eval conductual cross-model.
 
-## Bias controls
+## Controles de sesgo
 
-- Confirmation bias: mandatory contrary evidence and red team.
-- Builder bias: technical quality isolated from demand and monetization.
-- TAM bias: bottom-up reachable market and capacity-constrained SOM.
-- Survivorship bias: seek failed alternatives and negative reviews, not only winners.
-- Precision bias: ranges, nulls, sensitivity, and coverage.
-- Founder attachment: opportunity viability and founder-specific viability reported separately.
-- Automation bias: scripts cannot issue a final verdict; gates only constrain it.
-- Pessimism theater: red-team attacks require evidence or falsifiable inference and may leave scores unchanged with explanation.
+- Sesgo de confirmación: evidencia contraria obligatoria y red team.
+- Sesgo del constructor: calidad técnica aislada de demanda y monetización.
+- Sesgo de TAM: mercado alcanzable bottom-up y SOM limitado por capacidad.
+- Sesgo de supervivencia: buscar alternativas fallidas y reseñas negativas, no solo ganadores.
+- Sesgo de precisión: rangos, nulos, sensibilidad y cobertura.
+- Apego del fundador: viabilidad de la oportunidad y viabilidad específica del fundador reportadas por separado.
+- Sesgo de automatización: los scripts no pueden emitir un veredicto final; los gates solo lo limitan.
+- Teatro de pesimismo: los ataques del red team requieren evidencia o inferencia falsificable, y pueden dejar los scores sin cambios con explicación.
 
-## Known limitations
+## Limitaciones conocidas
 
-- No prompt can guarantee truthful research when tools or source access are weak.
-- Cross-model agreement does not prove correctness; correlated training data can reproduce the same error.
-- Synthetic fixtures validate formulas and policy, not real-world market outcomes.
-- Forecasts remain conditional on customer behavior and external conditions.
-- A repository audit cannot prove production behavior without suitable runtime access and safe tests.
+- Ningún prompt puede garantizar investigación veraz cuando las herramientas o el acceso a fuentes son débiles.
+- El acuerdo cross-model no prueba corrección; datos de entrenamiento correlacionados pueden reproducir el mismo error.
+- Los fixtures sintéticos validan fórmulas y política, no resultados reales de mercado.
+- Los pronósticos siguen condicionados al comportamiento del cliente y a condiciones externas.
+- Una auditoría de repositorio no puede probar el comportamiento de producción sin acceso de runtime adecuado y tests seguros.

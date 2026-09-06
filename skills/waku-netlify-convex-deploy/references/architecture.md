@@ -1,6 +1,6 @@
-# Architecture and Audit Map
+# Mapa de arquitectura y auditoría
 
-## Intended request path
+## Ruta de petición prevista
 
 ```text
 Browser
@@ -12,73 +12,73 @@ Browser
   -> database/index/internal function
 ```
 
-Netlify hosts the Waku application. Convex is a separately deployed backend. Do not route normal Convex queries and mutations through a Netlify Function without a concrete server-only requirement; that adds latency and duplicates the trust boundary.
+Netlify aloja la aplicación Waku. Convex es un backend desplegado por separado. No enrutes consultas y mutaciones normales de Convex a través de una Netlify Function sin un requisito concreto de solo-servidor; eso agrega latencia y duplica el límite de confianza.
 
-## Repository inventory
+## Inventario del repositorio
 
-Inspect these locations when present:
+Inspecciona estas ubicaciones cuando existan:
 
-| Concern | Files |
+| Interés | Archivos |
 | --- | --- |
-| Toolchain | `package.json`, `pnpm-lock.yaml`, `.npmrc`, `pnpm-workspace.yaml` |
+| Cadena de herramientas | `package.json`, `pnpm-lock.yaml`, `.npmrc`, `pnpm-workspace.yaml` |
 | Waku | `waku.config.ts`, `src/waku.server.tsx`, `src/pages/**`, `src/pages.gen.ts` |
-| Convex | `convex/schema.ts`, `convex/convex.config.ts`, `convex/auth.config.ts`, `convex/http.ts`, `convex/_generated/**`, all other `convex/*.ts` |
-| Client integration | root client component/provider, imports from `convex/react`, `ConvexReactClient` initialization |
+| Convex | `convex/schema.ts`, `convex/convex.config.ts`, `convex/auth.config.ts`, `convex/http.ts`, `convex/_generated/**`, todos los demás `convex/*.ts` |
+| Integración cliente | componente/proveedor cliente raíz, imports de `convex/react`, inicialización de `ConvexReactClient` |
 | Netlify | `netlify.toml`, `netlify-functions/**`, `netlify/functions/**`, `netlify/edge-functions/**`, `.netlify/state.json` |
-| Security | `.gitignore`, `.env*`, headers, CSP, auth helpers, rate limits, webhook handlers |
-| Verification | `tsconfig*.json`, ESLint, Vitest, CI workflows, deploy scripts |
+| Seguridad | `.gitignore`, `.env*`, headers, CSP, helpers de auth, rate limits, handlers de webhook |
+| Verificación | `tsconfig*.json`, ESLint, Vitest, workflows de CI, scripts de deploy |
 
-## Rendering decision
+## Decisión de renderizado
 
-Use pure static output only if every request-time feature can be removed or precomputed. Dynamic Waku runtime is required for any of these:
+Usa salida puramente estática solo si cada funcionalidad de tiempo de request puede eliminarse o precomputarse. Se requiere runtime dinámico de Waku para cualquiera de estas:
 
-- A route configured with `render: "dynamic"`.
-- A dynamic route without complete `staticPaths`.
-- Dynamic API routes.
+- Una ruta configurada con `render: "dynamic"`.
+- Una ruta dinámica sin `staticPaths` completos.
+- Rutas de API dinámicas.
 - Server actions.
-- Request-time cookies, headers, auth, personalization, middleware, redirects, or rewrites.
+- Cookies, headers, auth, personalización, middleware, redirecciones o rewrites en tiempo de request.
 
-Convex client-side reactivity does not itself require Waku SSR. A static Waku shell can connect directly to Convex. Choose dynamic Waku only for actual Waku server-runtime needs.
+La reactividad del lado del cliente de Convex no requiere en sí misma SSR de Waku. Un shell Waku estático puede conectarse directamente a Convex. Elige Waku dinámico solo para necesidades reales de runtime del servidor de Waku.
 
-## Environment ownership matrix
+## Matriz de propiedad de entornos
 
-Create this matrix using names only:
+Crea esta matriz usando solo nombres:
 
-| Variable | Owner | Secret | Consumer | Context | Netlify scope / Convex deployment |
+| Variable | Propietario | Secreto | Consumidor | Contexto | Scope Netlify / despliegue Convex |
 | --- | --- | --- | --- | --- | --- |
-| `WAKU_PUBLIC_CONVEX_URL` | Convex output | No | Browser build | preview/production | Netlify Builds |
-| `CONVEX_DEPLOY_KEY` | Convex | Yes | Convex CLI during build | preview/production | Netlify Builds, secret |
-| Other backend secrets | Application/vendor | Yes | Convex functions | per deployment | Convex environment |
-| Netlify Function secret | Application/vendor | Yes | Netlify Function | per context | Netlify Functions, secret |
+| `WAKU_PUBLIC_CONVEX_URL` | Salida de Convex | No | Build del navegador | preview/production | Netlify Builds |
+| `CONVEX_DEPLOY_KEY` | Convex | Sí | CLI de Convex durante el build | preview/production | Netlify Builds, secreto |
+| Otros secretos del backend | Aplicación/vendor | Sí | Funciones de Convex | por despliegue | Entorno de Convex |
+| Secreto de Netlify Function | Aplicación/vendor | Sí | Netlify Function | por contexto | Netlify Functions, secreto |
 
-Do not duplicate a secret in Netlify and Convex unless both runtimes genuinely consume it.
+No dupliques un secreto en Netlify y Convex a menos que ambos runtimes realmente lo consuman.
 
-## Compatibility contract
+## Contrato de compatibilidad
 
-Deployments are not perfectly atomic across services. New Convex functions and schemas must remain compatible with the currently deployed browser bundle, open tabs, scheduled jobs, and the new Waku bundle. Prefer additive changes:
+Los despliegues no son perfectamente atómicos entre servicios. Las funciones y esquemas nuevos de Convex deben seguir siendo compatibles con el bundle de navegador actualmente desplegado, las pestañas abiertas, los jobs programados y el bundle Waku nuevo. Prefiere cambios aditivos:
 
-1. Add optional fields or broader unions.
-2. Deploy compatible backend code.
-3. Backfill data.
-4. Deploy clients using the new shape.
-5. Tighten schema and remove old behavior later.
+1. Agregar campos opcionales o uniones más amplias.
+2. Desplegar código de backend compatible.
+3. Hacer backfill de datos.
+4. Desplegar clientes que usen la nueva forma.
+5. Endurecer el esquema y remover el comportamiento antiguo después.
 
-## Reference repository lessons
+## Lecciones de repositorios de referencia
 
-The user's Waku/Firebase projects demonstrate useful Netlify patterns:
+Los proyectos Waku/Firebase del usuario demuestran patrones útiles de Netlify:
 
-- `netlify-functions/serve.js` imports `dist/server/index.js` and delegates to `INTERNAL_runFetch`.
-- `preferStatic: true` lets `dist/public` win before the catch-all runtime.
-- `netlify.toml` publishes `dist/public` and points Functions to `netlify-functions`.
-- A Netlify Edge Function can inject per-response CSP nonces when Waku emits inline hydration scripts.
-- Hashed assets can be cached immutably while HTML should revalidate.
-- Deploy scripts should fail fast and run tests, lint, typecheck/build, and explicit target checks.
+- `netlify-functions/serve.js` importa `dist/server/index.js` y delega en `INTERNAL_runFetch`.
+- `preferStatic: true` permite que `dist/public` gane antes del runtime catch-all.
+- `netlify.toml` publica `dist/public` y apunta las Functions a `netlify-functions`.
+- Una Netlify Edge Function puede inyectar nonces CSP por respuesta cuando Waku emite scripts inline de hidratación.
+- Los assets con hash pueden cachearse de forma inmutable mientras el HTML debería revalidarse.
+- Los scripts de deploy deberían fallar rápido y ejecutar tests, lint, typecheck/build y verificaciones explícitas de destino.
 
-Do not copy these Firebase-specific lessons:
+No copies estas lecciones específicas de Firebase:
 
-- Externalizing `firebase-admin` or pinning Firebase Admin versions.
-- Firebase service account files or `included_files = ["private/**"]` unless the Waku application has an unrelated private-file need.
-- Firebase CSP origins.
-- Firebase REST token-verification workarounds.
+- Externalizar `firebase-admin` o fijar versiones de Firebase Admin.
+- Archivos de service account de Firebase o `included_files = ["private/**"]` a menos que la aplicación Waku tenga una necesidad no relacionada de archivos privados.
+- Orígenes CSP de Firebase.
+- Workarounds de verificación de tokens REST de Firebase.
 
-Convex's browser URL is public by design. Convex deploy keys and backend environment variables are secrets.
+La URL de navegador de Convex es pública por diseño. Las deploy keys de Convex y las variables de entorno del backend son secretos.

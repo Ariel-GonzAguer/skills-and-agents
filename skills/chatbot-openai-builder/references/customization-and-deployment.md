@@ -1,6 +1,6 @@
-# Detailed reference
+# Referencia detallada
 
-This material was moved from `SKILL.md` to keep the loaded workflow focused.
+Este material se movió desde `SKILL.md` para mantener el workflow cargado enfocado.
 
 ## Personalización del chatbot
 
@@ -60,7 +60,7 @@ const greetingMessage = "¡Hola! Soy Mandarino, el asistente virtual de Gato Roj
 )}
 ```
 
-## Troubleshooting
+## Solución de problemas
 
 ### El streaming no funciona
 **Problema:** Los mensajes no aparecen gradualmente.
@@ -152,7 +152,7 @@ async function getBusinessData() {
 }
 ```
 
-## Deployment
+## Despliegue
 
 ### Netlify
 1. Crear archivo `netlify/functions/chat-openai.ts`

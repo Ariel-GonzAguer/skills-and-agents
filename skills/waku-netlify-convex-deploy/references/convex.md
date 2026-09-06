@@ -1,95 +1,95 @@
-# Convex Production Review
+# Revisión de producción de Convex
 
-## Setup and generated types
+## Configuración y tipos generados
 
-- Keep `convex` in runtime dependencies when the deployed client imports it.
-- Generate `convex/_generated/api`, `dataModel`, and `server` with the installed Convex CLI.
-- Commit generated files if that is the current Convex recommendation and repository convention; never edit them manually.
-- Create `ConvexReactClient` once at module scope in a client-only boundary. Fail clearly when the public deployment URL is absent rather than passing `undefined` with a type assertion.
-- In Waku, confirm the current client-visible environment prefix from official docs. Recent Waku uses `WAKU_PUBLIC_`; do not assume Vite's `VITE_` prefix.
+- Mantén `convex` en dependencias de runtime cuando el cliente desplegado lo importa.
+- Genera `convex/_generated/api`, `dataModel` y `server` con la CLI de Convex instalada.
+- Commitea los archivos generados si esa es la recomendación actual de Convex y la convención del repositorio; nunca los edites a mano.
+- Crea `ConvexReactClient` una vez a nivel de módulo en un límite solo-cliente. Falla claramente cuando la URL pública de despliegue está ausente en vez de pasar `undefined` con una aserción de tipo.
+- En Waku, confirma el prefijo de entorno visible para el cliente actual desde la documentación oficial. Waku reciente usa `WAKU_PUBLIC_`; no asumas el prefijo `VITE_` de Vite.
 
-## Schema audit
+## Auditoría de esquema
 
-Require a `convex/schema.ts` for production projects. Review:
+Requiere un `convex/schema.ts` para proyectos de producción. Revisa:
 
-- Every table has explicit validators.
-- Optional versus nullable semantics are intentional.
-- IDs use `v.id("table")`, not arbitrary strings.
-- Unions model persisted variants completely.
-- Index field order matches equality and range constraints.
-- Index names describe access paths, such as `by_owner_and_status`.
-- Search/vector indexes include only fields needed by real queries.
-- Runtime `schemaValidation` remains enabled.
+- Cada tabla tiene validadores explícitos.
+- La semántica opcional versus nullable es intencional.
+- Los IDs usan `v.id("table")`, no strings arbitrarios.
+- Las uniones modelan variantes persistidas por completo.
+- El orden de campos de los índices coincide con restricciones de igualdad y rango.
+- Los nombres de índices describen rutas de acceso, como `by_owner_and_status`.
+- Los índices de búsqueda/vector incluyen solo campos necesarios para consultas reales.
+- La `schemaValidation` de runtime sigue habilitada.
 
-Deploying a stricter schema validates existing documents and can fail. Use expand, migrate, contract rather than disabling validation.
+Desplegar un esquema más estricto valida documentos existentes y puede fallar. Usa expandir, migrar, contraer en vez de deshabilitar la validación.
 
-## Function contract
+## Contrato de funciones
 
-Every public `query`, `mutation`, and `action` must have:
+Cada `query`, `mutation` y `action` pública debe tener:
 
-- Explicit `args`, including `args: {}` for no-argument functions.
-- Runtime validators for every untrusted value.
-- A `returns` validator when practical; require it for auth, billing, private records, and APIs where over-returning fields is risky.
-- Authentication when the operation is user-specific.
-- Resource-level authorization based on authoritative database state.
-- A bounded query or pagination for potentially growing collections.
-- Errors that do not leak secrets, internal IDs unnecessarily, or stack details.
+- `args` explícitos, incluido `args: {}` para funciones sin argumentos.
+- Validadores de runtime para cada valor no confiable.
+- Un validador `returns` cuando sea práctico; requiérelo para auth, billing, registros privados y APIs donde devolver campos de más es riesgoso.
+- Autenticación cuando la operación es específica del usuario.
+- Autorización a nivel de recursos basada en el estado autoritativo de la base de datos.
+- Una consulta acotada o paginación para colecciones que pueden crecer.
+- Errores que no filtren secretos, IDs internos innecesariamente o detalles del stack.
 
-Use `internalQuery`, `internalMutation`, and `internalAction` for functions called only by the backend, schedules, webhooks, migrations, seeds, admin workflows, or actions. Internal status reduces exposure but does not replace input checks and invariants.
+Usa `internalQuery`, `internalMutation` e `internalAction` para funciones llamadas solo por el backend, schedules, webhooks, migraciones, seeds, workflows de admin o actions. El estado interno reduce la exposición pero no reemplaza las comprobaciones de input y los invariantes.
 
-## Authentication and authorization
+## Autenticación y autorización
 
-`ctx.auth.getUserIdentity()` proves identity only after a provider is configured correctly. It does not prove ownership or role.
+`ctx.auth.getUserIdentity()` prueba identidad solo después de que un proveedor esté configurado correctamente. No prueba propiedad ni rol.
 
-For each public operation:
+Para cada operación pública:
 
-1. Obtain identity and reject `null` where authentication is required.
-2. Resolve the application user using stable identity fields such as `tokenIdentifier` or the documented issuer/subject pair.
-3. Load membership or resource ownership from Convex.
-4. Check tenant, role, ownership, status, and business constraints.
-5. Query or mutate only after checks pass.
+1. Obtén la identidad y rechaza `null` donde se requiera autenticación.
+2. Resuelve el usuario de la aplicación usando campos de identidad estables como `tokenIdentifier` o el par issuer/subject documentado.
+3. Carga la membresía o propiedad del recurso desde Convex.
+4. Verifica tenant, rol, propiedad, estado y restricciones de negocio.
+5. Consulta o muta solo después de que las verificaciones pasen.
 
-Never trust client-supplied `userId`, `ownerId`, email, tenant, organization, price, entitlement, or role as authorization evidence. Test that user A cannot read or mutate user B's records.
+Nunca confíes en `userId`, `ownerId`, email, tenant, organización, precio, entitlement o rol suministrados por el cliente como evidencia de autorización. Prueba que el usuario A no pueda leer ni mutar los registros del usuario B.
 
-## Query and mutation performance
+## Rendimiento de consultas y mutaciones
 
-Flag and repair:
+Señala y repara:
 
-- `.collect()` on a table that can grow without a proven small upper bound.
-- `.filter()` where an index can constrain the query.
-- N+1 reads inside loops when data can be modeled or fetched more directly.
-- Large documents, unbounded arrays, and frequently rewritten aggregates.
-- Returning full documents when a stable projection is enough.
-- Mutations that perform external network calls; network calls belong in actions, with mutations for transactional writes.
-- Actions that implement database invariants across separate calls without an atomic mutation.
+- `.collect()` en una tabla que puede crecer sin un límite superior pequeño probado.
+- `.filter()` donde un índice puede restringir la consulta.
+- Lecturas N+1 dentro de loops cuando los datos pueden modelarse u obtenerse más directamente.
+- Documentos grandes, arrays sin límite y agregados reescritos con frecuencia.
+- Devolver documentos completos cuando una proyección estable es suficiente.
+- Mutaciones que realizan llamadas de red externas; las llamadas de red pertenecen a actions, con mutaciones para escrituras transaccionales.
+- Actions que implementan invariantes de base de datos entre llamadas separadas sin una mutación atómica.
 
-## HTTP actions and webhooks
+## HTTP actions y webhooks
 
-Convex HTTP actions do not receive automatic function argument validation. Validate:
+Las HTTP actions de Convex no reciben validación automática de argumentos de función. Valida:
 
-- Method and route.
-- Content type and maximum body size.
-- Parsed body shape.
-- Authentication or webhook signature using the raw body when required.
-- Timestamp/replay protection and idempotency.
-- Authorization and tenant mapping.
-- Strict CORS allowlist and preflight behavior for browser endpoints.
-- Rate/abuse limits appropriate to cost and sensitivity.
-- Safe response headers and errors.
+- Método y ruta.
+- Tipo de contenido y tamaño máximo del body.
+- Forma del body parseado.
+- Autenticación o firma de webhook usando el body crudo cuando se requiera.
+- Protección de timestamp/replay e idempotencia.
+- Autorización y mapeo de tenant.
+- Allowlist estricta de CORS y comportamiento de preflight para endpoints de navegador.
+- Límites de rate/abuso apropiados al costo y la sensibilidad.
+- Headers de respuesta y errores seguros.
 
-Move privileged database work into internal functions invoked after the request is authenticated.
+Mueve el trabajo privilegiado de base de datos a funciones internas invocadas después de autenticar la petición.
 
-## Environment and deployments
+## Entorno y despliegues
 
-- Convex environment variables are deployment-specific. Configure values separately for development, preview, staging, and production.
-- Declare expected variables with validators in `convex/convex.config.ts` when supported by the installed version.
-- Never expose `CONVEX_DEPLOY_KEY` through a Waku public variable.
-- Use production deploy keys only in Netlify production Builds scope.
-- Use preview deploy keys only in deploy-preview context.
-- Use synthetic/non-production data and reduced third-party credentials in previews.
-- A permanent staging environment should use a separate Convex project when stable isolation is needed.
+- Las variables de entorno de Convex son específicas del despliegue. Configura valores por separado para desarrollo, preview, staging y producción.
+- Declara las variables esperadas con validadores en `convex/convex.config.ts` cuando la versión instalada lo soporte.
+- Nunca expongas `CONVEX_DEPLOY_KEY` a través de una variable pública de Waku.
+- Usa deploy keys de producción solo en el scope de Netlify Builds de producción.
+- Usa deploy keys de preview solo en el contexto de deploy-preview.
+- Usa datos sintéticos/no productivos y credenciales reducidas de terceros en previews.
+- Un entorno de staging permanente debería usar un proyecto Convex separado cuando se necesite aislamiento estable.
 
-Useful current commands, which must be checked against the installed CLI:
+Comandos actuales útiles, que deben verificarse contra la CLI instalada:
 
 ```bash
 pnpm exec convex dev --once
@@ -98,26 +98,26 @@ pnpm exec convex deploy --dry-run
 pnpm exec convex deploy --cmd "pnpm build"
 ```
 
-Do not print `convex env get` values during an audit.
+No imprimas valores de `convex env get` durante una auditoría.
 
 ## Tests
 
-Use `convex-test` for fast function and authorization tests, including `withIdentity`. Also test production-sensitive behavior against a real isolated backend because the mock does not fully enforce production limits, IDs, search behavior, crons, or runtime built-ins.
+Usa `convex-test` para tests rápidos de funciones y autorización, incluido `withIdentity`. También prueba el comportamiento sensible a producción contra un backend aislado real porque el mock no impone completamente los límites de producción, IDs, comportamiento de búsqueda, crons o built-ins de runtime.
 
-Minimum backend tests:
+Tests mínimos de backend:
 
-- Valid request succeeds.
-- Invalid argument and undeclared extra field fail.
-- Unauthenticated request fails.
-- Authenticated but unauthorized/cross-tenant request fails.
-- Correct owner/role succeeds.
-- Pagination or result bounds hold.
-- Schema rejects invalid persisted data.
-- Webhook rejects invalid signature and replay.
+- Una petición válida tiene éxito.
+- Un argumento inválido y un campo extra no declarado fallan.
+- Una petición no autenticada falla.
+- Una petición autenticada pero no autorizada/cross-tenant falla.
+- El propietario/rol correcto tiene éxito.
+- La paginación o los límites de resultados se mantienen.
+- El esquema rechaza datos persistidos inválidos.
+- El webhook rechaza firma inválida y replay.
 
-## Deployment sequencing
+## Secuencia de despliegue
 
-Convex deploy can run the frontend build with the selected deployment URL:
+El deploy de Convex puede ejecutar el build del frontend con la URL de despliegue seleccionada:
 
 ```bash
 pnpm exec convex deploy \
@@ -125,9 +125,9 @@ pnpm exec convex deploy \
   --cmd "pnpm build"
 ```
 
-Verify this integration against current docs and the installed version. Run tests before this command because Convex may update the backend before the Netlify deploy completes.
+Verifica esta integración contra la documentación actual y la versión instalada. Ejecuta los tests antes de este comando porque Convex puede actualizar el backend antes de que el deploy de Netlify se complete.
 
-Official sources:
+Fuentes oficiales:
 
 - https://docs.convex.dev/production/hosting/netlify
 - https://docs.convex.dev/production/multiple-deployments

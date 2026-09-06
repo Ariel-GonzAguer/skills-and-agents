@@ -9,7 +9,7 @@ description: |
   Firestore, Netlify Functions, Waku, React, Zustand, y stacks similares.
 ---
 
-# Security Audit for Serverless Web Applications
+# Auditoría de seguridad para aplicaciones web serverless
 
 Realiza una auditoría de seguridad exhaustiva siguiendo esta checklist. Cada sección debe revisarse
 en orden y reportar hallazgos con severidad (🔴 Alto / 🟡 Medio / 🟢 Bajo / ✓ Correcto).
@@ -174,7 +174,7 @@ Input sanitization NO es suficiente. OWASP recomienda **output encoding** como p
 ### 9.4 Sanitization Libraries
 
 - ¿Se usa DOMPurify (o equivalente) para sanitizar HTML antes de insertar en el DOM?
-- ¿La configuración de DOMPurify es restrictiva? (DEFAULT_CONFIG permite太多)
+- ¿La configuración de DOMPurify es restrictiva? (DEFAULT_CONFIG permite demasiado)
 - ¿Se evita `ALLOWED_TAGS` con `script`, `iframe`, `object`, `embed`?
 - ¿Se evita `ALLOWED_ATTR` con `on*` (event handlers)?
 - ¿Se usa Trusted Types policy como capa adicional?

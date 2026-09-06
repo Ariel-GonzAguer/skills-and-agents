@@ -1,153 +1,153 @@
-# Scoring, Evidence Coverage, and Confidence
+# Scoring, cobertura de evidencia y confianza
 
-## Three separate measures
+## Tres medidas separadas
 
-- `Overall score`: risk-adjusted attractiveness of the opportunity, 0-100.
-- `Confidence`: how likely the assessment is directionally correct, 0-100.
-- `Evidence coverage`: how much of the weighted decision surface has usable evidence, 0-100.
+- `Overall score`: atractivo de la oportunidad ajustado por riesgo, 0-100.
+- `Confidence`: probabilidad de que la evaluación sea direccionalmente correcta, 0-100.
+- `Evidence coverage`: cuánta de la superficie de decisión ponderada tiene evidencia útil, 0-100.
 
-Confidence is not optimism. Strong evidence that a project should be abandoned can produce a low score and high confidence.
+La confianza no es optimismo. Evidencia fuerte de que un proyecto debería abandonarse puede producir un score bajo y una confianza alta.
 
-## Dimension scoring contract
+## Contrato de scoring de dimensiones
 
-Score each applicable dimension from 0 to 100. Use `null` when it cannot be scored without inventing data. Never assign 50 merely because a value is unknown.
+Puntúa cada dimensión aplicable de 0 a 100. Usa `null` cuando no pueda puntuarse sin inventar datos. Nunca asignes 50 solo porque un valor es desconocido.
 
-Each dimension must include:
+Cada dimensión debe incluir:
 
-- `weight`: integer or decimal percentage;
-- `score`: 0-100 or `null`;
+- `weight`: porcentaje entero o decimal;
+- `score`: 0-100 o `null`;
 - `confidence`: 0-100;
 - `evidence_strength`: 0-4;
 - `positive_factors`;
 - `negative_factors`;
 - `evidence_ids`;
 - `unknowns`;
-- concise rationale.
+- fundamento conciso.
 
-`evidence_strength: 0` means the dimension has no usable evidence. It is valid only for an unscored or explicitly provisional dimension and must not support a confident score.
+`evidence_strength: 0` significa que la dimensión no tiene evidencia útil. Solo es válida para una dimensión sin puntuar o explícitamente provisional, y no puede respaldar un score confiado.
 
-Interpret scores consistently:
+Interpreta los scores de forma consistente:
 
-| Range | Interpretation |
+| Rango | Interpretación |
 | ---: | --- |
-| 0-20 | Strong evidence against viability |
-| 21-40 | Material structural weakness |
-| 41-60 | Mixed, ordinary, or unresolved |
-| 61-80 | Attractive with bounded weaknesses |
-| 81-100 | Exceptional evidence and economics |
+| 0-20 | Evidencia fuerte en contra de la viabilidad |
+| 21-40 | Debilidad estructural material |
+| 41-60 | Mixto, ordinario o sin resolver |
+| 61-80 | Atractivo con debilidades acotadas |
+| 81-100 | Evidencia y economía excepcionales |
 
-Problem-specific anchors:
+Anclas específicas de problema:
 
-- 0-20: nonexistent or unsupported problem;
-- 21-40: inconvenience or weak urgency;
-- 41-60: real but replaceable problem;
-- 61-80: important recurring problem with meaningful cost;
-- 81-100: critical, frequent, costly problem supported by behavior.
+- 0-20: problema inexistente o sin respaldo;
+- 21-40: inconveniencia o urgencia débil;
+- 41-60: problema real pero reemplazable;
+- 61-80: problema importante y recurrente con costo significativo;
+- 81-100: problema crítico, frecuente y costoso respaldado por comportamiento.
 
-A claim by the founder cannot by itself justify a score above 60 in the affected dimension.
+Una afirmación del fundador no puede por sí sola justificar un score por encima de 60 en la dimensión afectada.
 
-## Dimension guidance
+## Guía de dimensiones
 
 ### Problem
 
-Frequency, severity, urgency, cost of inaction, current workaround, and behavioral evidence. Avoid double-counting market size.
+Frecuencia, severidad, urgencia, costo de la inacción, workaround actual y evidencia de comportamiento. Evita contar dos veces el tamaño de mercado.
 
 ### Customer
 
-ICP specificity, user/buyer/decision-maker/payer clarity, budget, buying trigger, segment homogeneity, and access to interview or sell.
+Especificidad del ICP, claridad usuario/comprador/decisor/pagador, presupuesto, disparador de compra, homogeneidad de segmento y acceso a entrevista o venta.
 
 ### Market
 
-Eligible reachable buyers, growth, timing, geography, regulation, concentration, and credible SOM. Large TAM without accessibility scores poorly.
+Compradores elegibles alcanzables, crecimiento, timing, geografía, regulación, concentración y SOM creíble. Un TAM grande sin accesibilidad puntúa mal.
 
 ### Competition
 
-Score attractiveness, not absence of competitors. Include direct, indirect, substitutes, incumbent distribution, switching costs, and market crowding. Competition can validate demand while reducing capture.
+Puntúa el atractivo, no la ausencia de competidores. Incluye directos, indirectos, sustitutos, distribución de incumbentes, costos de cambio y saturación de mercado. La competencia puede validar la demanda mientras reduce la captura.
 
 ### Differentiation
 
-Measurable buyer advantage and defensibility from data, distribution, workflow, integration, expertise, brand, regulation, network effects, or switching costs. Label easy, moderate, or difficult to copy.
+Ventaja de comprador medible y defendibilidad por datos, distribución, workflow, integración, expertise, marca, regulación, efectos de red o costos de cambio. Etiqueta fácil, moderada o difícil de copiar.
 
 ### Product / UX
 
-Time to value, core workflow completion, activation, reliability, trust, retention loop, and critical missing capabilities. Keep code elegance out unless it changes these outcomes.
+Tiempo hasta el valor, completitud del workflow central, activación, confiabilidad, confianza, loop de retención y capacidades críticas faltantes. Deja la elegancia del código fuera salvo que cambie estos resultados.
 
 ### Monetization / pricing
 
-Payer, value metric, willingness-to-pay evidence, packaging, price-to-value, discounting, billing fit, and revenue durability.
+Pagador, métrica de valor, evidencia de disposición a pagar, empaquetado, precio-valor, descuentos, ajuste de billing y durabilidad del ingreso.
 
 ### Acquisition
 
-Credible path to initial and scaled customers, channel access, conversion evidence, cycle length, sales capacity, platform dependence, and saturation.
+Camino creíble a clientes iniciales y a escala, acceso a canal, evidencia de conversión, duración del ciclo, capacidad de venta, dependencia de plataforma y saturación.
 
 ### Economics
 
-Contribution margin, CAC, retention/churn, LTV, payback, cash cycle, support, infrastructure, AI/API cost, and break-even. Unknown CAC and churn should prevent a high-confidence high score.
+Margen de contribución, CAC, retención/churn, LTV, payback, ciclo de caja, soporte, infraestructura, costo de IA/API y break-even. CAC y churn desconocidos deben impedir un score alto con confianza alta.
 
 ### Execution risk
 
-This score runs positive: 100 means easy and low-risk execution; 0 means infeasible or exposed. Include technical, operational, legal, compliance, dependency, capital, support, and timing constraints.
+Este score corre positivo: 100 significa ejecución fácil y de bajo riesgo; 0 significa inviable o expuesta. Incluye restricciones técnicas, operativas, legales, de cumplimiento, de dependencias, de capital, de soporte y de timing.
 
 ### Founder fit / personal ROI
 
-Skills, access, credibility, sales willingness, capital, weekly time, interest, runway, opportunity cost, return per hour, and ability to maintain the business.
+Habilidades, acceso, credibilidad, disposición a vender, capital, tiempo semanal, interés, runway, costo de oportunidad, retorno por hora y capacidad de sostener el negocio.
 
-## Weighted score with missing dimensions
+## Score ponderado con dimensiones faltantes
 
-Let `known_weight` be the sum of weights with non-null scores.
+Sea `known_weight` la suma de pesos con scores no nulos.
 
 `provisional_score = sum(score x weight) / known_weight`
 
-This avoids pretending unknown means bad. However, it can make a sparse evaluation look deceptively strong, so always publish:
+Esto evita fingir que desconocido significa malo. Sin embargo, puede hacer que una evaluación dispersa luzca engañosamente fuerte, así que siempre publica:
 
 `evidence_coverage = known_weight / total_weight x 100`
 
-Do not issue `BUILD` when evidence coverage is below 70. Below 50, normally cap at `VALIDATE` or `RECONSIDER` depending on whether the missing evidence is cheaply testable and whether the observed case remains attractive.
+No emitas `BUILD` cuando la cobertura de evidencia esté por debajo de 70. Por debajo de 50, normalmente límites en `VALIDATE` o `RECONSIDER` según si la evidencia faltante se puede testear barato y si el caso observado sigue siendo atractivo.
 
-## Confidence calculation
+## Cálculo de confianza
 
-Dimension confidence reflects source quality, triangulation, relevance, recency, sample quality, and causal proximity. Suggested anchors:
+La confianza de dimensión refleja calidad de fuente, triangulación, relevancia, actualidad, calidad de muestra y proximidad causal. Anclas sugeridas:
 
-- 0-20: speculation or contradictory unknowns;
-- 21-40: weak directional evidence;
-- 41-60: usable but limited evidence;
-- 61-80: multiple relevant sources or verified behavior;
-- 81-100: strong repeated behavioral or authoritative evidence.
+- 0-20: especulación o unknowns contradictorios;
+- 21-40: evidencia direccional débil;
+- 41-60: evidencia útil pero limitada;
+- 61-80: múltiples fuentes relevantes o comportamiento verificado;
+- 81-100: evidencia conductual repetida o autoritativa.
 
-Compute:
+Calcula:
 
 `weighted_dimension_confidence = sum(confidence x weight for scored dimensions) / known_weight`
 
 `overall_confidence = 0.7 x weighted_dimension_confidence + 0.3 x evidence_coverage`
 
-Then apply disclosed penalties, normally 0-20 total, for stale evidence, unresolved contradictions, non-independent sources, severe selection bias, missing founder context, or no external research when it was needed. Do not apply a penalty merely because the score is low.
+Luego aplica penalizaciones divulgadas, normalmente 0-20 en total, por evidencia desactualizada, contradicciones sin resolver, fuentes no independientes, sesgo de selección severo, contexto de fundador faltante o falta de investigación externa cuando fue necesaria. No apliques una penalización solo porque el score es bajo.
 
-## Red-team adjustment
+## Ajuste de red team
 
-Store both `pre_red_team_score` and final dimension scores. The final weighted score comes from final scores, not from an arbitrary global subtraction. Every changed dimension needs an attack ID and rationale.
+Guarda tanto `pre_red_team_score` como los scores de dimensión finales. El score ponderado final viene de los scores finales, no de una resta global arbitraria. Cada dimensión cambiada necesita un ID de ataque y un fundamento.
 
-If the red team finds a cross-cutting issue that cannot be assigned to one dimension, record a transparent `global_adjustment` between -10 and 0. Use it sparingly because dimension changes are easier to explain.
+Si el red team encuentra un problema transversal que no puede asignarse a una dimensión, registra un `global_adjustment` transparente entre -10 y 0. Úsalo con moderación porque los cambios de dimensión son más fáciles de explicar.
 
-## Deal breakers and verdict ceilings
+## Deal breakers y límites de veredicto
 
-Deal breakers override averaging. Examples:
+Los deal breakers anulan el promediado. Ejemplos:
 
-- legal or compliance prohibition without a feasible remedy;
-- no credible buyer access within runway;
-- unit economics structurally negative at plausible scale;
-- required capital exceeds accessible capital;
-- founder cannot perform or fund the binding activity;
-- platform or supplier dependency creates unacceptable existential exposure;
-- severe security/privacy gap blocks the target buyer and cannot be remediated in time;
-- behavioral evidence strongly rejects the core value proposition.
+- prohibición legal o de cumplimiento sin remedio factible;
+- sin acceso creíble al comprador dentro del runway;
+- unidad económica estructuralmente negativa a escala plausible;
+- capital requerido que excede el capital accesible;
+- el fundador no puede ejecutar o financiar la actividad vinculante;
+- la dependencia de plataforma o proveedor crea exposición existencial inaceptable;
+- una brecha severa de seguridad/privacidad bloquea al comprador objetivo y no puede remediarse a tiempo;
+- la evidencia conductual rechaza con fuerza la propuesta de valor central.
 
-Each deal breaker includes status `open`, `mitigated`, or `accepted`, severity, evidence IDs, remediation, and verdict ceiling. Typical ceilings:
+Cada deal breaker incluye estado `open`, `mitigated` o `accepted`, severidad, IDs de evidencia, remediación y límite de veredicto. Límites típicos:
 
-- unresolved critical: `VALIDATE`, `RECONSIDER`, or `ABANDON` depending on falsifiability and evidence;
-- unresolved high: no `BUILD`;
-- missing willingness-to-pay or retention evidence: normally no `BUILD`;
-- low founder fit with no delegation plan: no `BUILD` for this founder, even if opportunity viability is high.
+- crítico sin resolver: `VALIDATE`, `RECONSIDER` o `ABANDON` según falsabilidad y evidencia;
+- alto sin resolver: sin `BUILD`;
+- sin evidencia de disposición a pagar o retención: normalmente sin `BUILD`;
+- fit de fundador bajo sin plan de delegación: sin `BUILD` para este fundador, incluso si la viabilidad de la oportunidad es alta.
 
-## Verdict is a judgment, not a band
+## El veredicto es un juicio, no una banda
 
-Use the score as one input. Explain why the selected verdict is preferable to adjacent verdicts. A 72 with low coverage and an untested acquisition channel can be `VALIDATE`; a 58 with high confidence, strong niche economics, low downside, and excellent founder fit can be `BUILD` for a constrained micro-business.
+Usa el score como un input. Explica por qué el veredicto elegido es preferible a los adyacentes. Un 72 con cobertura baja y un canal de adquisición sin testear puede ser `VALIDATE`; un 58 con confianza alta, economía de nicho fuerte, downside bajo y fit de fundador excelente puede ser `BUILD` para una microempresa acotada.

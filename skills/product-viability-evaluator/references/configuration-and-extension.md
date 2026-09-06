@@ -1,60 +1,60 @@
-# Configuration and Extension
+# Configuración y extensión
 
-## Modify weights
+## Modificar pesos
 
-Edit [config/profiles.json](../config/profiles.json), preserving the eleven stable dimension IDs and a total of 100 per profile. Then update [references/business-model-profiles.md](business-model-profiles.md) so agents understand why the profile differs.
+Edita [config/profiles.json](../config/profiles.json), preservando los once IDs de dimensión estables y un total de 100 por perfil. Luego actualiza [references/business-model-profiles.md](business-model-profiles.md) para que los agentes entiendan por qué el perfil difiere.
 
-For a one-off assessment, copy the closest profile into the assessment JSON and explain any changes. Keep changes small unless the business has a structurally different constraint. `founder_fit` must remain explicit and cannot be removed from any profile. Profile keys should match the schema's project type exactly; aliases such as `consumer` and `enterprise` are retained only as human-friendly references in the methodology.
+Para una evaluación de una sola vez, copia el perfil más cercano dentro del JSON de la evaluación y explica cualquier cambio. Mantén los cambios pequeños salvo que el negocio tenga una restricción estructuralmente distinta. `founder_fit` debe permanecer explícito y no puede eliminarse de ningún perfil. Las keys de perfil deben coincidir exactamente con el tipo de proyecto del esquema; alias como `consumer` y `enterprise` se conservan solo como referencias amigables en la metodología.
 
-## Modify decision policy
+## Modificar la política de decisión
 
-Policy defaults live in [config/decision-policy.json](../config/decision-policy.json) and are read by `scripts/calculate-score.mjs` at runtime. Keep their semantics aligned with the policy notes and run the complete tests after any policy change.
+Los defaults de política viven en [config/decision-policy.json](../config/decision-policy.json) y son leídos por `scripts/calculate-score.mjs` en runtime. Mantén su semántica alineada con las notas de política y ejecuta los tests completos después de cualquier cambio de política.
 
-Do not introduce score-only verdict bands. Policy can change confidence, coverage, and deal-breaker thresholds, but the final verdict remains a reasoned decision.
+No introduzcas bandas de veredicto basadas solo en el score. La política puede cambiar los umbrales de confianza, cobertura y deal breakers, pero el veredicto final sigue siendo una decisión razonada.
 
-## Add a business type
+## Agregar un tipo de negocio
 
-1. Add the type to `project.type` in `schemas/assessment.schema.json`.
-2. Add a weight profile totaling 100 to `config/profiles.json`.
-3. Add type-specific buyer, retention, distribution, economics, and execution questions to `references/business-model-profiles.md`.
-4. Add at least one deterministic case to `tests/cases.json` and one behavioral eval to `evals/evals.json`.
-5. Run `node tests/run-tests.mjs` and the Skill validator.
+1. Agrega el tipo a `project.type` en `schemas/assessment.schema.json`.
+2. Agrega un perfil de pesos que totalice 100 a `config/profiles.json`.
+3. Agrega preguntas específicas de comprador, retención, distribución, economía y ejecución a `references/business-model-profiles.md`.
+4. Agrega al menos un caso determinista a `tests/cases.json` y un eval conductual a `evals/evals.json`.
+5. Ejecuta `node tests/run-tests.mjs` y el validador de la Skill.
 
-## Change the model per phase
+## Cambiar el modelo por fase
 
-This Skill never encodes model names. Each role is delegated to an agent defined at the host level, and each agent binds its own model:
+Esta Skill nunca codifica nombres de modelo. Cada rol se delega a un agente definido a nivel de host, y cada agente vincula su propio modelo:
 
-1. Edit the `model` field in the matching agent file of your opencode configuration (for example `~/.config/opencode/agents/viability-skeptic.md` with `model: provider/model-id`).
-2. Restart opencode so the new config is loaded.
-3. Re-run the evaluation. The role to agent mapping in [config/agents.json](../config/agents.json) is unchanged.
+1. Edita el campo `model` en el archivo de agente correspondiente de tu configuración de opencode (por ejemplo `~/.config/opencode/agents/viability-skeptic.md` con `model: provider/model-id`).
+2. Reinicia opencode para que se cargue la nueva configuración.
+3. Re-ejecuta la evaluación. El mapeo de rol a agente en [config/agents.json](../config/agents.json) no cambia.
 
-To bind a role to a different agent instead, edit the `role_agent` mapping in `config/agents.json` and restart opencode.
+Para vincular un rol a un agente distinto, edita el mapeo `role_agent` en `config/agents.json` y reinicia opencode.
 
-## Add agents or models
+## Agregar agentes o modelos
 
-Do not encode model names. Add a role in `references/multi-agent.md`, define its input and output fields, and ensure it writes source IDs into the shared assessment schema. A new role must reduce correlated error, collect different evidence, or perform deterministic verification; otherwise it only adds cost.
+No codifiques nombres de modelo. Agrega un rol en `references/multi-agent.md`, define sus campos de input y output, y asegúrate de que escriba IDs de fuente en el esquema de evaluación compartido. Un rol nuevo debe reducir el error correlacionado, recolectar evidencia distinta o realizar verificación determinista; si no, solo agrega costo.
 
-To expose a role to delegation:
+Para exponer un rol a la delegación:
 
-1. Add the role to `references/multi-agent.md`.
-2. Define a matching agent file at the host level with a `description` that mentions the skill and role name.
-3. Add a `role_agent` entry in `config/agents.json`.
+1. Agrega el rol a `references/multi-agent.md`.
+2. Define un archivo de agente a nivel de host con una `description` que mencione la skill y el nombre del rol.
+3. Agrega una entrada `role_agent` en `config/agents.json`.
 
-The synthesizer resolves conflicts using evidence. Never average model scores or use majority vote as a substitute for judgment.
+El synthesizer resuelve conflictos usando evidencia. Nunca promedies scores de modelos ni uses el voto por mayoría como sustituto del juicio.
 
-## Extend financial models
+## Extender modelos financieros
 
-Add optional scenario inputs to the schema and calculations to `calculateScenario`. Preserve `null` for unavailable metrics, document formulas and limitations in `references/financial-modeling.md`, and add exact arithmetic tests.
+Agrega inputs de escenario opcionales al esquema y cálculos a `calculateScenario`. Preserva `null` para métricas no disponibles, documenta fórmulas y limitaciones en `references/financial-modeling.md`, y agrega tests aritméticos exactos.
 
-## Portability requirements
+## Requisitos de portabilidad
 
-- Relative paths inside the Skill.
-- No provider-specific tool names in the workflow.
-- No mandatory network or subagent dependency.
-- No external package dependency for scripts.
-- Safe fallback when shell, web, or repository access is missing.
-- UTF-8 Markdown and JSON artifacts.
+- Rutas relativas dentro de la Skill.
+- Sin nombres de herramientas específicos de proveedor en el workflow.
+- Sin dependencia obligatoria de red o subagentes.
+- Sin dependencia de paquetes externos para los scripts.
+- Fallback seguro cuando falta acceso a shell, web o repositorio.
+- Artefactos Markdown y JSON en UTF-8.
 
-## Versioning
+## Versionado
 
-Treat changes to dimension IDs, required schema fields, formulas, or verdict semantics as breaking changes. Weight tuning, new profiles, additional references, and new optional fields are compatible when existing assessments remain valid.
+Trata los cambios en IDs de dimensión, campos de esquema requeridos, fórmulas o semántica de veredicto como cambios breaking. El ajuste de pesos, perfiles nuevos, referencias adicionales y campos opcionales nuevos son compatibles cuando las evaluaciones existentes siguen siendo válidas.

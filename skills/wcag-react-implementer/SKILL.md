@@ -3,7 +3,7 @@ name: wcag-react-implementer
 description: Implementa correcciones de accesibilidad WCAG 2.2 Nivel AA en proyectos React + TypeScript + Tailwind CSS. Usa cuando el usuario pida agregar o corregir accesibilidad (a11y), etiquetas ARIA, soporte para lectores de pantalla, navegación por teclado, gestión del foco, modales accesibles, anuncios de errores de formularios, o cuando el código usa <div>/<span> como elementos interactivos. Se activa con "fix accessibility", "aria labels", "screen reader", "a11y", "lector de pantalla", "accesibilidad", "WCAG".
 ---
 
-# WCAG React Implementer
+# Implementador WCAG en React
 
 Implementación sistemática de patrones de accesibilidad WCAG 2.2 Nivel AA para codebases React + TypeScript + Tailwind CSS, incluyendo todos los atributos ARIA, navegación por teclado, gestión del foco y anuncios para lectores de pantalla.
 
@@ -151,7 +151,7 @@ Después de completar las correcciones, genera este resumen:
 1. **Nunca uses `onClick` solo** en un elemento no interactivo — siempre convierte a `<button>` o `<a>`
 2. **Nunca uses `aria-hidden="true"` en elementos con foco** — esto crea trampas de teclado
 3. **`role="dialog"` requiere `aria-labelledby` o `aria-label`**
-4. **Las regiones `aria-live` deben estar en el DOM antes de que cambie el contenido** —ardless Empty first, then update
+4. **Las regiones `aria-live` deben estar en el DOM antes de que cambie el contenido** — renderiza vacía primero, luego actualiza
 5. **`aria-required` NO reemplaza el atributo HTML `required`** — usa ambos
 6. **NO uses `tabIndex={0}`** en elementos que ya reciben foco nativamente (botones, inputs, enlaces)
 7. **`useId()` para cualquier ID que identifique relación** entre elementos (`htmlFor`, `aria-labelledby`, `aria-controls`, `aria-describedby`) — previene duplicados en listas

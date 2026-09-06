@@ -1,12 +1,12 @@
-# Detailed reference
+# Referencia detallada
 
-This material was moved from `SKILL.md` to keep the loaded workflow focused.
+Este material se movió desde `SKILL.md` para mantener el workflow cargado enfocado.
 
-## Phase 3 — Pattern Implementations
+## Fase 3: Implementaciones de patrones
 
-### Pattern A — Modal / Dialog (WCAG 2.1.2, 4.1.2)
+### Patrón A: Modal / Diálogo (WCAG 2.1.2, 4.1.2)
 
-**Problem**: `<div>` overlay without role, no Escape key, no focus management.
+**Problema**: overlay con `<div>` sin role, sin tecla Escape, sin gestión de foco.
 
 ```tsx
 import { useEffect, useId, useRef } from 'react';
@@ -84,18 +84,18 @@ export function AccessibleModal({ isOpen, onClose, title, children }: ModalProps
 }
 ```
 
-**Key rules**:
-- Backdrop `div` gets `aria-hidden="true"` — screen readers never see it
-- Inner dialog `div` gets `role="dialog" aria-modal="true" aria-labelledby={id} aria-hidden="false"`
-- `useId()` for unique title ID (required when multiple dialogs can exist)
-- `useRef` on close button → `.focus()` on open
-- `useEffect` adds `keydown` listener for Escape
-- `onClick` on backdrop → close; inner div stops propagation
-- Close button: `aria-label` + `<span aria-hidden="true">✕</span>`
+**Reglas clave**:
+- El `div` del backdrop recibe `aria-hidden="true"`: los lectores de pantalla nunca lo ven.
+- El `div` interno del diálogo recibe `role="dialog" aria-modal="true" aria-labelledby={id} aria-hidden="false"`.
+- `useId()` para el ID único del título (requerido cuando pueden existir múltiples diálogos).
+- `useRef` en el botón de cerrar con `.focus()` al abrir.
+- `useEffect` agrega el listener `keydown` para Escape.
+- `onClick` en el backdrop cierra; el `div` interno detiene la propagación.
+- Botón de cerrar: `aria-label` + `<span aria-hidden="true">✕</span>`.
 
 ---
 
-### Pattern B — Accessible Form (WCAG 1.3.1, 1.3.5, 4.1.2)
+### Patrón B: Formulario accesible (WCAG 1.3.1, 1.3.5, 4.1.2)
 
 ```tsx
 import { focusRing } from '../utils/a11y';
@@ -157,17 +157,17 @@ export function AccessibleForm() {
 }
 ```
 
-**Key rules**:
-- `noValidate` on `<form>` — removes browser tooltip; your JS/aria handles errors
-- Error container: `role="alert" aria-live="assertive" aria-atomic="true"` — assertive for errors that block progress; use `aria-live="polite"` for status/success
-- Required fields: `aria-required="true"` on the input AND visual asterisk pattern with `aria-hidden="true"` + `sr-only`
-- `aria-busy={isLoading}` + `aria-disabled={isLoading}` + dynamic `aria-label` on submit button
+**Reglas clave**:
+- `noValidate` en `<form>`: quita el tooltip del navegador; tu JS/aria maneja los errores.
+- Contenedor de errores: `role="alert" aria-live="assertive" aria-atomic="true"`; assertive para errores que bloquean el progreso; usa `aria-live="polite"` para estado/éxito.
+- Campos requeridos: `aria-required="true"` en el input Y patrón visual del asterisco con `aria-hidden="true"` + `sr-only`.
+- `aria-busy={isLoading}` + `aria-disabled={isLoading}` + `aria-label` dinámico en el botón de submit.
 
 ---
 
-### Pattern C — Select & Grouped Inputs (WCAG 1.3.1)
+### Patrón C: Select e inputs agrupados (WCAG 1.3.1)
 
-**Radio / Checkbox groups MUST use `<fieldset>` + `<legend>`**:
+**Los grupos de Radio / Checkbox DEBEN usar `<fieldset>` + `<legend>`**:
 
 ```tsx
 {/* WRONG ❌ */}
@@ -199,7 +199,7 @@ export function AccessibleForm() {
 </fieldset>
 ```
 
-**Select with accessible label**:
+**Select con label accesible**:
 
 ```tsx
 <label htmlFor="producto">
@@ -222,18 +222,18 @@ export function AccessibleForm() {
 
 ---
 
-### Pattern D — Accessible Toast / Live Region (WCAG 4.1.3)
+### Patrón D: Toast / live region accesible (WCAG 4.1.3)
 
-Use these rules when choosing between `assertive` and `polite`:
+Usa estas reglas al elegir entre `assertive` y `polite`:
 
-| Situation | aria-live | When to use |
+| Situación | aria-live | Cuándo usarlo |
 |---|---|---|
 | Error bloqueante | `assertive` | Error que impide continuar (validación, red) |
 | Estado de carga | `polite` | "Cargando...", "Guardando..." |
 | Éxito / confirmación | `polite` | "¡Guardado correctamente!" |
 | Alerta destructiva | `assertive` | "El archivo será eliminado permanentemente" |
 
-**Static error announcement pattern**:
+**Patrón de anuncio de error estático**:
 ```tsx
 {/* Mounts immediately → screen reader announces right away */}
 {error && (
@@ -250,7 +250,7 @@ Use these rules when choosing between `assertive` and `polite`:
 )}
 ```
 
-**Persistent live region with Sonner toast** — for libraries that render outside the component tree, add a visually hidden live region and mirror the message:
+**Live region persistente con toast de Sonner**: para librerías que renderizan fuera del árbol de componentes, agrega una live region oculta visualmente y refleja el mensaje:
 ```tsx
 const [announcement, setAnnouncement] = useState('');
 
@@ -278,7 +278,7 @@ return (
 
 ---
 
-### Pattern E — Accordion (WCAG 4.1.2, 2.1.1)
+### Patrón E: Acordeón (WCAG 4.1.2, 2.1.1)
 
 ```tsx
 function Accordion({ items }: { items: { title: string; content: string }[] }) {
@@ -329,18 +329,18 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 }
 ```
 
-**Key rules**:
-- Trigger is always a `<button>` (never `<div>` or `<h*>` directly)
-- `aria-expanded={boolean}` on the button
-- `aria-controls={panelId}` on the button; `aria-labelledby={headerId}` on the panel
-- Use `hidden` attribute (not `display:none` via JS) — screen readers respect `hidden` natively
-- Visual arrow: `aria-hidden="true"` so SR doesn't say "triangle down"
+**Reglas clave**:
+- El trigger siempre es un `<button>` (nunca `<div>` ni `<h*>` directamente).
+- `aria-expanded={boolean}` en el botón.
+- `aria-controls={panelId}` en el botón; `aria-labelledby={headerId}` en el panel.
+- Usa el atributo `hidden` (no `display:none` vía JS): los lectores de pantalla respetan `hidden` de forma nativa.
+- Flecha visual: `aria-hidden="true"` para que el lector de pantalla no diga "triangle down".
 
 ---
 
-### Pattern F — span/div → button (WCAG 2.1.1, 4.1.2)
+### Patrón F: span/div → button (WCAG 2.1.1, 4.1.2)
 
-**Never use non-interactive elements as buttons**:
+**Nunca uses elementos no interactivos como botones**:
 
 ```tsx
 {/* WRONG ❌ — not keyboard accessible, no role, no enter/space */}
@@ -367,13 +367,13 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 </button>
 ```
 
-**`<a>` vs `<button>` rule**:
-- Use `<a href="...">` for links that navigate to URLs (internal routes or external)
-- Use `<button>` for everything that triggers an action (open modal, submit, toggle)
+**Regla `<a>` vs `<button>`**:
+- Usa `<a href="...">` para links que navegan a URLs (rutas internas o externas).
+- Usa `<button>` para todo lo que dispara una acción (abrir modal, submit, toggle).
 
 ---
 
-### Pattern G — External Links (WCAG 2.4.4)
+### Patrón G: Links externos (WCAG 2.4.4)
 
 ```tsx
 {/* CORRECT ✅ — screen reader hears "Ver en YouTube (abre en nueva pestaña)" */}
@@ -403,7 +403,7 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 
 ---
 
-### Pattern H — Image / Icon Buttons (WCAG 1.1.1)
+### Patrón H: Botones de imagen / ícono (WCAG 1.1.1)
 
 ```tsx
 {/* Decorative image inside button — hide image, label the button */}
@@ -425,7 +425,7 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 
 ---
 
-### Pattern I — Navigation Landmarks (WCAG 1.3.6, 2.4.1)
+### Patrón I: Landmarks de navegación (WCAG 1.3.6, 2.4.1)
 
 ```tsx
 {/* Skip link — first focusable element on the page */}
@@ -463,7 +463,7 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 
 ---
 
-### Pattern J — Table / List Accessibility (WCAG 1.3.1)
+### Patrón J: Accesibilidad de tablas / listas (WCAG 1.3.1)
 
 ```tsx
 {/* Data table */}
@@ -506,7 +506,7 @@ function Accordion({ items }: { items: { title: string; content: string }[] }) {
 
 ---
 
-### Pattern K — Loading States & Busy Regions (WCAG 4.1.3, 2.2.1)
+### Patrón K: Estados de carga y regiones ocupadas (WCAG 4.1.3, 2.2.1)
 
 ```tsx
 {/* Button with loading state */}

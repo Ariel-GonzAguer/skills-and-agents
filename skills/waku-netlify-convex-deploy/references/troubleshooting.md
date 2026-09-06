@@ -1,93 +1,93 @@
-# Troubleshooting Matrix
+# Matriz de troubleshooting
 
 ## `error decoding lambda response`
 
-This is a wrapper symptom, not a root cause. Inspect Netlify Function logs for the first import/runtime exception.
+Esto es un síntoma del wrapper, no una causa raíz. Inspecciona los logs de la Netlify Function en busca de la primera excepción de import/runtime.
 
-Check:
+Verifica:
 
-- Wrapper imports the generated server entry that actually exists.
-- Waku adapter and checked-in wrapper agree for the installed version.
-- Runtime dependencies are in `dependencies`, not only `devDependencies`.
-- Packages required by SSR were not incorrectly externalized.
-- Required Function variables have Functions scope and the deploy was rebuilt after setting them.
-- Function response is valid and body consumption/streaming is supported by the current runtime.
+- El wrapper importa la entrada del servidor generado que realmente existe.
+- El adaptador de Waku y el wrapper commiteado coinciden para la versión instalada.
+- Las dependencias de runtime están en `dependencies`, no solo en `devDependencies`.
+- Los paquetes requeridos por SSR no fueron externalizados incorrectamente.
+- Las variables requeridas de la Function tienen scope Functions y el deploy se reconstruyó después de configurarlas.
+- La respuesta de la Function es válida y el consumo de body/streaming es soportado por el runtime actual.
 
-The Firebase reference repositories fixed one case by not externalizing the Firebase browser SDK. Do not translate that into externalizing or bundling Convex blindly; inspect the failing import and current Waku/Convex packaging.
+Los repositorios de referencia de Firebase corrigieron un caso al no externalizar el SDK de navegador de Firebase. No traduzcas eso a externalizar o empaquetar Convex a ciegas; inspecciona el import que falla y el empaquetado actual de Waku/Convex.
 
-## Static page works, refresh or dynamic route fails
+## La página estática funciona, pero el refresh o la ruta dinámica fallan
 
-- Generic SPA redirect is masking Waku routing.
-- Dynamic route lacks runtime or `staticPaths`.
-- Catch-all Function path omits current RSC base.
-- `dist/public` was partially deployed.
-- Function directory or publish path disagrees with generated output.
+- Un redirect SPA genérico está enmascarando el enrutamiento de Waku.
+- La ruta dinámica carece de runtime o de `staticPaths`.
+- La ruta de la Function catch-all omite la base RSC actual.
+- `dist/public` se desplegó parcialmente.
+- El directorio de Functions o la ruta de publicación difieren de la salida generada.
 
-## Convex works locally but not after deploy
+## Convex funciona localmente pero no después del deploy
 
-- Public Convex URL was absent during the Waku client build.
-- Wrong Waku public prefix was used.
-- Preview/production build used the wrong `CONVEX_DEPLOY_KEY`.
-- CSP blocks the Convex connection.
-- Auth provider does not allow the deployed origin.
-- Convex backend environment values were configured only in development.
-- The frontend and backend contracts are incompatible.
+- La URL pública de Convex estaba ausente durante el build del cliente Waku.
+- Se usó un prefijo público de Waku incorrecto.
+- El build de preview/producción usó la `CONVEX_DEPLOY_KEY` incorrecta.
+- El CSP bloquea la conexión a Convex.
+- El proveedor de auth no permite el origen desplegado.
+- Los valores de entorno del backend de Convex se configuraron solo en desarrollo.
+- Los contratos de frontend y backend son incompatibles.
 
-Inspect the browser bundle only for the public URL. Never search deployed assets for a secret by echoing the secret itself; search known variable names and suspicious key markers.
+Inspecciona el bundle del navegador solo para la URL pública. Nunca busques un secreto en assets desplegados haciendo echo del propio secreto; busca nombres de variables conocidos y marcadores sospechosos de keys.
 
-## Convex deploy rejects schema
+## El deploy de Convex rechaza el esquema
 
-- Existing documents do not match the new validator.
-- A required field was introduced before backfill.
-- A union removed a still-persisted variant.
-- An index or schema change conflicts with current data.
+- Los documentos existentes no coinciden con el nuevo validador.
+- Se introdujo un campo requerido antes del backfill.
+- Una unión removió una variante aún persistida.
+- Un cambio de índice o esquema entra en conflicto con los datos actuales.
 
-Use expand, migrate, contract. Do not disable `schemaValidation` to bypass production data errors.
+Usa expandir, migrar, contraer. No deshabilites `schemaValidation` para bypasear errores de datos de producción.
 
-## Type errors in `convex/_generated`
+## Errores de tipo en `convex/_generated`
 
-- Generated files are stale or were edited.
-- Convex CLI/package versions disagree.
-- Backend code failed generation/typecheck.
-- TypeScript config excludes or incorrectly transforms generated modules.
+- Los archivos generados están obsoletos o fueron editados.
+- Las versiones de CLI/paquete de Convex no coinciden.
+- El código del backend falló generación/typecheck.
+- La configuración de TypeScript excluye o transforma incorrectamente módulos generados.
 
-Run the installed CLI's one-shot dev/codegen command against a non-production deployment. Never hand-patch generated output.
+Ejecuta el comando de dev/codegen de un solo uso de la CLI instalada contra un despliegue no productivo. Nunca parchees salida generada a mano.
 
-## Netlify preview touched production Convex
+## La preview de Netlify tocó producción de Convex
 
-Treat this as a security incident:
+Trata esto como un incidente de seguridad:
 
-1. Stop further preview builds.
-2. Revoke/rotate the exposed production deploy key.
-3. Audit Convex deployment history, functions, schema, and data writes.
-4. Configure a preview-specific key in deploy-preview Builds scope.
-5. Verify production and preview builds resolve distinct deployment URLs.
-6. Assess whether untrusted preview code could read any other build secrets.
+1. Detén más builds de preview.
+2. Revoca/rota la deploy key de producción expuesta.
+3. Audita el historial de despliegue, funciones, esquema y escrituras de datos de Convex.
+4. Configura una key específica de preview en el scope de Builds de deploy-preview.
+5. Verifica que los builds de producción y preview resuelvan URLs de despliegue distintas.
+6. Evalúa si el código de preview no confiable pudo leer cualquier otro secreto de build.
 
-## CSP violations
+## Violaciones de CSP
 
-- Confirm the blocked origin/resource is expected and necessary.
-- For inline Waku scripts, confirm a per-response nonce appears both in CSP and markup.
-- Do not add script `unsafe-inline` or broad `https:`/`*` merely to silence errors.
-- Add only exact Convex, auth, analytics, image, font, or API origins used by the app.
-- Remember Report-Only does not enforce; use it for rollout, then enforce after review.
+- Confirma que el origen/recurso bloqueado es esperado y necesario.
+- Para scripts Waku inline, confirma que un nonce por respuesta aparece tanto en CSP como en el markup.
+- No agregues `unsafe-inline` de scripts ni `https:`/`*` amplios solo para silenciar errores.
+- Agrega solo los orígenes exactos de Convex, auth, analytics, imágenes, fuentes o API usados por la app.
+- Recuerda que Report-Only no impone; úsalo para rollout y luego impón después de la revisión.
 
-## Stale page after successful deploy
+## Página obsoleta después de un deploy exitoso
 
-- HTML has long-lived or immutable caching.
-- Service worker serves an old shell.
-- New HTML references removed hashed assets.
-- CDN/browser was not forced to revalidate mutable resources.
+- El HTML tiene caching de larga duración o inmutable.
+- Un service worker sirve un shell antiguo.
+- El HTML nuevo referencía assets con hash removidos.
+- El CDN/navegador no fue forzado a revalidar recursos mutables.
 
-Cache immutable hashed assets aggressively, but make HTML and service-worker update behavior explicit and test an upgrade from the previous version.
+Cachea assets inmutables con hash agresivamente, pero haz explícito el comportamiento de actualización de HTML y service worker y prueba una actualización desde la versión anterior.
 
-## Convex query is slow or expensive
+## La consulta de Convex es lenta o costosa
 
-- `.collect()` scans an unbounded set.
-- Filtering happens after retrieval rather than through an index.
-- Index fields/order do not match equality and range constraints.
-- UI creates duplicate subscriptions or requests.
-- N+1 document reads occur per result.
-- Large documents or arrays are repeatedly transferred.
+- `.collect()` escanea un conjunto sin límite.
+- El filtrado ocurre después de la recuperación en vez de a través de un índice.
+- Los campos/orden del índice no coinciden con las restricciones de igualdad y rango.
+- La UI crea suscripciones o peticiones duplicadas.
+- Ocurren lecturas N+1 de documentos por resultado.
+- Documentos grandes o arrays se transfieren repetidamente.
 
-Confirm with actual query shape and Convex dashboard metrics before changing the data model.
+Confirma con la forma real de la consulta y las métricas del dashboard de Convex antes de cambiar el modelo de datos.

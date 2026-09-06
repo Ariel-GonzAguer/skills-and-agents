@@ -1,59 +1,59 @@
-# Report Template
+# Plantilla de reporte
 
-Use this structure. Omit empty optional sections, but never omit failed or skipped verification.
+Usa esta estructura. Omite secciones opcionales vacías, pero nunca omitas verificación fallida u omitida.
 
 ```markdown
-# Waku + Convex + Netlify Review
+# Revisión Waku + Convex + Netlify
 
-## Verdict
-READY FOR PREVIEW | READY FOR PRODUCTION | BLOCKED | DEPLOYED
+## Veredicto
+LISTO PARA PREVIEW | LISTO PARA PRODUCCIÓN | BLOQUEADO | DESPLEGADO
 
-One paragraph stating what was verified and the highest remaining risk.
+Un párrafo que indique qué se verificó y el riesgo restante más alto.
 
-## Findings
+## Hallazgos
 
-### CRITICAL
-- `path/file.ts:line` Finding, impact, evidence, and required fix.
+### CRÍTICO
+- `ruta/archivo.ts:línea` Hallazgo, impacto, evidencia y corrección requerida.
 
-### HIGH
-- `path/file.ts:line` Finding, impact, evidence, and required fix.
+### ALTO
+- `ruta/archivo.ts:línea` Hallazgo, impacto, evidencia y corrección requerida.
 
-### MEDIUM
-- `path/file.ts:line` Finding, impact, evidence, and recommendation.
+### MEDIO
+- `ruta/archivo.ts:línea` Hallazgo, impacto, evidencia y recomendación.
 
-### LOW
-- `path/file.ts:line` Finding and recommendation.
+### BAJO
+- `ruta/archivo.ts:línea` Hallazgo y recomendación.
 
-## Fixes Applied
-- `path/file.ts` What changed and why.
+## Correcciones aplicadas
+- `ruta/archivo.ts` Qué cambió y por qué.
 
-## Verification
-| Gate | Command/check | Result |
+## Verificación
+| Puerta | Comando/verificación | Resultado |
 | --- | --- | --- |
-| Convex generation | `...` | PASS/FAIL/SKIPPED |
+| Generación de Convex | `...` | PASS/FAIL/SKIPPED |
 | Typecheck | `...` | PASS/FAIL/SKIPPED |
 | Tests | `...` | PASS/FAIL/SKIPPED |
 | Lint | `...` | PASS/FAIL/SKIPPED |
-| Dependency/secret audit | `...` | PASS/FAIL/SKIPPED |
-| Convex dry run | `...` | PASS/FAIL/SKIPPED |
-| Netlify production build | `...` | PASS/FAIL/SKIPPED |
-| Preview smoke test | URL and checks | PASS/FAIL/SKIPPED |
-| Production smoke test | URL and checks | PASS/FAIL/SKIPPED |
+| Auditoría de dependencias/secretos | `...` | PASS/FAIL/SKIPPED |
+| Dry run de Convex | `...` | PASS/FAIL/SKIPPED |
+| Build de producción de Netlify | `...` | PASS/FAIL/SKIPPED |
+| Smoke test de preview | URL y verificaciones | PASS/FAIL/SKIPPED |
+| Smoke test de producción | URL y verificaciones | PASS/FAIL/SKIPPED |
 
-## Deployment
-- Netlify target: name/ID, no credentials.
-- Convex target: deployment name/type, no key.
-- Git revision: branch and commit.
-- Preview URL: ...
-- Production URL: ...
-- Partial deployment: none or exact service changed.
-- Rollback status: not needed, available, executed, or blocked.
+## Despliegue
+- Destino Netlify: nombre/ID, sin credenciales.
+- Destino Convex: nombre/tipo de despliegue, sin key.
+- Revisión de Git: rama y commit.
+- URL de preview: ...
+- URL de producción: ...
+- Despliegue parcial: ninguno o servicio exacto cambiado.
+- Estado de rollback: no necesario, disponible, ejecutado o bloqueado.
 
-## Environment Contract
-List required variable names, owner, context, visibility, and scope. Never include values.
+## Contrato de entorno
+Lista los nombres de variables requeridas, propietario, contexto, visibilidad y scope. Nunca incluyas valores.
 
-## Remaining Risks
-- Risk, reason it remains, and next action.
+## Riesgos restantes
+- Riesgo, motivo por el que permanece y próxima acción.
 ```
 
-If no findings remain, explicitly state that no confirmed findings remain and identify residual test limitations, such as unavailable credentials or skipped deployed-browser verification.
+Si no quedan hallazgos, declara explícitamente que no quedan hallazgos confirmados e identifica las limitaciones residuales de los tests, como credenciales no disponibles o verificación en navegador desplegado omitida.
