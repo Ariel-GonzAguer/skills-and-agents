@@ -41,7 +41,7 @@ Usa esta skill cuando el usuario mencione:
 
 ## Implementación paso a paso
 
-Use the project stack and security constraints to select an implementation path. Read [implementation.md](references/implementation.md) when you need the detailed commands, templates, or implementation examples.
+Usa el stack del proyecto y las restricciones de seguridad para seleccionar una ruta de implementación. Lee [implementation.md](references/implementation.md) cuando necesites comandos detallados, plantillas o ejemplos de implementación.
 
 ## Características de accesibilidad (WCAG 2.1+)
 
@@ -232,7 +232,7 @@ OPENAI_API_KEY=sk-proj-...
 
 ## Testing
 
-Test the server boundary, streaming UI, rate limits, and accessibility before shipping. Read [testing.md](references/testing.md) when you need the detailed commands, templates, or implementation examples.
+Prueba el límite del servidor, la UI con streaming, el rate limiting y la accesibilidad antes de desplegar. Lee [testing.md](references/testing.md) cuando necesites comandos detallados, plantillas o ejemplos de implementación.
 
 ## Checklist de implementación
 
@@ -293,7 +293,7 @@ Test the server boundary, streaming UI, rate limits, and accessibility before sh
 
 ## Personalización del chatbot
 
-Keep customizations tokenized and deployment configuration environment-specific. Read [customization-and-deployment.md](references/customization-and-deployment.md) when you need the detailed commands, templates, or implementation examples.
+Mantén las personalizaciones tokenizadas y la configuración de despliegue específica por entorno. Lee [customization-and-deployment.md](references/customization-and-deployment.md) cuando necesites comandos detallados, plantillas o ejemplos de implementación.
 
 ## Recursos adicionales
 
