@@ -1,11 +1,11 @@
 ---
 description: Escribir el siguiente feature spec desde el roadmap (override manual).
-agent: sdd
+agent: sdd-dl
 ---
 
 Encontrar la siguiente fase incompleta del roadmap y escribir un feature spec para ella.
 
-1. Leer `specs/roadmap.md`, `specs/mission.md` y `specs/tech-stack.md`.
+1. Leer `specs/constitution/roadmap.md`, `specs/constitution/mission.md` y `specs/constitution/tech-stack.md`.
 2. Identificar la primera fase cuyos ítems estén todos desmarcados (`[ ]`).
 3. Crear y cambiar a una rama: `git checkout -b phase-N-<kebab-name>`.
 4. Preguntar al usuario tres cosas, una a la vez:

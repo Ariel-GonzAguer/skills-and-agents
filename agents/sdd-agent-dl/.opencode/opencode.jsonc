@@ -1,41 +1,41 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "agent": {
-    "sdd": {
+    "sdd-dl": {
       "mode": "primary",
       "model": "opencode/gpt-5.1-codex",
-      "prompt": "{file:./agent/sdd.md}"
+      "prompt": "{file:./agent/sdd-dl.md}"
     }
   },
   "command": {
-    "sdd": {
+    "sdd-dl": {
       "description": "Ejecutar el orquestador autónomo de SDD.",
-      "agent": "sdd",
+      "agent": "sdd-dl",
       "template": "Avanzar el proyecto usando Spec-Driven Development. Inspeccionar el estado actual, proponer la siguiente acción y ejecutarla con aprobación del usuario."
     },
-    "sdd-constitution": {
+    "sdd-dl-constitution": {
       "description": "Crear la constitución de SDD (override manual).",
-      "agent": "sdd",
-      "template": "Ejecutar solo la fase de constitución del flujo SDD. Crear specs/mission.md, specs/tech-stack.md y specs/roadmap.md entrevistando al usuario. Preguntar antes de commitear."
+      "agent": "sdd-dl",
+      "template": "Ejecutar solo la fase de constitución del flujo SDD. Crear specs/constitution/mission.md, specs/constitution/tech-stack.md y specs/constitution/roadmap.md entrevistando al usuario. Preguntar antes de commitear."
     },
-    "sdd-feature-spec": {
+    "sdd-dl-feature-spec": {
       "description": "Escribir el siguiente feature spec desde el roadmap (override manual).",
-      "agent": "sdd",
+      "agent": "sdd-dl",
       "template": "Ejecutar solo la fase de feature spec del flujo SDD. Encontrar la siguiente fase incompleta del roadmap, crear una rama y escribir el directorio de spec con fecha. Preguntar antes de escribir archivos y antes de implementar."
     },
-    "sdd-implement": {
+    "sdd-dl-implement": {
       "description": "Implementar el feature spec actual (override manual).",
-      "agent": "sdd",
+      "agent": "sdd-dl",
       "template": "Ejecutar solo la fase de implementación del flujo SDD. Leer el feature spec actual e implementar el plan en commits pequeños y reversibles. No mergear."
     },
-    "sdd-validate": {
+    "sdd-dl-validate": {
       "description": "Validar la rama actual contra su feature spec (override manual).",
-      "agent": "sdd",
+      "agent": "sdd-dl",
       "template": "Ejecutar solo la fase de validación del flujo SDD. Ejecutar todos los checks automáticos y el walkthrough manual del feature spec actual. Reportar resultados y preguntar antes de mergear."
     },
-    "sdd-merge": {
+    "sdd-dl-merge": {
       "description": "Actualizar changelog y mergear la fase actual de SDD (override manual).",
-      "agent": "sdd",
+      "agent": "sdd-dl",
       "template": "Ejecutar solo la fase de merge del flujo SDD. Actualizar CHANGELOG.md, preguntar antes de commitear, mergear la rama a main y marcar la fase del roadmap como completa."
     }
   }

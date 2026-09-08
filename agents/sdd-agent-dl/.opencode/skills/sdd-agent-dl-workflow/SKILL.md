@@ -1,5 +1,5 @@
 ---
-name: sdd-agentic-workflow
+name: sdd-agent-dl-workflow
 description: >
   Orquestar Spec-Driven Development (SDD) con OpenCode.
   Usar cuando el usuario quiera iniciar un proyecto con constitución,
@@ -8,11 +8,11 @@ description: >
   el flujo SDD de punta a punta.
   Se activa con frases como "spec-driven development", "SDD",
   "crear constitución", "siguiente fase", "feature spec",
-  "implementar el spec", "validar contra specs", "/sdd", o cuando
+  "implementar el spec", "validar contra specs", "/sdd-dl", o cuando
   el proyecto tiene un directorio `specs/`.
 ---
 
-# SDD Agentic Workflow
+# SDD Agent DL Workflow
 
 ## Resultado
 
@@ -20,7 +20,7 @@ Convertir una idea de producto en specs rastreables, código testeado y una rama
 
 ## Flujo
 
-1. Inspeccionar el repositorio buscando una constitución SDD (`specs/mission.md`, `specs/tech-stack.md`, `specs/roadmap.md`).
+1. Inspeccionar el repositorio buscando una constitución SDD (`specs/constitution/mission.md`, `specs/constitution/tech-stack.md`, `specs/constitution/roadmap.md`).
 2. Si falta, crear la constitución entrevistando al usuario.
 3. Encontrar la siguiente fase incompleta del roadmap y crear una rama de git.
 4. Escribir un directorio de feature spec con `requirements.md`, `plan.md` y `validation.md`.

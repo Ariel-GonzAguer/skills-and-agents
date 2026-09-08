@@ -24,10 +24,10 @@ Tu objetivo: llevar el proyecto de la idea → constitución → specs de featur
 
 ## Conceptos centrales
 
-- **Constitución** — contrato permanente del proyecto en `specs/`:
-  - `specs/mission.md` — propósito del producto, audiencia, métricas de éxito.
-  - `specs/tech-stack.md` — stack, convenciones, comandos de validación.
-  - `specs/roadmap.md` — fases pequeñas e independientes para implementar.
+- **Constitución** — contrato permanente del proyecto en `specs/constitution/`:
+  - `specs/constitution/mission.md` — propósito del producto, audiencia, métricas de éxito.
+  - `specs/constitution/tech-stack.md` — stack, convenciones, comandos de validación.
+  - `specs/constitution/roadmap.md` — fases pequeñas e independientes para implementar.
 - **Feature spec** — directorio con fecha bajo `specs/YYYY-MM-DD-nombre-feature/`:
   - `requirements.md` — alcance, decisiones, contexto.
   - `plan.md` — grupos de tareas numeradas y sub-tareas.
@@ -36,10 +36,10 @@ Tu objetivo: llevar el proyecto de la idea → constitución → specs de featur
 
 ## Comportamiento autónomo
 
-Cuando te invocan (`/sdd` o `@sdd`), siempre empezá inspeccionando el estado del proyecto:
+Cuando te invocan (`/sdd-dl` o `@sdd-dl`), siempre empezá inspeccionando el estado del proyecto:
 
 1. Verificar el estado de git y la rama actual.
-2. Verificar que existan `specs/mission.md`, `specs/tech-stack.md` y `specs/roadmap.md`.
+2. Verificar que existan `specs/constitution/mission.md`, `specs/constitution/tech-stack.md` y `specs/constitution/roadmap.md`.
 3. Listar los directorios de feature specs existentes bajo `specs/`.
 4. Determinar el estado actual de SDD y proponer la siguiente acción.
 
@@ -47,7 +47,7 @@ Cuando te invocan (`/sdd` o `@sdd`), siempre empezá inspeccionando el estado de
 
 | Estado | Detección | Próxima acción |
 |--------|-----------|----------------|
-| **Sin constitución** | Falta alguno de `specs/mission.md`, `specs/tech-stack.md`, `specs/roadmap.md` | Crear la constitución. |
+| **Sin constitución** | Falta alguno de `specs/constitution/mission.md`, `specs/constitution/tech-stack.md`, `specs/constitution/roadmap.md` | Crear la constitución. |
 | **Solo constitución** | Existen los tres archivos de constitución, no hay feature en curso | Buscar la siguiente fase incompleta del roadmap, crear rama y escribir feature spec. |
 | **Spec listo** | Existe feature spec pero los checks de `validation.md` no están satisfechos | Implementar el plan. |
 | **Implementado** | Existe código, los checks de validación aún no se ejecutaron | Ejecutar validación. |
@@ -63,12 +63,12 @@ Cuando te invocan (`/sdd` o `@sdd`), siempre empezá inspeccionando el estado de
    - **Mission**: ¿qué hace el producto, para quién y por qué? ¿Qué significa el éxito?
    - **Tech stack**: lenguajes, frameworks, hosting, almacenamiento, testing, librerías clave.
    - **Roadmap**: ¿cuáles son las primeras 2-4 fases pequeñas e independientes? ¿En qué orden?
-3. Después de las tres respuestas, escribir `specs/mission.md`, `specs/tech-stack.md` y `specs/roadmap.md` usando las plantillas en `.opencode/templates/constitution/`.
+3. Después de las tres respuestas, escribir `specs/constitution/mission.md`, `specs/constitution/tech-stack.md` y `specs/constitution/roadmap.md` usando las plantillas en `.opencode/templates/constitution/`.
 4. Preguntar antes de commitear. Mensaje sugerido: `chore(specs): add project constitution`.
 
 ### Escribir feature spec
 
-1. Leer `specs/roadmap.md`, `specs/mission.md` y `specs/tech-stack.md`.
+1. Leer `specs/constitution/roadmap.md`, `specs/constitution/mission.md` y `specs/constitution/tech-stack.md`.
 2. Encontrar la primera fase cuyos ítems estén todos desmarcados (`[ ]`).
 3. Derivar un nombre de rama en kebab-case a partir del título de la fase.
 4. Crear y cambiar a la rama: `git checkout -b phase-N-<kebab-name>`.
@@ -101,11 +101,11 @@ Cuando te invocan (`/sdd` o `@sdd`), siempre empezá inspeccionando el estado de
 2. Revisar y limpiar la redacción del changelog.
 3. Preguntar antes de commitear el changelog.
 4. Preguntar antes de cambiar a `main`, mergear y borrar la rama.
-5. Marcar la fase como completa en `specs/roadmap.md` y commitear.
+5. Marcar la fase como completa en `specs/constitution/roadmap.md` y commitear.
 
 ## Comandos como override manual
 
-El usuario también puede invocar fases específicas con `/sdd-constitution`, `/sdd-feature-spec`, `/sdd-implement`, `/sdd-validate` o `/sdd-merge`. En esos casos, ejecutar solo esa fase en lugar de la detección autónoma de estado.
+El usuario también puede invocar fases específicas con `/sdd-dl-constitution`, `/sdd-dl-feature-spec`, `/sdd-dl-implement`, `/sdd-dl-validate` o `/sdd-dl-merge`. En esos casos, ejecutar solo esa fase en lugar de la detección autónoma de estado.
 
 ## Restricciones
 

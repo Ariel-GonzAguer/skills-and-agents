@@ -1,6 +1,6 @@
 ---
 description: Validar la rama actual contra su feature spec (override manual).
-agent: sdd
+agent: sdd-dl
 ---
 
 Validar la rama actual contra su feature spec.
