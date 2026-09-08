@@ -8,8 +8,11 @@ Este proyecto usa Spec-Driven Development (SDD). El spec de larga vida vive en `
 
 Cada feature tiene un directorio con fecha: `specs/YYYY-MM-DD-nombre-feature/` que contiene:
 
-- `requirements.md` — alcance, decisiones, contexto.
-- `plan.md` — grupos de tareas numeradas.
-- `validation.md` — checks automáticos y manuales.
+- `requirements.md` — REQs con IDs (`REQ-001`), acceptance criteria, assumptions, clarifications y change log.
+- `plan.md` — TASKs con IDs (`TASK-001 (REQ-001)`) y checkboxes por sub-tarea.
+- `validation.md` — VALs con IDs (`VAL-001 (REQ-001)`) y checkboxes.
+- `state.md` — estado explícito de la feature (specifying → approved → implementing → implemented → validating → validated → merged; flag blocked).
 
 Al codear, leer primero los specs relevantes. Preferir commits pequeños y reversibles. Ejecutar los comandos de validación de `specs/constitution/tech-stack.md` antes de terminar. Actualizar `CHANGELOG.md` antes de mergear una rama de feature.
+
+Los IDs son estables: si se elimina un requirement, no reutilizar su ID. Los cambios a specs aprobadas requieren aprobación humana (sección "Change log" de `requirements.md`).
