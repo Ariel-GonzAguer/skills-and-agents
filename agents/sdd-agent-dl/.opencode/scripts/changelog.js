@@ -9,7 +9,7 @@
  * Si existe, antepone los commits más nuevos que la última fecha registrada.
  */
 
-const { execSync } = require("child_process");
+const { execFileSync } = require("child_process");
 const fs = require("fs");
 const path = require("path");
 
@@ -20,7 +20,7 @@ function gitLog(sinceDate) {
   if (sinceDate) {
     args.push(`--after=${sinceDate}`);
   }
-  const output = execSync(["git", ...args].join(" "), {
+  const output = execFileSync("git", args, {
     encoding: "utf8",
     stdio: ["pipe", "pipe", "ignore"],
   });
