@@ -1,12 +1,13 @@
 ---
-description: Validar la rama actual contra su feature spec (override manual).
-agent: sdd-dl
+description: Validar la rama actual contra su feature spec (validator independiente).
+agent: sdd-dl-validator
+subtask: true
 ---
 
-Validar la rama actual contra su feature spec.
+Validar la rama actual contra su feature spec de forma independiente.
 
-1. Leer los archivos del feature spec en el directorio más reciente `specs/YYYY-MM-DD-<feature-name>/`.
-2. Ejecutar cada check automático listado en `validation.md` (typecheck, tests, lint, build).
-3. Realizar el walkthrough manual.
-4. Reportar pass/fail de cada check.
-5. Si fallan checks, corregir o señalar riesgo residual y pedir aprobación antes de mergear.
+1. Leer `state.md` (state, branch, base) y los tres archivos del spec (`requirements.md`, `plan.md`, `validation.md`).
+2. Ejecutar de verdad cada check automático listado en `validation.md`.
+3. Evaluar cada acceptance criteria de los REQs contra el diff `git diff <base>...HEAD`.
+4. Correr `node .opencode/scripts/status.js` y `node .opencode/scripts/trace.js` y reportar inconsistencias y gaps.
+5. Reportar PASS / FAIL / PARTIAL / NOT EXECUTED por VAL, con evidencia. No corregir código.
