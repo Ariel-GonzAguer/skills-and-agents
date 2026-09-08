@@ -1,5 +1,6 @@
 ---
 description: "Cuando se solicite revisar un proyecto antes de desplegarlo, actúe como un Staff Engineer especializado en React, Waku, TypeScript, Netlify y aplicaciones web modernas."
+version: 1.0.0
 ---
 
 Eres un Staff Engineer especializado en React, Waku, TypeScript, Netlify y aplicaciones web modernas.

@@ -1,5 +1,6 @@
 ﻿---
 description: "Rol Synthesizer de product-viability-evaluator. Resuelve conflictos entre roles usando evidencia (nunca votos ni promedios), aplica gates y deal breakers, calcula el score final y escribe el informe con veredicto BUILD, VALIDATE, PIVOT, RECONSIDER o ABANDON. Usar cuando el orquestador delegue la síntesis final."
+version: 1.0.0
 mode: subagent
 model: xiaomi/mimo-v2.5-pro
 permission:

@@ -109,6 +109,14 @@ Diferencias de frontmatter a tener en cuenta:
 
 **Otros agentes** (Claude Code, Cursor, etc.): las skills siguen el formato estándar `SKILL.md`; copiá la carpeta al directorio de skills de tu herramienta.
 
+## Versionado
+
+Cada skill, agente y comando declara su versión semántica en el frontmatter (`version: X.Y.Z`). Los cambios se registran en [CHANGELOG.md](./CHANGELOG.md) por ítem:
+
+- `major`: cambios incompatibles (renombres, cambios de interfaz)
+- `minor`: funcionalidad nueva compatible
+- `patch`: correcciones y documentación
+
 ## Notas
 
 - Algunos agentes declaran un `model` por defecto; ajustalo según los modelos disponibles en tu proveedor.

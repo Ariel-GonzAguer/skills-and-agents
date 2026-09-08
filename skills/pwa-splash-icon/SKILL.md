@@ -1,5 +1,6 @@
 ---
 name: pwa-splash-icon
+version: 1.0.0
 description: >
   Genera un icono de splash screen para PWA con el tamaño correcto a partir del logo existente de la app.
   Agrega padding alrededor del icono para que no recorte por la máscara circular del navegador,

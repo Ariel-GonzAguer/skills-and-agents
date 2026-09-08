@@ -1,5 +1,6 @@
 ---
 name: theme-switching
+version: 1.0.0
 description: Implementa cambio de tema claro/oscuro en apps React usando Zustand para gestión de estado con persistencia en localStorage y modo oscuro basado en clases de Tailwind CSS v4. Usar esta skill cuando el usuario pida agregar modo oscuro, toggle de tema, modo claro/oscuro, modo nocturno, cambio de tema, cambio de esquema de color, o un tema oscuro a un proyecto React. También usar cuando el usuario mencione persistir preferencias de tema, stores de tema seguros para SSR, componentes ThemeProvider, o quiera convertir un proyecto existente para soportar modo oscuro. Activa con frases como "agregar modo oscuro", "cambiar tema", "dark mode", "toggle theme", "light/dark", "modo noche".
 ---
 

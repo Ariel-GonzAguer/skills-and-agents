@@ -1,5 +1,6 @@
 ---
 name: security-audit-webapp
+version: 1.0.0
 description: |
   Auditoría completa de seguridad para aplicaciones web serverless (Waku/React/Netlify/Firebase).
   Usa esta skill SIEMPRE que el usuario pida: revisar seguridad, auditar vulnerabilidades,

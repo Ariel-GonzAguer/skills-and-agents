@@ -1,5 +1,6 @@
 ---
 name: waku-netlify-firebase-deploy
+version: 1.0.0
 description: Despliega proyectos Waku en Netlify con Firebase Admin SDK. Usar al desplegar Waku en Netlify, configurar netlify-functions/serve.js, configurar netlify.toml para Waku, corregir problemas de empaquetado de firebase-admin, o migrar proyectos Waku de Vercel a Netlify. Cubre el wrapper serve.js, estructura de waku.config.ts, edge functions de nonce CSP y compatibilidad de versiones de firebase-admin.
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: wcag-react-implementer
+version: 1.0.0
 description: Implementa correcciones de accesibilidad WCAG 2.2 Nivel AA en proyectos React + TypeScript + Tailwind CSS. Usa cuando el usuario pida agregar o corregir accesibilidad (a11y), etiquetas ARIA, soporte para lectores de pantalla, navegación por teclado, gestión del foco, modales accesibles, anuncios de errores de formularios, o cuando el código usa <div>/<span> como elementos interactivos. Se activa con "fix accessibility", "aria labels", "screen reader", "a11y", "lector de pantalla", "accesibilidad", "WCAG".
 ---
 

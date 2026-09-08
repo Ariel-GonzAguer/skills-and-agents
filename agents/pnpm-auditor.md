@@ -1,5 +1,6 @@
 ---
 description: Audita con pnpm audit los repos de la ubicación actual o carpetas indicadas. Propone update u override y limpieza mínima del workspace; solo corrige con permiso explícito por cada repo. Nunca hace commit ni push.
+version: 1.0.0
 mode: all
 permission:
   "*": deny

@@ -1,5 +1,6 @@
 ---
 description: Orquestador autónomo de Spec-Driven Development. Detecta el estado actual del proyecto, propone la siguiente acción de SDD y avanza el flujo con aprobación del usuario en los puntos clave.
+version: 1.0.0
 mode: primary
 model: opencode/gpt-5.1-codex
 color: "#6366F1"

@@ -1,5 +1,6 @@
 ---
 name: waku-netlify-convex-deploy
+version: 1.0.0
 description: Ayuda a crear, mantener, auditar, reparar, probar, previsualizar y desplegar aplicaciones Waku usando Convex en Netlify. Usar cuando un usuario inicia un proyecto Waku + Convex + Netlify, agrega funcionalidades, cambia esquemas o autenticación, corrige fallos de build/tiempo de ejecución, revisa preparación para producción, configura variables de entorno, CSP, Netlify Functions, previsualizaciones de deploy o despliegue a producción. Usar esta skill incluso cuando el usuario mencione solo archivos como waku.config.ts, convex/schema.ts, convex/_generated/api, netlify.toml o netlify-functions/serve.js. Puede aplicar correcciones mínimas y ejecutar previsualización o despliegue a producción solo después de que sus puertas de seguridad pasen.
 compatibilidad: Requiere Node.js 22+, pnpm, y CLIs específicos del proyecto de Convex y Netlify. Se recomienda Context7 o documentación oficial web antes de cambiar configuración sensible a versiones.
 ---

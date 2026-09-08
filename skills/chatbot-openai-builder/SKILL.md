@@ -1,5 +1,6 @@
 ---
 name: chatbot-openai-builder
+version: 1.0.0
 description: |
   Construye chatbots accesibles con OpenAI GPT, streaming de respuestas, rate limiting y UI flotante. 
   Usa cuando el usuario pida: crear chatbot, integrar OpenAI, asistente virtual, chat con IA, 

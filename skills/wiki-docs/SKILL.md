@@ -1,5 +1,6 @@
 ---
 name: wiki-docs
+version: 1.0.0
 description: Genera documentación técnica avanzada, completa y detallada para proyectos de software en Markdown. Crea una wiki estructurada por dominios técnicos orientada al onboarding de desarrolladores nuevos y a la referencia del equipo actual. Documenta arquitectura, backend, componentes, funcionalidades destacadas, CI/CD, seguridad, despliegue y desarrollo. Usa cuando el usuario pida documentar un proyecto, crear una wiki, generar documentación técnica o estructurar docs de onboarding.
 ---
 

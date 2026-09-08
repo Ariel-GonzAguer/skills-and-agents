@@ -1,5 +1,6 @@
 ---
 name: chatbot-security
+version: 1.0.0
 description: >
   Lista de verificación de seguridad y patrones de implementación segura para chatbots
   con LLM (OpenAI, Anthropic, Gemini o cualquier proveedor). Aplica automáticamente

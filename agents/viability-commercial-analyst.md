@@ -1,5 +1,6 @@
 ---
 description: "Rol Commercial analyst de product-viability-evaluator. Analiza ICP, compraventa usuario/comprador, competencia directa e indirecta, sustitutos, diferenciación, monetización, pricing y adquisición de los primeros clientes. No puntúa ni decide viabilidad. Usar cuando el orquestador delegue el análisis comercial."
+version: 1.0.0
 mode: subagent
 model: agentrouter/gpt-5.6-sol
 permission:

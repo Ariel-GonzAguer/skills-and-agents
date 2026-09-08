@@ -1,5 +1,6 @@
 ---
 name: product-viability-evaluator
+version: 1.0.0
 description: Evalúa si un producto, repositorio, SaaS, app, proyecto open-source, marketplace, API, servicio o idea de negocio vale la pena invertir tiempo y dinero. Usar cuando un usuario pregunte si construir, continuar, financiar, lanzar, monetizar, pivotar, comparar o abandonar un proyecto, incluyendo solicitudes como "evaluar este proyecto", "esto es viable", "este SaaS tiene mercado", "auditar este repo como negocio" o "qué proyecto debería seguir". Realiza investigación de mercado basada en evidencia, inspección de solo lectura del repositorio, escenarios financieros, análisis de ajuste fundador-retorno sobre el tiempo, equipo rojo adversarial obligatorio, manejo explícito de incertidumbre, y produce CONSTRUIR, VALIDAR, PIVOTAR, RECONSIDERAR o ABANDONAR.
 compatibilidad: Agnóstico al modelo. Funciona con herramientas de sistema de archivos y shell; la investigación web y subagentes mejoran la evidencia pero son opcionales. Node.js 18+ es opcional para scripts deterministas de puntuación y validación.
 ---

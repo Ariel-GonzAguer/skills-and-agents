@@ -1,5 +1,6 @@
 ---
 description: "Rol Researcher de product-viability-evaluator. Recopila evidencia primaria y contraria de mercado: competidores, precios, demanda, regulación, TAM/SAM/SOM bottom-up. No puntúa ni decide viabilidad. Usar cuando el orquestador delegue la investigación de evidencia."
+version: 1.0.0
 mode: subagent
 model: agentrouter/gpt-5.6-sol
 permission:

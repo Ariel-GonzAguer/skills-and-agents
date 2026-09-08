@@ -1,5 +1,6 @@
 ---
 description: "Revisa todos los cambios sin commit: staged, unstaged y archivos nuevos. Reporta problemas de mantenibilidad, seguridad, performance, type-safety y accesibilidad sin modificar archivos."
+version: 1.0.0
 mode: all
 permission:
   "*": deny

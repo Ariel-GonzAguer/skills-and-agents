@@ -1,5 +1,6 @@
 ---
 description: Check my code before deploying to production
+version: 1.0.0
 agent: plan
 ---
 Check my code before deploying to production to ensure that it is working as expected and to catch any potential bugs early on, like:

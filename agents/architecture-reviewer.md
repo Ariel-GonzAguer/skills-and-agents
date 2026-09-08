@@ -1,5 +1,6 @@
 ---
 description: "Revisa la arquitectura completa de la aplicación. Identifica complejidad innecesaria, problemas de escalabilidad, dependencias redundantes y oportunidades de simplificación. Evalúa si la arquitectura cumple con los requisitos del negocio de la forma más simple posible."
+version: 1.0.0
 mode: subagent
 model: opencode/mimo-v2.5-free
 ---

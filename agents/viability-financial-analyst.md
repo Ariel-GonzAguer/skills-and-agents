@@ -1,5 +1,6 @@
 ---
 description: "Rol Financial analyst de product-viability-evaluator. Verifica fórmulas, escenarios pesimista/base/optimista, unidad económica, sensibilidad, timing de caja y retorno sobre tiempo del fundador. No decide viabilidad. Usar cuando el orquestador delegue el modelado financiero."
+version: 1.0.0
 mode: subagent
 model: agentrouter/gpt-5.6-sol
 permission:

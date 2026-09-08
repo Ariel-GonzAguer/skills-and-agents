@@ -1,5 +1,6 @@
 ---
 description: "Rol Product/technical analyst de product-viability-evaluator. Audita producto y repositorio de solo lectura: capacidades verificadas, riesgos de adopción, seguridad, costos, diferenciación. No infiere demanda desde la calidad del código. Usar cuando el orquestador delegue la auditoría técnica."
+version: 1.0.0
 mode: subagent
 model: opencode/deepseek-v4-pro
 permission:

@@ -1,5 +1,6 @@
 ---
 description: "Estima y analiza costos de proyectos desplegados en Netlify. Consulta la API REST para obtener datos de cuenta, sitios y deploys, y calcula gastos según el sistema de créditos vigente. Use cuando el usuario pregunte por costos, billing, uso de bandwidth, deploys, credits, o gastos de sus sitios en Netlify."
+version: 1.0.0
 mode: subagent
 model: opencode/mimo-v2.5-free
 ---

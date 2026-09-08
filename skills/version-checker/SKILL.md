@@ -1,5 +1,6 @@
 ---
 name: version-checker
+version: 1.0.0
 description: >
   Implementa un sistema de verificación de versión en tiempo real para apps web React
   usando Zustand + Firebase Firestore + notificaciones toast. Compara la versión local

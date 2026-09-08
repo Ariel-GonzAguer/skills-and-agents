@@ -1,5 +1,6 @@
 ---
 description: "Rol Skeptic (Red Team) de product-viability-evaluator. Recibe el caso inicial y lo ataca de forma independiente: demanda, acceso al comprador, disposición a pagar, retención, distribución, economía unitaria, costos ocultos, legal, dependencias y ajuste del fundador. Usar cuando el orquestador delegue la revisión adversaria."
+version: 1.0.0
 mode: subagent
 model: opencode/kimi-k2.6
 permission:

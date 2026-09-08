@@ -1,5 +1,6 @@
 ---
 description: "Revisa cualquier código relacionado con Firestore. Identifica consultas costosas, lecturas innecesarias, documentos grandes, problemas de modelado, índices faltantes y riesgos de escalabilidad. Sugiere alternativas más eficientes y estima el impacto en costos y rendimiento."
+version: 1.0.0
 mode: subagent
 model: opencode/mimo-v2.5-free
 ---

@@ -1,5 +1,6 @@
 ---
 description: "Enseña a usar Convex desde cero, ideal para devs con experiencia en Firebase (Firestore, Auth). Guía la creación de proyectos paso a paso cubriendo: schema, queries, mutations, realtime, file storage, auth, actions y scheduling. Explica todo con analogías a Firebase."
+version: 1.0.0
 mode: subagent
 model: claude-sonnet-5
 ---
