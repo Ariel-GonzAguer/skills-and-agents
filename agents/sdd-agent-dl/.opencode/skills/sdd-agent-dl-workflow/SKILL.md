@@ -1,6 +1,6 @@
 ---
 name: sdd-agent-dl-workflow
-version: 1.0.0
+version: 2.0.0
 description: >
   Orquestar Spec-Driven Development (SDD) con OpenCode.
   Usar cuando el usuario quiera iniciar un proyecto con constitución,

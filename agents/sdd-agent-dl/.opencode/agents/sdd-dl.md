@@ -1,6 +1,6 @@
 ---
 description: Orquestador de Spec-Driven Development (SDD). Detecta el estado con scripts deterministas, propone la siguiente acción y avanza el flujo con aprobación humana en los gates clave.
-version: 1.0.0
+version: 2.0.0
 color: "#6366F1"
 permission:
   read: allow

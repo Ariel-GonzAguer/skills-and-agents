@@ -1,20 +1,48 @@
 # SDD Agent DL para OpenCode
 
-Agente de Spec-Driven Development (SDD) para [OpenCode](https://github.com/anomalyco/opencode), basado en el curso [Spec-Driven Development with Coding Agents](https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents) de DeepLearning.AI.
+Agente de Spec-Driven Development (SDD) para [OpenCode](https://opencode.ai/), basado en el curso [Spec-Driven Development with Coding Agents](https://www.deeplearning.ai/courses/spec-driven-development-with-coding-agents) de DeepLearning.AI.
 
-## Qué hace
+## What it is
 
-Es un **agente autónomo** que implementa el flujo SDD del curso:
+Un flujo de desarrollo guiado por specs para coding agents: la idea de producto se convierte en una constitución, cada feature se especifica con requirements rastreables, se implementa con change control y se valida con un agente independiente antes de mergear.
 
-1. **Constitución**: crea `specs/constitution/mission.md`, `specs/constitution/tech-stack.md` y `specs/constitution/roadmap.md`.
-2. **Feature spec**: para cada fase del roadmap crea `specs/YYYY-MM-DD-nombre-feature/{requirements.md,plan.md,validation.md}`.
-3. **Implementación**: sigue el plan escrito en el spec.
-4. **Validación**: ejecuta los checks automáticos y el walkthrough manual.
-5. **Changelog y merge**: actualiza `CHANGELOG.md`, mergea la rama y marca la fase como completa.
+No es un framework: son archivos Markdown, 3 scripts Node sin dependencias y la configuración de OpenCode. Se copia a un proyecto y funciona.
 
-El agente detecta solo en qué fase está el proyecto y propone la siguiente acción. Solo necesitás invocarlo con `/sdd-dl` o `@sdd-dl`.
+## Why
 
-## Instalación
+Los coding agents son buenos escribiendo código y malos recordando decisiones. SDD fuerza a persistir las decisiones en specs antes de codear, hace verificable qué se implementó de cada requirement (`trace.js`) y evita que el mismo agente valide su propio trabajo (validator independiente).
+
+## Architecture
+
+```mermaid
+flowchart LR
+    H[Humano] -->|entrevista + aprobación| C[Constitución]
+    C --> S[Feature spec + clarification gate]
+    S -->|0 BLOCKING + aprobación| A[approved]
+    A --> I[Implementer: sdd-dl]
+    I -->|state: implemented| V[Validator: sdd-dl-validator]
+    V -->|FAIL| I
+    V -->|PASS| M[Merge + changelog]
+    M --> S
+```
+
+- **Orquestador** (`sdd-dl`): detecta el estado con `status.js`, propone la siguiente acción y coordina las fases.
+- **Validator** (`sdd-dl-validator`): subagente independiente con `edit: deny`; evalúa acceptance criteria y checks reales, reporta PASS/FAIL/PARTIAL/NOT EXECUTED y no corrige código.
+- **Estado explícito**: `state.md` por feature — `specifying → approved → implementing → implemented → validating → validated → merged` + flag `blocked`.
+- **Trazabilidad**: IDs `REQ-001` / `TASK-001 (REQ-001)` / `VAL-001 (REQ-001)`; `trace.js` deriva la matriz y reporta gaps.
+- **Scripts** (Node, sin dependencias): `status.js` (SDD STATUS determinista), `trace.js` (matriz + checks), `changelog.js` (CHANGELOG.md desde git).
+
+## Workflow
+
+1. `/sdd-dl-constitution` — mission, tech-stack y roadmap en `specs/constitution/`.
+2. `/sdd-dl-feature-spec` — spec con REQs + clarification gate (BLOCKING/IMPORTANT/OPTIONAL) → aprobación humana.
+3. `/sdd-dl-implement` — TASKs con commits pequeños; change control para specs aprobadas.
+4. `/sdd-dl-validate` — validator independiente.
+5. `/sdd-dl-merge` — changelog + merge (solo desde `validated`, 0 BLOCKING).
+
+O `/sdd-dl` para el modo orquestado: detecta el estado y propone el siguiente paso.
+
+## Quick Start
 
 ### 1. Copiar el agente en tu proyecto
 
@@ -43,42 +71,48 @@ cp .opencode/opencode.json ./opencode.json
 
 ### 3. Inicializar OpenCode
 
-Si es la primera vez, ejecutá `opencode` en tu proyecto y usá `/init` para que OpenCode reconozca los agentes y comandos.
+Si es la primera vez, ejecutá `opencode` en tu proyecto y usá `/init` para que OpenCode reconozca los agentes y comandos. Luego corré `/sdd-dl`.
 
-## Uso
+## Example
 
-### Modo autónomo (recomendado)
+Una feature pequeña atravesando el flujo completo:
 
-Abrí tu proyecto con OpenCode y ejecutá:
+**Specify** — `/sdd-dl-feature-spec` crea `specs/2026-09-08-user-auth/` con `REQ-001` (login), `TASK-001 (REQ-001)` y `VAL-001 (REQ-001)`.
+**Clarify** — el gate detecta una ambigüedad BLOCKING sobre recuperación de contraseña y pregunta; queda registrada en "Clarifications".
+**Approve** — con 0 BLOCKING y la matriz de `trace.js` limpia, el usuario aprueba; `state.md` pasa a `approved`.
+**Implement** — `/sdd-dl-implement` completa los TASKs, marca los checkboxes del plan y pasa a `implemented`.
+**Validate** — `/sdd-dl-validate` ejecuta los checks de verdad con el validator independiente y marca los VALs con evidencia → `validated`.
+**Merge** — `/sdd-dl-merge` actualiza `CHANGELOG.md`, mergea a la base y marca la fase del roadmap → `merged`.
 
-```
-/sdd-dl
-```
+## Safety
 
-El agente `sdd-dl` inspeccionará el proyecto, detectará en qué fase está y propondrá la siguiente acción. Te pedirá aprobación antes de escribir archivos, commitear o mergear.
+- Aprobaciones por riesgo: trivial (leer, `git status/diff`, checks) no pregunta; material (editar código, specs aprobadas, dependencias, commits, merge) pide aprobación.
+- Permisos OpenCode: el orquestador tiene `edit: ask`; el validator tiene `edit: deny` y bash con allowlist.
+- Prohibiciones absolutas: no ocultar failures, no cambiar requirements para que parezcan cumplidos, no marcar PASS sin evidencia, no mergear con BLOCKING, no inventar resultados de tests.
 
-También podés cambiar al agente SDD manualmente con `Tab` y hablarle directamente con `@sdd-dl`.
+## Portability
 
-### Modo manual (atajos)
+- **Específico de OpenCode**: agentes (`agents/*.md`), comandos (`commands/*.md`), permisos y `opencode.json`.
+- **Agnóstico del harness**: specs (`specs/`), templates, `AGENTS.md`, la skill (`SKILL.md`) y los scripts (Node sin dependencias, usables fuera de OpenCode).
+- **Modelos**: el agente no hardcodea modelo; usa el default de la config global. Cambiarlo con `/models` en el TUI o con `"model"` en `opencode.json`. El validator hereda el modelo del agente que lo invoca.
 
-Si querés forzar una fase específica, usá estos comandos:
+## Design decisions
 
-| Comando | Cuándo usarlo |
-|---------|---------------|
-| `/sdd-dl-constitution` | Crea la constitución del proyecto. |
-| `/sdd-dl-feature-spec` | Escribe el spec de la siguiente fase del roadmap. |
-| `/sdd-dl-implement` | Implementa el spec actual. |
-| `/sdd-dl-validate` | Valida el trabajo contra el spec. |
-| `/sdd-dl-merge` | Actualiza changelog y mergea la rama. |
+- **Estado explícito**: `state.md` por feature evita que una sesión nueva infiera mal la fase; `status.js` lo valida de forma determinista.
+- **IDs de requirements**: `REQ/TASK/VAL` permiten responder programáticamente qué está implementado, validado o sin cobertura.
+- **Validator independiente**: reduce el sesgo de self-validation; reporta sin corregir.
+- **Change control**: las specs aprobadas no se editan libremente; cambios materiales requieren aprobación humana e invalidan las validations afectadas.
+- **Scripts deterministas**: lo que no necesita razonamiento (estado, matriz, changelog) no depende del LLM.
 
 ## Estructura
 
 ```text
 sdd-agent-dl/
 ├── .opencode/
-│   ├── agent/
-│   │   └── sdd-dl.md              # agente SDD DL principal
-│   ├── command/
+│   ├── agents/
+│   │   ├── sdd-dl.md              # orquestador SDD
+│   │   └── sdd-dl-validator.md    # validador independiente (subagent)
+│   ├── commands/
 │   │   ├── sdd-dl.md              # comando /sdd-dl
 │   │   ├── sdd-dl-constitution.md # /sdd-dl-constitution
 │   │   ├── sdd-dl-feature-spec.md # /sdd-dl-feature-spec
@@ -87,13 +121,16 @@ sdd-agent-dl/
 │   │   └── sdd-dl-merge.md        # /sdd-dl-merge
 │   ├── skills/
 │   │   └── sdd-agent-dl-workflow/
-│   │       └── SKILL.md           # skill SDD DL
+│   │       └── SKILL.md           # skill reutilizable
 │   ├── templates/
 │   │   ├── constitution/          # mission, tech-stack, roadmap
-│   │   └── feature/               # requirements, plan, validation
+│   │   └── feature/               # requirements, plan, validation, state
 │   ├── scripts/
+│   │   ├── status.js              # SDD STATUS determinista
+│   │   ├── trace.js               # matriz REQ → TASK → VAL
 │   │   └── changelog.js           # helper para CHANGELOG.md
-│   └── opencode.json             # configuración de ejemplo
+│   └── opencode.json              # definición del agente (mode + prompt)
+├── evals/                         # fixtures + run-evals.js
 ├── AGENTS.md                      # instrucciones persistentes del proyecto
 └── README.md                      # este archivo
 ```
