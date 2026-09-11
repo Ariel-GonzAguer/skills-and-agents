@@ -1,8 +1,10 @@
 ---
 name: product-viability-evaluator
-version: 1.0.0
-description: Evalúa si un producto, repositorio, SaaS, app, proyecto open-source, marketplace, API, servicio o idea de negocio vale la pena invertir tiempo y dinero. Usar cuando un usuario pregunte si construir, continuar, financiar, lanzar, monetizar, pivotar, comparar o abandonar un proyecto, incluyendo solicitudes como "evaluar este proyecto", "esto es viable", "este SaaS tiene mercado", "auditar este repo como negocio" o "qué proyecto debería seguir". Realiza investigación de mercado basada en evidencia, inspección de solo lectura del repositorio, escenarios financieros, análisis de ajuste fundador-retorno sobre el tiempo, equipo rojo adversarial obligatorio, manejo explícito de incertidumbre, y produce CONSTRUIR, VALIDAR, PIVOTAR, RECONSIDERAR o ABANDONAR.
-compatibilidad: Agnóstico al modelo. Funciona con herramientas de sistema de archivos y shell; la investigación web y subagentes mejoran la evidencia pero son opcionales. Node.js 18+ es opcional para scripts deterministas de puntuación y validación.
+description: Evalúa si un producto, repositorio, SaaS, app, proyecto open-source, marketplace, API, servicio o idea de negocio vale la pena invertir tiempo y dinero. Usar cuando un usuario pregunte si construir, continuar, financiar, lanzar, monetizar, pivotar, comparar o abandonar un proyecto, incluyendo solicitudes como "evaluar este proyecto", "esto es viable", "este SaaS tiene mercado", "auditar este repo como negocio" o "qué proyecto debería seguir". Realiza investigación de mercado basada en evidencia, inspección de solo lectura del repositorio, escenarios financieros, análisis de ajuste fundador-retorno sobre el tiempo, equipo rojo adversarial obligatorio, manejo explícito de incertidumbre, y produce BUILD, VALIDATE, PIVOT, RECONSIDER o ABANDON.
+compatibility: Agnóstico al modelo. Funciona con herramientas de sistema de archivos y shell; la investigación web y subagentes mejoran la evidencia pero son opcionales. Node.js 18+ es opcional para scripts deterministas de puntuación y validación.
+metadata:
+  author: Ariel GonzAgüer
+  version: "1.1.0"
 ---
 
 # Evaluador de Viabilidad de Producto
@@ -17,7 +19,7 @@ Decidir si esta oportunidad merece el tiempo, dinero y atención escasos de este
 4. Buscar evidencia negativa con el mismo esfuerzo usado para evidencia de soporte.
 5. Mantener `Puntuación`, `Confianza` y `Cobertura de evidencia` separados. La evidencia faltante reduce la confianza y cobertura; no convertir silenciosamente `DESCONOCIDO` en cero o un punto medio inventado.
 6. No dejar que la puntuación ponderada determine el veredicto. Aplicar puertas de decisión y deal breakers después de puntuar.
-7. Preferir `VALIDAR` cuando una incertidumbre de alto impacto permanezca testeable. Decir que la evidencia es insuficiente cuando lo es.
+7. Preferir `VALIDATE` cuando una incertidumbre de alto impacto permanezca testeable. Decir que la evidencia es insuficiente cuando lo es.
 8. Auditar repositorios en solo lectura. Nunca imprimir valores secretos, modificar código, ejecutar comandos destructivos o inferir preparación para producción solo de la documentación.
 9. Igualar la profundidad técnica al impacto de la decisión. No gastar tiempo en refactorizaciones estéticas o detalles de implementación de bajo impacto.
 
@@ -101,13 +103,13 @@ Resolver desacuerdos entre el análisis inicial y el equipo rojo. Recalcular dim
 
 Aplicar deal breakers y techos de veredicto después de puntuar:
 
-- `CONSTRUIR`: evidencia suficiente soporta demanda, compradores alcanzables, un camino económico plausible, ajuste de ejecución y sin puerta crítica sin resolver.
-- `VALIDAR`: el potencial existe, pero una o más hipótesis testeables de alto impacto permanecen sin resolver.
-- `PIVOTAR`: el problema o mercado tiene evidencia, pero el cliente actual, oferta, producto, precios o canal son estructuralmente débiles.
-- `RECONSIDERAR`: la evidencia, el retorno ajustado al riesgo, el ajuste del fundador o el costo de oportunidad son poco atractivos, pero no fatalmente concluyentes.
-- `ABANDONAR`: evidencia fuerte muestra que el retorno esperado no justifica más inversión o existe un deal breaker no remediable.
+- `BUILD`: evidencia suficiente soporta demanda, compradores alcanzables, un camino económico plausible, ajuste de ejecución y sin puerta crítica sin resolver.
+- `VALIDATE`: el potencial existe, pero una o más hipótesis testeables de alto impacto permanecen sin resolver.
+- `PIVOT`: el problema o mercado tiene evidencia, pero el cliente actual, oferta, producto, precios o canal son estructuralmente débiles.
+- `RECONSIDER`: la evidencia, el retorno ajustado al riesgo, el ajuste del fundador o el costo de oportunidad son poco atractivos, pero no fatalmente concluyentes.
+- `ABANDON`: evidencia fuerte muestra que el retorno esperado no justifica más inversión o existe un deal breaker no remediable.
 
-No usar rangos de veredicto basados solo en puntuación. Un proyecto con alta puntuación pero disposición de pago no verificada, distribución inaccesible, exposición crítica de cumplimiento o restricciones imposibles del fundador no puede recibir `CONSTRUIR`.
+No usar rangos de veredicto basados solo en puntuación. Un proyecto con alta puntuación pero disposición de pago no verificada, distribución inaccesible, exposición crítica de cumplimiento o restricciones imposibles del fundador no puede recibir `BUILD`.
 
 ### 7. Diseñar experimentos de validación
 

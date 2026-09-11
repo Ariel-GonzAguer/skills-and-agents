@@ -2,11 +2,20 @@
 
 Este material se movió desde `SKILL.md` para mantener el workflow cargado enfocado.
 
+## Contenido
+
+- [API serverless](#1-api-serverless-backend)
+- [Funciones auxiliares](#funciones-auxiliares-críticas)
+- [Componente frontend](#2-componente-frontend-ui-flotante)
+
 ## Implementación paso a paso
 
 ### 1. API Serverless (Backend)
 
-#### Estructura del archivo API
+#### Esqueleto del archivo API
+
+Este ejemplo muestra el flujo y requiere adaptar `checkRateLimit`, `validateOrigin`, `businessData`
+y `allowedOrigins` al runtime real. No lo presentes como listo para producción hasta completar y probar esas fronteras.
 
 ```typescript
 import OpenAI from 'openai';
@@ -16,15 +25,17 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Rate limiting (Netlify Blobs con fallback en memoria)
-const rateLimitMap = new Map();
+// Contratos que deben implementarse con las primitivas confiables del runtime.
 const RATE_LIMIT = 7; // requests por ventana
 const RATE_WINDOW = 60 * 1000; // 1 minuto
 
-async function checkRateLimit(clientIp: string): Promise<boolean> {
-  // Implementar con Netlify Blobs o similar para persistencia
-  // Fallback a Map en memoria si no está disponible
-}
+declare function consumeRateLimit(input: {
+  key: string;
+  limit: number;
+  windowMs: number;
+}): Promise<{ allowed: boolean; retryAfterSeconds: number }>;
+declare function getTrustedClientIp(request: Request): string;
+declare function validateOrigin(request: Request, allowedOrigins: string[]): boolean;
 
 // System prompt optimizado
 function createSystemPrompt(businessData): string {
@@ -54,42 +65,44 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   // 2. Obtener IP y verificar rate limit
-  const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0] || 'unknown';
-  if (!(await checkRateLimit(clientIp))) {
+  const clientIp = getTrustedClientIp(request);
+  const rateLimit = await consumeRateLimit({
+    key: `chat:${clientIp}`,
+    limit: RATE_LIMIT,
+    windowMs: RATE_WINDOW,
+  });
+  if (!rateLimit.allowed) {
     return new Response(JSON.stringify({ 
       error: 'Demasiadas solicitudes. Espera un minuto.' 
     }), {
       status: 429,
-      headers: { 'Retry-After': '60' },
+      headers: { 'Retry-After': String(rateLimit.retryAfterSeconds) },
     });
   }
 
-  // 3. Parsear y sanitizar input
+  // 3. Parsear y validar input
   const { question, history = [] } = await request.json();
-  const sanitized = sanitizeInput(question);
+  if (typeof question !== 'string' || question.trim().length === 0) {
+    return Response.json({ error: 'Pregunta inválida' }, { status: 400 });
+  }
+  const sanitized = validateInput(question);
 
   // Validar historial del cliente (ver chatbot-security): debe ser array, solo roles
-  // permitidos y contenido string sanitizado. Nunca aceptar el rol 'system' del cliente.
+  // permitidos y contenido string acotado. Nunca aceptar el rol 'system' del cliente.
   const ALLOWED_ROLES = ['user', 'assistant'];
   const historialValido = Array.isArray(history)
     ? history
         .filter(m => m && ALLOWED_ROLES.includes(m.role) && typeof m.content === 'string')
-        .map(m => ({ role: m.role, content: sanitizeInput(m.content).slice(0, 2000) }))
+        .map(m => ({ role: m.role, content: validateInput(m.content).slice(0, 2000) }))
         .slice(-10)
     : [];
 
-  // 4. Preparar mensajes (limitar historial para reducir tokens)
-  const messages = [
-    { role: 'system', content: createSystemPrompt(businessData) },
-    ...historialValido, // Últimos 10 mensajes
-    { role: 'user', content: sanitized }
-  ];
-
-  // 5. Streaming con OpenAI
-  const stream = await openai.chat.completions.create({
-    model: 'gpt-5-nano',
-    messages,
-    max_completion_tokens: 500,
+  // 4. Streaming con Responses API
+  const stream = await openai.responses.create({
+    model: process.env.OPENAI_MODEL,
+    instructions: createSystemPrompt(businessData),
+    input: [...historialValido, { role: 'user', content: sanitized }],
+    max_output_tokens: 500,
     stream: true,
   }, {
     // Timeout explícito: evita colgar la función serverless si OpenAI no responde.
@@ -103,7 +116,7 @@ export async function POST(request: Request): Promise<Response> {
     async start(controller) {
       try {
         for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content || '';
+          const content = chunk.type === 'response.output_text.delta' ? chunk.delta : '';
           if (content) {
             const data = `data: ${JSON.stringify({ content })}\n\n`;
             controller.enqueue(encoder.encode(data));
@@ -129,14 +142,14 @@ export async function POST(request: Request): Promise<Response> {
 
 #### Funciones auxiliares críticas
 
-**Sanitización de inputs:**
+**Validación y límites de inputs:**
 ```typescript
-function sanitizeInput(text: string): string {
+function validateInput(text: string): string {
+  if (typeof text !== 'string') throw new TypeError('El contenido debe ser texto');
   return text
     .trim()
     .replace(/\s+/g, ' ') // Normalizar espacios
-    .slice(0, 500) // Límite de caracteres
-    .replace(/[<>'"&]/g, ''); // Remover HTML peligroso
+    .slice(0, 500); // Limitar costo y abuso; React escapará el texto al renderizar
 }
 ```
 

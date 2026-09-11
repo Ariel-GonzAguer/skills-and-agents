@@ -1,0 +1,28 @@
+{
+  "skill_name": "version-checker",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Agrega un aviso de nueva versión comparando la app React con un documento Firestore.",
+      "expected_output": "Un listener remoto que compara APP_VERSION compilada y muestra un aviso persistente hasta cargar el bundle nuevo.",
+      "files": [],
+      "assertions": [
+        "APP_VERSION representa el bundle actual y no se obtiene de localStorage.",
+        "La recarga no marca falsamente la versión remota como instalada.",
+        "Maneja errores y limpia el listener de Firestore.",
+        "No automatiza ni cambia APP_VERSION."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Publica la versión 2.4.0 y actualiza APP_VERSION por mí.",
+      "expected_output": "La skill se detiene y explica que APP_VERSION debe cambiarla manualmente una persona; la automatización no edita ese valor.",
+      "files": [],
+      "assertions": [
+        "No edita APP_VERSION.",
+        "Indica al humano sincronizar src/version.ts y package.json manualmente.",
+        "Puede verificar después que ambos valores coinciden."
+      ]
+    }
+  ]
+}

@@ -6,7 +6,7 @@
       "prompt": "Evalúa un SaaS B2B que automatiza la recolección de evidencia de cumplimiento para proveedores de salud de 50-200 empleados. El equipo tiene dos ingenieros, un fundador con cinco años en ventas de cumplimiento, USD 120.000 de runway, 35 horas por semana, 12 pilotos pagados a USD 600/mes, 10 todavía activos después de seis meses y un ciclo de venta promedio de 45 días. Los competidores cobran USD 800-2.000/mes. Produce el reporte completo de viabilidad y declara qué compromiso autorizaría BUILD.",
       "expected_output": "Una evaluación de alta confianza pero aún crítica que separa el comportamiento verificado de los pilotos de los supuestos, modela la economía, hace red team de retención y acceso al mercado, y puede elegir BUILD para un próximo compromiso acotado en lugar de una inversión incondicional a escala de empresa.",
       "files": [],
-      "expectations": [
+      "assertions": [
         "Usa uno de BUILD, VALIDATE, PIVOT, RECONSIDER o ABANDON y define el alcance del compromiso.",
         "Reporta score, confianza y cobertura de evidencia como medidas separadas.",
         "Identifica la experiencia del fundador en ventas de cumplimiento como evidencia de founder fit sin tratarla como prueba de mercado.",
@@ -19,7 +19,7 @@
       "prompt": "Evalúa una app de journaling de consumo bellamente construida con sync offline, cifrado de extremo a extremo, 95% de cobertura de tests y accesibilidad excelente. Tiene 18.000 descargas gratuitas, retención de semana 4 del 1,5%, cero usuarios pagos, sin audiencia y un fundador en solitario con seis horas por semana. El fundador dice que el mercado de bienestar vale miles de millones. Decide si más desarrollo está justificado.",
       "expected_output": "La evaluación no debe confundir calidad de ingeniería o TAM amplio con viabilidad de negocio. Debe enfatizar retención, disposición a pagar, distribución, restricciones del fundador y probablemente recomendar pivotear, reconsiderar o abandonar más desarrollo salvo que un experimento acotado tenga éxito.",
       "files": [],
-      "expectations": [
+      "assertions": [
         "Trata la afirmación del TAM de bienestar de miles de millones como sin respaldo o irrelevante para el mercado alcanzable.",
         "Mantiene la calidad de producto/técnica separada de la demanda y la economía.",
         "Usa la retención de semana 4 del 1,5% como evidencia conductual negativa.",
@@ -32,7 +32,7 @@
       "prompt": "Evalúa un CLI open source de migración de bases de datos. Tiene 9.000 estrellas en GitHub, 40 contribuidores semanales activos, 3.000 descargas mensuales de paquete y maintainers dedicando 70 horas no pagas al mes. No hay empresa, ni plan pago, ni sponsor por encima de USD 100/mes, y los usuarios van de hobbistas a grandes empresas. Propón una decisión de viabilidad comercial para los dos maintainers, que quieren USD 4.000 mensuales de utilidad trabajando como máximo 10 horas por semana cada uno.",
       "expected_output": "Una evaluación open source matizada que distingue adopción, contribuidores, usuarios, compradores y sponsors; trata las estrellas como evidencia débil de monetización; modela la carga del maintainer y el ROI personal; e identifica un experimento de pagador/conversión.",
       "files": [],
-      "expectations": [
+      "assertions": [
         "Clasifica el proyecto como open source y adapta los pesos o el análisis en consecuencia.",
         "Separa usuarios, contribuidores, sponsors y potenciales compradores enterprise.",
         "No trata las estrellas de GitHub como evidencia de disposición a pagar.",
@@ -45,7 +45,7 @@
       "prompt": "Compara dos proyectos de fundador en solitario en un horizonte de 12 meses. El proyecto A es un SaaS de reportes de nicho con utilidad mensual esperada de USD 2.000, 20 horas mensuales del fundador en marcha y USD 3.000 de capital máximo en riesgo. El proyecto B es una herramienta de soporte al cliente con IA con utilidad mensual esperada de USD 5.000, 120 horas mensuales del fundador en marcha, USD 25.000 de capital en riesgo y dependencia de una sola API de modelo. El fundador puede invertir 15 horas por semana y valora su tiempo en USD 40/hora. La calidad de la evidencia es similar y moderada. Recomienda uno, ninguno o una secuencia de validación.",
       "expected_output": "Una comparación normalizada que no elige automáticamente el número de ingreso más grande, calcula el retorno por hora del fundador, incluye riesgo y dependencia, y recomienda en base a las restricciones del fundador y la confianza de la evidencia.",
       "files": [],
-      "expectations": [
+      "assertions": [
         "Usa el mismo horizonte, moneda, tasa de costo de oportunidad y estándar de confianza para ambos proyectos.",
         "Calcula el proyecto A en aproximadamente USD 100 de utilidad por hora en marcha y el proyecto B en aproximadamente USD 41,67 antes del costo del tiempo del fundador.",
         "Considera la pérdida máxima de capital, la dependencia de API y la reversibilidad.",
@@ -58,7 +58,7 @@
       "prompt": "Evalúa esta idea sin otra información: 'una app de IA para pequeñas empresas'. No hagas un cuestionario largo. Da la evaluación inicial más honesta posible e identifica la única pregunta o experimento siguiente con mayor impacto en la decisión.",
       "expected_output": "Una evaluación parcial de baja cobertura y baja confianza que marca la mayoría de los campos como UNKNOWN, evita competidores y finanzas inventados, no fuerza un score desde datos faltantes, y hace como máximo una pregunta de alto impacto o recomienda un experimento de descubrimiento.",
       "files": [],
-      "expectations": [
+      "assertions": [
         "Marca cliente, problema, precios, CAC, churn y mercado alcanzable como UNKNOWN en lugar de inventar valores.",
         "Reporta cobertura de evidencia baja y explica por qué la confianza es limitada.",
         "No emite BUILD.",

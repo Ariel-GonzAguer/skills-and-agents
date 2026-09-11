@@ -2,6 +2,20 @@
 
 Este material se movió desde `SKILL.md` para mantener el workflow cargado enfocado.
 
+## Contenido
+
+- [Modal / diálogo](#patrón-a-modal--diálogo-wcag-212-412)
+- [Formulario accesible](#patrón-b-formulario-accesible-wcag-131-135-412)
+- [Select e inputs agrupados](#patrón-c-select-e-inputs-agrupados-wcag-131)
+- [Toast / live region](#patrón-d-toast--live-region-accesible-wcag-413)
+- [Acordeón](#patrón-e-acordeón-wcag-412-211)
+- [Elementos interactivos](#patrón-f-spandiv--button-wcag-211-412)
+- [Links externos](#patrón-g-links-externos-wcag-244)
+- [Botones de imagen](#patrón-h-botones-de-imagen--ícono-wcag-111)
+- [Landmarks](#patrón-i-landmarks-de-navegación-wcag-136-241)
+- [Tablas y listas](#patrón-j-accesibilidad-de-tablas--listas-wcag-131)
+- [Carga y regiones ocupadas](#patrón-k-estados-de-carga-y-regiones-ocupadas-wcag-413-221)
+
 ## Fase 3: Implementaciones de patrones
 
 ### Patrón A: Modal / Diálogo (WCAG 2.1.2, 4.1.2)
@@ -22,36 +36,62 @@ interface ModalProps {
 export function AccessibleModal({ isOpen, onClose, title, children }: ModalProps) {
   const titleId = useId();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     if (!isOpen) return;
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
     // WCAG 2.4.3: Move focus to modal on open
     closeBtnRef.current?.focus();
     // WCAG 2.1.2: Close on Escape
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab' || !dialogRef.current) return;
+      const focusable = Array.from(dialogRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ));
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (!first || !last) return;
+      if (!dialogRef.current.contains(document.activeElement)) {
+        e.preventDefault();
+        (e.shiftKey ? last : first).focus();
+      } else if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     document.addEventListener('keydown', handleKey);
-    return () => document.removeEventListener('keydown', handleKey);
+    return () => {
+      document.removeEventListener('keydown', handleKey);
+      previousFocusRef.current?.focus();
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen) return null;
 
   return (
-    // Backdrop: aria-hidden so screen readers skip the overlay itself
     <div
-      aria-hidden="true"
       className="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
-      onClick={onClose}
+      onMouseDown={(event) => {
+        if (event.currentTarget === event.target) onClose();
+      }}
     >
       {/* WCAG 4.1.2: role=dialog + aria-modal + aria-labelledby */}
       <div
+        ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        aria-hidden="false"
         className="bg-white rounded-lg p-6 max-w-md w-full mx-4 max-h-[90vh] overflow-y-auto relative"
-        onClick={e => e.stopPropagation()}
       >
         {/* WCAG 2.4.6: Visible heading tied to dialog label */}
         <h2 id={titleId} className="text-xl font-bold mb-4 pr-10">{title}</h2>
@@ -85,12 +125,13 @@ export function AccessibleModal({ isOpen, onClose, title, children }: ModalProps
 ```
 
 **Reglas clave**:
-- El `div` del backdrop recibe `aria-hidden="true"`: los lectores de pantalla nunca lo ven.
-- El `div` interno del diálogo recibe `role="dialog" aria-modal="true" aria-labelledby={id} aria-hidden="false"`.
+- El backdrop no recibe `aria-hidden`: aplicarlo a un ancestro ocultaría también el diálogo descendiente.
+- El `div` interno del diálogo recibe `role="dialog" aria-modal="true" aria-labelledby={id}`.
 - `useId()` para el ID único del título (requerido cuando pueden existir múltiples diálogos).
 - `useRef` en el botón de cerrar con `.focus()` al abrir.
-- `useEffect` agrega el listener `keydown` para Escape.
-- `onClick` en el backdrop cierra; el `div` interno detiene la propagación.
+- `useEffect` implementa Escape, contención de Tab y restauración de foco.
+- El backdrop solo cierra cuando el evento se origina en él, no en un descendiente.
+- En una app real, usar un primitive de diálogo probado o volver `inert` el contenido exterior para impedir interacción de puntero y foco fuera del modal.
 - Botón de cerrar: `aria-label` + `<span aria-hidden="true">✕</span>`.
 
 ---

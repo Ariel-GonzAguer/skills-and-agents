@@ -1,6 +1,5 @@
 ---
 name: sdd-agent-dl-workflow
-version: 2.0.0
 description: >
   Orquestar Spec-Driven Development (SDD) con OpenCode.
   Usar cuando el usuario quiera iniciar un proyecto con constitución,
@@ -11,6 +10,10 @@ description: >
   "crear constitución", "siguiente fase", "feature spec",
   "implementar el spec", "validar contra specs", "/sdd-dl", o cuando
   el proyecto tiene un directorio `specs/`.
+compatibility: Diseñada para OpenCode y para instalarse junto con los agentes, comandos, scripts y plantillas incluidos en agents/sdd-agent-dl/.opencode.
+metadata:
+  author: Ariel GonzAgüer
+  version: "2.1.0"
 ---
 
 # SDD Agent DL Workflow
@@ -19,9 +22,21 @@ description: >
 
 Convertir una idea de producto en specs rastreables, código testeado y una rama lista para mergear usando el flujo SDD del curso *Spec-Driven Development with Coding Agents* de DeepLearning.AI.
 
+## Contrato de instalación
+
+Esta skill no es autónoma: antes de ejecutar el flujo, comprobar que el proyecto también contiene los comandos, agentes, scripts y plantillas de `agents/sdd-agent-dl/.opencode/`. En particular, verificar `.opencode/scripts/status.js`, `.opencode/scripts/trace.js` y los agentes referenciados por los comandos.
+
+Si falta una pieza:
+
+- no inventar su comportamiento ni continuar con un flujo parcial;
+- indicar la ruta ausente y la operación afectada;
+- ofrecer las instrucciones de instalación del paquete completo;
+- permitir tareas de lectura o explicación que no dependan de esa pieza.
+
 ## Flujo
 
 1. Inspeccionar el repositorio buscando la constitución SDD (`specs/constitution/mission.md`, `specs/constitution/tech-stack.md`, `specs/constitution/roadmap.md`).
+   Antes, ejecutar o inspeccionar `.opencode/scripts/status.js`; si no existe, aplicar el contrato de instalación.
 2. Si falta, crear la constitución entrevistando al usuario.
 3. Encontrar la siguiente fase incompleta del roadmap y crear una rama de git.
 4. Escribir un directorio de feature spec con `requirements.md` (REQ-IDs + acceptance criteria), `plan.md` (TASK-IDs con referencia a REQ), `validation.md` (VAL-IDs con referencia a REQ) y `state.md` (estado explícito).
@@ -38,3 +53,4 @@ Convertir una idea de producto en specs rastreables, código testeado y una rama
 - Nunca marcar un check como PASS sin evidencia ni inventar resultados de tests.
 - Nunca cambiar requirements para que la implementación parezca correcta.
 - Mantener el alcance de cada feature enfocado e independientemente entregable.
+- Tratar la salida de scripts como evidencia auxiliar: si un proceso no pudo iniciarse, reportar el error de ejecución y no interpretarlo como un resultado funcional.

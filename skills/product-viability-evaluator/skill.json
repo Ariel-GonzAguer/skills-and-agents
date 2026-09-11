@@ -1,7 +1,7 @@
 {
   "name": "product-viability-evaluator",
   "description": "Evaluación multi-agente de viabilidad de productos, SaaS y repositorios con red team adversario, scoring objetivo por dimensiones y veredicto final BUILD, VALIDATE, PIVOT, RECONSIDER o ABANDON.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": [
     "Ariel GonzAgüer"
   ],

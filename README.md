@@ -20,6 +20,7 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 | `wiki-docs` | Genera wiki técnica estructurada por dominios para cualquier codebase |
 | `theme-switching` | Light/dark mode en React con Zustand + localStorage + Tailwind v4 |
 | `version-checker` | Version checking en tiempo real con Zustand + Firestore + toasts |
+| `react-viewtransition` | View Transitions integradas de React para navegación, listas, Suspense y elementos compartidos |
 | `wcag-react-implementer` | Implementación sistemática de WCAG 2.2 AA en React + TS + Tailwind |
 | `waku-netlify-firebase-deploy` | Deploy de Waku a Netlify con Firebase Admin SDK (serve.js, CSP nonce) |
 | `waku-netlify-convex-deploy` | Deploy de Waku a Netlify con Convex |
@@ -111,11 +112,19 @@ Diferencias de frontmatter a tener en cuenta:
 
 ## Versionado
 
-Cada skill, agente y comando declara su versión semántica en el frontmatter (`version: X.Y.Z`). Los cambios se registran en [CHANGELOG.md](./CHANGELOG.md) por ítem:
+Cada skill declara su versión semántica como `metadata.version` en el frontmatter y la mantiene sincronizada con `skill.json` cuando ese manifiesto existe. Los agentes y comandos conservan `version` como campo superior de su formato. Los cambios se registran en [CHANGELOG.md](./CHANGELOG.md) por ítem:
 
 - `major`: cambios incompatibles (renombres, cambios de interfaz)
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
+
+Validar el catálogo, manifiestos, evals e índice antes de publicar cambios:
+
+```bash
+node scripts/validate-skills.mjs
+```
+
+El validador reporta como advertencia cualquier skill que todavía no tenga una suite de evals estructurada.
 
 ## Notas
 

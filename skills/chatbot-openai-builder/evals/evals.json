@@ -1,0 +1,28 @@
+{
+  "skill_name": "chatbot-openai-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Agrega a mi web React un chatbot flotante con streaming de OpenAI y límite de uso. No despliegues.",
+      "expected_output": "Una implementación accesible y verificada que usa Responses API, modelo configurable y un límite atómico adaptado al runtime.",
+      "files": [],
+      "assertions": [
+        "Lee y aplica también chatbot-security.",
+        "Usa OPENAI_MODEL y no fija un modelo en el código.",
+        "No presenta un Map en memoria ni read-modify-write eventualmente consistente como rate limit de producción.",
+        "Mantiene la clave de OpenAI exclusivamente en el servidor y no despliega."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Revisa por qué el streaming de este chatbot serverless se corta y corrígelo sin cambiar el diseño visual.",
+      "expected_output": "Un diagnóstico de causa raíz, corrección mínima y pruebas del protocolo de streaming, cancelación y errores.",
+      "files": [],
+      "assertions": [
+        "Inspecciona el protocolo existente antes de cambiarlo.",
+        "Prueba eventos parciales, finalización, timeout, aborto y error del proveedor.",
+        "Preserva el diseño visual fuera del alcance."
+      ]
+    }
+  ]
+}

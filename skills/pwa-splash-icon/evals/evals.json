@@ -1,0 +1,28 @@
+{
+  "skill_name": "pwa-splash-icon",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Mi logo queda cortado al instalar la PWA. Genera el icono con fondo #d7efe6 desde public/logo.png.",
+      "expected_output": "Un icono maskable 512x512 generado con padding, manifiesto actualizado y verificación visual.",
+      "files": [],
+      "assertions": [
+        "Usa el script incluido y valida origen, destino, color y proporción.",
+        "Conserva archivos separados para purpose any y maskable.",
+        "No elimina sharp si ya era dependencia del proyecto.",
+        "Comprueba dimensiones, fondo y zona segura visualmente."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Revisa el manifest: el mismo PNG aparece como any y maskable y todavía se recorta.",
+      "expected_output": "Un diagnóstico que separa los dos propósitos y evita afirmaciones incorrectas sobre splash nativo de iOS.",
+      "files": [],
+      "assertions": [
+        "Propone activos distintos para any y maskable.",
+        "Mantiene el contenido importante dentro de la zona segura.",
+        "No afirma que cambiar el canvas a 1024 resuelve iOS."
+      ]
+    }
+  ]
+}

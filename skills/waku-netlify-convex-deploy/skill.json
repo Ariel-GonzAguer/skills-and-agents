@@ -1,7 +1,7 @@
 {
   "name": "waku-netlify-convex-deploy",
   "description": "Crea, mantiene, audita y despliega aplicaciones Waku con Convex en Netlify: schema, funciones, preview deploys, variables de entorno y reparación de builds.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": [
     "Ariel GonzAgüer"
   ],

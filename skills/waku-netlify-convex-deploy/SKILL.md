@@ -1,8 +1,10 @@
 ---
 name: waku-netlify-convex-deploy
-version: 1.0.0
 description: Ayuda a crear, mantener, auditar, reparar, probar, previsualizar y desplegar aplicaciones Waku usando Convex en Netlify. Usar cuando un usuario inicia un proyecto Waku + Convex + Netlify, agrega funcionalidades, cambia esquemas o autenticación, corrige fallos de build/tiempo de ejecución, revisa preparación para producción, configura variables de entorno, CSP, Netlify Functions, previsualizaciones de deploy o despliegue a producción. Usar esta skill incluso cuando el usuario mencione solo archivos como waku.config.ts, convex/schema.ts, convex/_generated/api, netlify.toml o netlify-functions/serve.js. Puede aplicar correcciones mínimas y ejecutar previsualización o despliegue a producción solo después de que sus puertas de seguridad pasen.
-compatibilidad: Requiere Node.js 22+, pnpm, y CLIs específicos del proyecto de Convex y Netlify. Se recomienda Context7 o documentación oficial web antes de cambiar configuración sensible a versiones.
+compatibility: Requiere Node.js 22+, pnpm, y CLIs específicos del proyecto de Convex y Netlify. Se recomienda Context7 o documentación oficial web antes de cambiar configuración sensible a versiones.
+metadata:
+  author: Ariel GonzAgüer
+  version: "1.1.0"
 ---
 
 # Waku + Convex + Netlify
@@ -15,9 +17,9 @@ Auditar y reparar el camino completo desde un cliente Waku y rutas renderizadas 
 2. Inspeccionar el repositorio y worktree actual antes de cambiar cualquier cosa. Para un proyecto nuevo, inspeccionar el directorio destino y confirmar que está vacío o preservar archivos existentes.
 3. Obtener documentación oficial actual de Waku, Convex y Netlify antes de cambiar APIs, comandos, adaptadores o configuración sensible a versiones. No copiar ciegamente los repositorios de referencia.
 4. Nunca revelar, imprimir, copiar o commitear valores secretos. Reportar solo nombres y ámbitos de variables.
-5. **Pedir aprobación explícita antes de cualquier efecto secundario.** Esto incluye editar o eliminar archivos, instalar/actualizar dependencias, regenerar archivos, cambiar variables/configuración de Netlify o Convex, aprovisionar o modificar un despliegue de Convex, crear una previsualización de Netlify y desplegar a producción. La inspección de solo lectura y comandos de diagnóstico están permitidos antes de la aprobación.
-6. Antes de preguntar, presentar la auditoría, causas raíz confirmadas, archivos/comandos propuestos, riesgos esperados y si la acción apunta a local, previsualización, staging o producción. No pedir permiso vago como "¿debería continuar?".
-7. Aplicar solo el alcance aprobado. Si un nuevo problema o efecto secundario aparece fuera de ese alcance, detenerse y preguntar de nuevo.
+5. Tratar una solicitud explícita de crear, corregir o mantener el proyecto como autorización para los cambios locales normales de ese alcance. Pedir aprobación adicional antes de eliminar datos, instalar o actualizar dependencias no solicitadas, cambiar configuración alojada, aprovisionar recursos o crear cualquier despliegue.
+6. Antes de un efecto externo, presentar causas raíz confirmadas, archivos/comandos propuestos, riesgos esperados y si la acción apunta a previsualización, staging o producción. No pedir permiso vago como "¿debería continuar?".
+7. Aplicar solo el alcance solicitado o aprobado. Si aparece un efecto destructivo o externo nuevo fuera de ese alcance, detenerse y preguntar de nuevo.
 8. Corregir problemas confirmados con el cambio mantenible más pequeño. Preservar cambios no relacionados del worktree.
 9. Ejecutar todas las puertas de calidad y despliegue aplicables. No reclamar éxito cuando una puerta fue omitida o falló.
 10. El despliegue a producción es un efecto secundario externo. Ejecutarlo solo cuando el usuario aprobó explícitamente el despliegue a producción en la conversación actual, las credenciales apuntan al sitio/despliegue intencionado, y cada puente bloqueante pasa.
@@ -95,13 +97,14 @@ Tratar la salida del escáner como pistas, no como prueba. Confirmar cada hallaz
 
 ## Puerta de aprobación
 
-Después del descubrimiento de solo lectura y la auditoría, detenerse antes de la Fase 3. Hacer exactamente una pregunta enfocada que incluya el alcance propuesto. Por ejemplo:
+Después del descubrimiento y la auditoría, continuar con correcciones locales cuando la solicitud original ya las autorice. Si falta autorización para cambiar archivos o se necesita un efecto externo, detenerse antes de la Fase 3 y hacer una pregunta enfocada que incluya el alcance propuesto. Por ejemplo:
 
 > Encontré estos bloqueos: `convex/schema.ts` no existe y `netlify.toml:12` expone una variable de despliegue. Propongo modificar `convex/schema.ts`, `netlify.toml` y `package.json`, ejecutar typecheck/tests/build, y crear solo un deploy preview con una clave Convex de preview. ¿Autorizás exactamente esos cambios y ese preview?
 
 Interpretar la aprobación de forma estrecha:
 
-- "Sí" autoriza solo los archivos, comandos, contextos y destino de despliegue listados.
+- Una solicitud inicial explícita de corregir o implementar ya autoriza las ediciones locales normales dentro de ese alcance.
+- "Sí" a una propuesta adicional autoriza solo los archivos, comandos, contextos y destino de despliegue listados.
 - La aprobación para corregir código no autoriza instalar paquetes, cambiar variables alojadas, aprovisionar Convex ni desplegar.
 - La aprobación para una previsualización no autoriza despliegue a producción.
 - La aprobación para configurar variables no autoriza leer o mostrar sus valores.

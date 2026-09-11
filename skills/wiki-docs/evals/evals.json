@@ -1,0 +1,29 @@
+{
+  "skill_name": "wiki-docs",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Documenta este pequeño CLI de 20 archivos para que una persona nueva pueda contribuir.",
+      "expected_output": "Una wiki compacta y basada en evidencia, sin estructura vacía ni delegación artificial.",
+      "files": [],
+      "assertions": [
+        "Adapta dominios y profundidad al tamaño del repositorio.",
+        "No exige seis subagentes ni un documento por cada plantilla.",
+        "No inventa troubleshooting, tablas o diagramas para cumplir cuotas.",
+        "Enlaza entrypoints, comandos, tests y operación."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Crea documentación completa para un monorepo con frontend, API, workers y tres pipelines.",
+      "expected_output": "Exploración por dominios, plan incremental y documentación navegable con cobertura explícita.",
+      "files": [],
+      "assertions": [
+        "Paraleliza dominios independientes solo si hay capacidad y está permitido.",
+        "Declara si cada inventario es completo o representativo.",
+        "Verifica links, ejemplos y fuentes antes de declarar completitud.",
+        "Reporta excepciones justificadas y evidencia pendiente en el quality gate."
+      ]
+    }
+  ]
+}

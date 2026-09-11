@@ -58,11 +58,13 @@ for (const c of cases) {
     encoding: "utf8",
   });
   const out = `${res.stdout}\n${res.stderr}`;
+  const executionError = res.error ? `${res.error.name}: ${res.error.message}` : "";
   const okExit = res.status === c.exit;
   const missing = c.expect.filter((s) => !out.includes(s));
   const ok = okExit && missing.length === 0;
   if (!ok) failed++;
   console.log(`${ok ? "PASS" : "FAIL"}  ${c.name}`);
+  if (executionError) console.log(`      no se pudo ejecutar: ${executionError}`);
   if (!okExit) console.log(`      exit esperado ${c.exit}, real ${res.status}`);
   for (const m of missing) console.log(`      falta: "${m}"`);
 }

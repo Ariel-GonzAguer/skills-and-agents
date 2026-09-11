@@ -1,0 +1,27 @@
+{
+  "skill_name": "theme-switching",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Agrega light/dark mode persistente a React con Zustand y Tailwind v4 sin flash al recargar.",
+      "expected_output": "Una implementación accesible con clase dark temprana, persistencia y pruebas de hidratación.",
+      "files": [],
+      "assertions": [
+        "No afirma que useLayoutEffect por sí solo evita el flash en un hard refresh.",
+        "Propone script temprano o cookie de servidor según la arquitectura.",
+        "El toggle anuncia dinámicamente el tema al que cambiará.",
+        "Los iconos decorativos están ocultos de tecnología asistiva."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Al cerrar sesión mi app borra la preferencia de tema. Corrige ese comportamiento.",
+      "expected_output": "La preferencia del dispositivo persiste salvo que el producto la defina como dato de cuenta.",
+      "files": [],
+      "assertions": [
+        "No elimina el tema automáticamente durante logout.",
+        "Documenta la excepción para preferencias account-scoped o reset explícito."
+      ]
+    }
+  ]
+}

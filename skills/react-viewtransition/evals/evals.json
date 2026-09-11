@@ -1,0 +1,28 @@
+{
+  "skill_name": "react-viewtransition",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Anima la navegación entre una grilla y el detalle de producto con ViewTransition de React.",
+      "expected_output": "Una transición compartida con límite pequeño, nombre único e integración real del router.",
+      "files": [],
+      "assertions": [
+        "Verifica versión de React e integración del router.",
+        "Usa ViewTransition de React y no document.startViewTransition.",
+        "Garantiza nombres globalmente únicos y una pareja montada por transición.",
+        "Incluye reduced motion y conserva foco/navegación."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Depura una lista React cuyo reordenamiento no anima aunque cada fila tiene ViewTransition.",
+      "expected_output": "Un diagnóstico de claves, límites y prioridad de actualización con un cambio mínimo.",
+      "files": [],
+      "assertions": [
+        "Comprueba que la actualización ocurre dentro de startTransition.",
+        "Comprueba claves estables y límites como elementos directos.",
+        "No recomienda name compartido para reordenar la lista."
+      ]
+    }
+  ]
+}

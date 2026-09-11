@@ -2,14 +2,16 @@
 
 Este material se movió desde `SKILL.md` para mantener el workflow cargado enfocado.
 
-## Plantilla completa de handler seguro
+## Esqueleto de handler seguro
 
-Copia esto como punto de partida para cualquier endpoint nuevo de API de chatbot:
+Adapta este esqueleto al runtime. `consumeRateLimit` y `getTrustedClientIp` representan
+integraciones obligatorias con APIs confiables del proveedor; no son helpers opcionales.
 
 ```typescript
 import OpenAI from 'openai';
 import { info as logInfo, warn as logWarn, error as logError } from '../../utils/logger/logger';
 import { validateOrigin, applySecurityHeaders } from '../../utils/security/security';
+import { consumeRateLimit, getTrustedClientIp } from '../../utils/security/rate-limit';
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
@@ -19,28 +21,13 @@ const RATE_WINDOW = 60_000;
 const ALLOWED_ROLES = ['user', 'assistant'] as const;
 type AllowedRole = (typeof ALLOWED_ROLES)[number];
 
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-
-function sanitizeInput(text: string): string {
-  return text.trim().replace(/\s+/g, ' ').slice(0, 500).replace(/[<>'"&]/g, '');
+function validateInput(text: string): string {
+  if (typeof text !== 'string') throw new TypeError('El contenido debe ser texto');
+  return text.trim().replace(/\s+/g, ' ').slice(0, 500);
 }
 
 async function checkRateLimit(ip: string): Promise<boolean> {
-  const now = Date.now();
-  try {
-    const { getStore } = await import('@netlify/blobs');
-    const store = getStore('rate-limits');
-    const entry = await store.get(`rl:${ip}`, { type: 'json' }) as { count: number; resetTime: number } | null;
-    if (!entry || now > entry.resetTime) { await store.setJSON(`rl:${ip}`, { count: 1, resetTime: now + RATE_WINDOW }); return true; }
-    if (entry.count >= RATE_LIMIT) return false;
-    await store.setJSON(`rl:${ip}`, { count: entry.count + 1, resetTime: entry.resetTime });
-    return true;
-  } catch { /* fallback */ }
-  const e = rateLimitMap.get(ip);
-  if (!e || now > e.resetTime) { rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW }); return true; }
-  if (e.count >= RATE_LIMIT) return false;
-  e.count++;
-  return true;
+  return consumeRateLimit({ key: ip, limit: RATE_LIMIT, windowMs: RATE_WINDOW });
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -53,7 +40,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   // 2. Rate limit
-  const clientIp = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+  const clientIp = getTrustedClientIp(request);
   if (!(await checkRateLimit(clientIp))) {
     logWarn(`[chatbot] Rate limit exceeded for ${clientIp}`);
     const h = new Headers({ 'Content-Type': 'application/json' });
@@ -78,9 +65,9 @@ export async function POST(request: Request): Promise<Response> {
     return new Response(JSON.stringify({ error: 'Formato inválido' }), { status: 400, headers: h });
   }
 
-  // 4. Sanitize inputs
-  const sanitizedQuestion = sanitizeInput(question);
-  logInfo(`[chatbot] Question: "${sanitizedQuestion.slice(0, 50)}${sanitizedQuestion.length > 50 ? '...' : ''}"`);
+  // 4. Validate and bound inputs. Do not log user content by default.
+  const sanitizedQuestion = validateInput(question);
+  logInfo('[chatbot] Valid request received');
 
   // 5. Build history with role whitelist + token budget
   const MAX_HISTORY_TOKENS = 2000;
@@ -89,8 +76,9 @@ export async function POST(request: Request): Promise<Response> {
 
   for (let i = history.length - 1; i >= 0; i--) {
     const msg = history[i];
-    const role: AllowedRole = ALLOWED_ROLES.includes(msg.role) ? msg.role : 'user';
-    const content = sanitizeInput(msg.content || '');
+    if (!msg || typeof msg.content !== 'string' || !ALLOWED_ROLES.includes(msg.role)) continue;
+    const role: AllowedRole = msg.role;
+    const content = validateInput(msg.content);
     const tokens = Math.ceil(content.length / 4);
     if (tokenCount + tokens > MAX_HISTORY_TOKENS) break;
     filteredHistory.unshift({ role, content });
@@ -103,15 +91,15 @@ export async function POST(request: Request): Promise<Response> {
 
   let stream;
   try {
-    stream = await openai.chat.completions.create(
+    stream = await openai.responses.create(
       {
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: 'System prompt here' },
+        model: process.env.OPENAI_MODEL,
+        instructions: 'System prompt here',
+        input: [
           ...filteredHistory,
           { role: 'user', content: sanitizedQuestion },
         ],
-        max_completion_tokens: 500,
+        max_output_tokens: 500,
         stream: true,
       },
       { signal: controller.signal },
@@ -137,7 +125,7 @@ export async function POST(request: Request): Promise<Response> {
     async start(controller) {
       try {
         for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content ?? '';
+          const content = chunk.type === 'response.output_text.delta' ? chunk.delta : '';
           if (content) controller.enqueue(encoder.encode(`data: ${JSON.stringify({ content })}\n\n`));
         }
         controller.enqueue(encoder.encode('data: [DONE]\n\n'));

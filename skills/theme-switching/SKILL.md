@@ -1,7 +1,9 @@
 ---
 name: theme-switching
-version: 1.0.0
 description: Implementa cambio de tema claro/oscuro en apps React usando Zustand para gestión de estado con persistencia en localStorage y modo oscuro basado en clases de Tailwind CSS v4. Usar esta skill cuando el usuario pida agregar modo oscuro, toggle de tema, modo claro/oscuro, modo nocturno, cambio de tema, cambio de esquema de color, o un tema oscuro a un proyecto React. También usar cuando el usuario mencione persistir preferencias de tema, stores de tema seguros para SSR, componentes ThemeProvider, o quiera convertir un proyecto existente para soportar modo oscuro. Activa con frases como "agregar modo oscuro", "cambiar tema", "dark mode", "toggle theme", "light/dark", "modo noche".
+metadata:
+  author: Ariel GonzAgüer
+  version: "1.1.0"
 ---
 
 # Cambio de tema (Modo claro/oscuro)
@@ -215,7 +217,7 @@ function ThemeToggle() {
 
   return (
     <div className="flex items-center gap-2">
-      <p>☀️</p>
+      <p aria-hidden="true">☀️</p>
       <button
         type="button"
         onClick={toggleTheme}
@@ -223,6 +225,7 @@ function ThemeToggle() {
           isDark ? "bg-coral" : "bg-border"
         }`}
         aria-pressed={isDark}
+        aria-label={isDark ? "Cambiar a tema claro" : "Cambiar a tema oscuro"}
       >
         <span
           className={`absolute top-1 left-1 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${
@@ -230,7 +233,7 @@ function ThemeToggle() {
           }`}
         />
       </button>
-      <p>🌙</p>
+      <p aria-hidden="true">🌙</p>
     </div>
   );
 }
@@ -282,19 +285,21 @@ const STATUS_INFO = {
 <span className={`${status.color} ${status.darkColor}`}>{status.label}</span>
 ```
 
-## Limpieza al cerrar sesión / eliminar cuenta
+## Persistencia al cerrar sesión
 
-Cuando un usuario cierra sesión o elimina su cuenta, limpiar el tema de localStorage para que el siguiente usuario empiece limpio:
+La preferencia de tema suele pertenecer al dispositivo, no a la sesión autenticada. Consérvala al cerrar sesión. Elimínala solo si el producto define el tema como preferencia privada de una cuenta concreta o si el usuario solicita restablecer preferencias. Por ejemplo, en una acción explícita de reset:
 
 ```typescript
-localStorage.removeItem("app-theme");
+function resetDeviceThemePreference() {
+  localStorage.removeItem("app-theme");
+}
 ```
 
 ## Mejoras opcionales
 
 ### Prevenir FOUC (Flash de contenido sin estilo)
 
-**No se necesita script inline ni `useLayoutEffect`.** El comportamiento sin flash entre navegaciones de página viene de la arquitectura de routing SPA, no de trucos de temporización. Tres condiciones deben cumplirse:
+`useLayoutEffect` reduce flashes durante actualizaciones del cliente, pero no puede aplicar la clase antes del primer HTML pintado en una carga completa. Para evitar FOUC en hard refresh, usa un script inline mínimo en `<head>` cuando la CSP lo permita, o renderiza la clase inicial desde una cookie en el servidor. Para navegaciones SPA en Waku, además deben cumplirse estas condiciones:
 
 1. **ThemeProvider debe ser un componente hoja.** Debe retornar `null` y montarse auto-cerrado (`<ThemeProvider />`). Nunca envolver `{children}` dentro de él. Si ThemeProvider envuelve hijos, se convierte parte del árbol de reconciliación de React para cambios de ruta — cualquier re-evaluación RSC del layout raíz (ej: de un layout `render: 'dynamic'` más profundo en el árbol) puede causar que el componente se remonte o que su `useEffect` se re-ejecute, perdiendo brevemente la clase `.dark` y produciendo un flash. Un componente hoja permanece aislado de la reconciliación de rutas.
 
@@ -394,7 +399,7 @@ Luego usarlas en Tailwind v4: `bg-[var(--bg-primary)]`. Esto centraliza los colo
 - [ ] Configurar `@custom-variant dark` en el archivo CSS principal
 - [ ] Definir variables de color en `@theme`
 - [ ] Crear `themeStore.ts` con `persist` y `safeStorage`
-- [ ] Crear `ThemeProvider.tsx` con `useEffect`
+- [ ] Crear `ThemeProvider.tsx` con `useLayoutEffect`
 - [ ] Montar `<ThemeProvider />` en la raíz de la app
 - [ ] Crear el componente toggle
 - [ ] Aplicar variantes `dark:` a todos los componentes

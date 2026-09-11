@@ -1,7 +1,7 @@
 {
   "name": "version-checker",
   "description": "Sistema de detección de nuevas versiones en tiempo real para React: compara la versión local contra Firestore con onSnapshot autenticado y notifica con toasts.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": [
     "Ariel GonzAgüer"
   ],

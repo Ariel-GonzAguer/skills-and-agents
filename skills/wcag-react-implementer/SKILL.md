@@ -1,7 +1,9 @@
 ---
 name: wcag-react-implementer
-version: 1.0.0
 description: Implementa correcciones de accesibilidad WCAG 2.2 Nivel AA en proyectos React + TypeScript + Tailwind CSS. Usa cuando el usuario pida agregar o corregir accesibilidad (a11y), etiquetas ARIA, soporte para lectores de pantalla, navegación por teclado, gestión del foco, modales accesibles, anuncios de errores de formularios, o cuando el código usa <div>/<span> como elementos interactivos. Se activa con "fix accessibility", "aria labels", "screen reader", "a11y", "lector de pantalla", "accesibilidad", "WCAG".
+metadata:
+  author: Ariel GonzAgüer
+  version: "1.1.0"
 ---
 
 # Implementador WCAG en React
@@ -47,19 +49,22 @@ Siempre crea/verifica `src/utils/a11y.ts` antes de implementar correcciones:
  * Usa focus-visible: para no mostrar el anillo en interacciones táctiles.
  * Las clases son strings completos para que Tailwind las detecte en el escaneo estático.
  *
- * @param colorRing - Color del anillo de foco: 'red' (por defecto) o 'amber'
+ * @param colorRing - Color del anillo de foco: 'red' (por defecto), 'amber' o 'white'
  * @returns String de clases de Tailwind
  *
  * @example
- * <button className={focusClassName('amber')}>Guardar</button>
+ * <button className={focusRing('amber')}>Guardar</button>
  */
-export function focusClassName(colorRing: 'red' | 'amber' = 'red'): string {
+export function focusRing(colorRing: 'red' | 'amber' | 'white' = 'red'): string {
   // Strings completamente estáticos: Tailwind necesita clases literales para incluirlas en el
   // CSS compilado. Cualquier template literal con variable hace que el scanner las omita.
   if (colorRing === 'red') {
-    return 'outline-none rounded font-semibold tracking-wide transition-all duration-500 ease-out hover:ring-4 hover:ring-amber-300 focus-visible:ring-4 focus-visible:ring-red-600 focus-visible:ring-offset-1';
+    return 'outline-none rounded focus-visible:ring-4 focus-visible:ring-red-600 focus-visible:ring-offset-1';
   }
-  return 'outline-none rounded font-semibold tracking-wide transition-all duration-500 ease-out hover:ring-4 hover:ring-amber-300 focus-visible:ring-4 focus-visible:ring-amber-300 focus-visible:ring-offset-1';
+  if (colorRing === 'amber') {
+    return 'outline-none rounded focus-visible:ring-4 focus-visible:ring-amber-300 focus-visible:ring-offset-1';
+  }
+  return 'outline-none rounded focus-visible:ring-4 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-800';
 }
 ```
 
@@ -118,7 +123,7 @@ className="min-h-6 min-w-6"
 className="min-h-11 min-w-11"   // Tailwind: min-h-11 = 44px
 ```
 
-**Regla**: Todos los elementos interactivos (botones, enlaces, inputs) deben tener `min-h-11` a menos que el espacio esté deliberadamente limitado (ej. ícono inline en tabla densa).
+**Regla**: Verifica primero el mínimo AA de 24×24px y sus excepciones de espaciado, equivalencia, controles inline, controles del user agent y tamaño esencial. Prefiere 44×44px como mejora AAA o criterio de diseño del producto, no como requisito AA universal.
 
 ---
 
@@ -156,8 +161,8 @@ Después de completar las correcciones, genera este resumen:
 5. **`aria-required` NO reemplaza el atributo HTML `required`** — usa ambos
 6. **NO uses `tabIndex={0}`** en elementos que ya reciben foco nativamente (botones, inputs, enlaces)
 7. **`useId()` para cualquier ID que identifique relación** entre elementos (`htmlFor`, `aria-labelledby`, `aria-controls`, `aria-describedby`) — previene duplicados en listas
-8. **`aria-disabled` ≠ `disabled`** — `disabled` remueve el elemento del orden de tabulación; `aria-busy` + `aria-disabled` lo mantiene en el orden comunicando el estado ocupado
-9. **`noValidate` en cada formulario** donde manejes validación manual
+8. **`aria-disabled` ≠ `disabled`** — prefiere `disabled` en controles nativos. Usa `aria-disabled` solo cuando el control deba seguir en el orden de tabulación y bloquea también su acción en JavaScript.
+9. **Usa `noValidate` solo cuando la validación personalizada reemplaza intencionalmente la validación nativa** y ofrece mensajes equivalentes o mejores.
 10. **`alt=""` en imágenes decorativas** — no `alt="decorative"` o faltante; cadena vacía indica al lector de pantalla que lo omita
 11. **`aria-live` debe estar en un contenedor, nunca en `<img>` o elementos vacíos** — colocarlo en `<img src="loader.svg" aria-live="polite">` es ignorado silenciosamente por todos los lectores de pantalla; mueve el atributo al `<p>` o `<div>` contenedor
 12. **Los valores de `aria-label` deben usar lenguaje natural** — guiones y guiones bajos se verbalizan literalmente; `aria-label="Contact-Form"` se lee como "Contact guión Form"; usa `aria-label="Contact Form"`
@@ -170,7 +175,7 @@ Después de completar las correcciones, genera este resumen:
 
 ```tsx
 import { useId, useRef, useState, useEffect } from 'react';
-import { focusClassName } from '../utils/a11y';
+import { focusRing } from '../utils/a11y';
 
 export function AccessibleChatbot() {
   const [isOpen, setIsOpen] = useState(false);
@@ -210,7 +215,7 @@ export function AccessibleChatbot() {
         aria-expanded={isOpen}
         aria-controls="chat-window"
         type="button"
-        className={focusClassName('amber')}
+        className={focusRing('amber')}
       >
         {/* icon */}
       </button>

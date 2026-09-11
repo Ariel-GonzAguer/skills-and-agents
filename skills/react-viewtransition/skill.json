@@ -1,0 +1,23 @@
+{
+  "name": "react-viewtransition",
+  "description": "Implementa y revisa animaciones con el componente ViewTransition integrado de React, incluidos enter/exit, elementos compartidos, listas, Suspense, Activity y movimiento reducido.",
+  "version": "1.0.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "react",
+    "view-transition",
+    "animation",
+    "accessibility"
+  ],
+  "triggers": [
+    "ViewTransition React",
+    "animar rutas React",
+    "shared element transition",
+    "startTransition animation",
+    "prefers-reduced-motion"
+  ],
+  "category": "frontend",
+  "complexity": "medium"
+}

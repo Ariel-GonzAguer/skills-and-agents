@@ -1,10 +1,12 @@
 ---
 name: chatbot-openai-builder
-version: 1.0.0
 description: |
   Construye chatbots accesibles con OpenAI GPT, streaming de respuestas, rate limiting y UI flotante. 
   Usa cuando el usuario pida: crear chatbot, integrar OpenAI, asistente virtual, chat con IA, 
   chatbot con streaming, chatbot accesible WCAG, chat flotante, implementar GPT en mi sitio.
+metadata:
+  author: Ariel GonzAgüer
+  version: "1.2.0"
 ---
 
 # Chatbot OpenAI Builder
@@ -30,19 +32,22 @@ Usa esta skill cuando el usuario mencione:
 - Manejo de estado con useState
 
 **Backend:**
-- API serverless (Netlify Functions, Vercel Edge, Cloudflare Workers)
-- OpenAI SDK (gpt-5-nano para bajo costo y respuestas rápidas; gpt-4.1-mini como balance costo/calidad)
-- Netlify Blobs o similar para rate limiting persistente
+- API serverless (Netlify Functions, Vercel Functions, Cloudflare Workers)
+- OpenAI SDK con Responses API por defecto; seleccionar el modelo desde configuración del entorno
+- Rate limiting atómico nativo de la plataforma o un almacén diseñado para contadores concurrentes
 
 **Seguridad:**
 - Validación de origen (CSRF)
 - Rate limiting por IP
-- Sanitización de inputs
+- Validación de esquema, tamaño y presupuesto de inputs; output encoding al renderizar
 - Variables de entorno para API keys
 
 ## Implementación paso a paso
 
 Usa el stack del proyecto y las restricciones de seguridad para seleccionar una ruta de implementación. Lee [implementation.md](references/implementation.md) cuando necesites comandos detallados, plantillas o ejemplos de implementación.
+
+Lee también la skill `chatbot-security` antes de implementar el endpoint. Esta skill construye la
+funcionalidad; `chatbot-security` define las fronteras de autorización, datos, herramientas, gasto y abuso.
 
 ## Características de accesibilidad (WCAG 2.1+)
 
@@ -79,7 +84,7 @@ Usa el stack del proyecto y las restricciones de seguridad para seleccionar una 
 - System prompt compacto y sin redundancias
 - Limitar historial a últimos 10-20 mensajes
 - `max_completion_tokens` bajo (500-1000)
-- Usar modelo económico (gpt-5-nano)
+- Elegir el modelo mediante `OPENAI_MODEL` después de medir calidad, latencia y costo con casos reales
 
 ### 2. Cache de datos del negocio
 ```typescript
@@ -98,36 +103,19 @@ async function getBusinessData() {
 ```
 
 ### 3. Rate limiting persistente
-```typescript
-// Usar Netlify Blobs o similar para persistencia serverless
-async function checkRateLimit(ip: string): Promise<boolean> {
-  const { getStore } = await import('@netlify/blobs');
-  const store = getStore('rate-limits');
-  const key = `ratelimit:${ip}`;
-  
-  const entry = await store.get(key, { type: 'json' });
-  const now = Date.now();
-  
-  if (!entry || now > entry.resetTime) {
-    await store.setJSON(key, { count: 1, resetTime: now + RATE_WINDOW });
-    return true;
-  }
-  
-  if (entry.count >= RATE_LIMIT) return false;
-  
-  await store.setJSON(key, { count: entry.count + 1, resetTime: entry.resetTime });
-  return true;
-}
-```
+
+Usa la capacidad nativa del runtime cuando exista o un contador con incremento atómico. No presentes
+un read-modify-write sobre almacenamiento eventualmente consistente como límite fuerte. En producción,
+no degradar silenciosamente a memoria; aplica un límite de emergencia o falla cerrado y alerta.
 
 ### 4. Timeout en peticiones
 ```typescript
 const abortController = new AbortController();
 const timeoutId = setTimeout(() => abortController.abort(), 30000);
 
-const stream = await openai.chat.completions.create(
-  { /* ... */ },
-  { signal: abortController.signal }
+const stream = await openai.responses.create(
+  { model: process.env.OPENAI_MODEL, input: '...', stream: true },
+  { signal: abortController.signal, maxRetries: 1 }
 );
 
 clearTimeout(timeoutId);
@@ -223,6 +211,7 @@ try {
 ```bash
 # .env.local
 OPENAI_API_KEY=sk-proj-...
+OPENAI_MODEL=<modelo-validado-para-el-proyecto>
 ```
 
 Para Netlify Functions:
@@ -241,9 +230,9 @@ Prueba el límite del servidor, la UI con streaming, el rate limiting y la acces
 - [ ] Endpoint serverless creado (`/api/chat-openai`)
 - [ ] OpenAI SDK instalado (`npm install openai`)
 - [ ] API key en variables de entorno
-- [ ] Rate limiting implementado (Netlify Blobs o fallback)
+- [ ] Rate limiting atómico implementado con una primitiva adecuada del runtime
 - [ ] Validación de origen (CSRF)
-- [ ] Sanitización de inputs
+- [ ] Validación de tipos, tamaños y presupuesto de inputs
 - [ ] System prompt optimizado
 - [ ] Streaming configurado
 - [ ] Timeout de 30s
@@ -287,10 +276,10 @@ Prueba el límite del servidor, la UI con streaming, el rate limiting y la acces
 ### Optimización ✅
 - [ ] System prompt compacto
 - [ ] Historial limitado (últimos 10-20 mensajes)
-- [ ] `max_completion_tokens` configurado
+- [ ] `max_output_tokens` configurado
 - [ ] Cache de datos del negocio
 - [ ] Timeout en peticiones
-- [ ] Modelo económico elegido
+- [ ] Modelo configurado por entorno y evaluado con casos representativos
 
 ## Personalización del chatbot
 
@@ -305,7 +294,7 @@ Mantén las personalizaciones tokenizadas y la configuración de despliegue espe
 
 ## Ejemplo completo de referencia
 
-Una implementación completa y funcional de este patrón existe en producción en Gato Rojo Lab (asistente virtual del estudio): endpoint serverless con rate limiting persistente, componente React con streaming y suite de tests. La implementación es privada, pero la estructura esperada es:
+La estructura de referencia esperada es:
 
 - `netlify-functions/api-openai.ts` — endpoint con validación, rate limit y streaming SSE
 - `src/components/ChatbotOpenAI/` — UI accesible (diálogo con foco gestionado, anuncios ARIA)

@@ -1,6 +1,5 @@
 ---
 name: version-checker
-version: 1.0.0
 description: >
   Implementa un sistema de verificación de versión en tiempo real para apps web React
   usando Zustand + Firebase Firestore + notificaciones toast. Compara la versión local
@@ -9,6 +8,9 @@ description: >
   de versión", "detección de auto-actualización", "version checker", "banner de nueva versión",
   "sincronización de versión en tiempo real", "detectar actualizaciones remotas", o cualquier
   solicitud para notificar a los usuarios cuando se despliega una nueva versión de la app.
+metadata:
+  author: Ariel GonzAgüer
+  version: "1.1.0"
 ---
 
 # Version Checker — Detección de actualizaciones en tiempo real para apps React
@@ -22,7 +24,7 @@ solicita al usuario actualizar cuando hay una nueva versión disponible.
 ```
 ┌──────────────┐     ┌──────────────────┐     ┌─────────────────┐
 │  version.ts  │────▶│ useVersionStore   │────▶│ UpdateBanner    │
-│  (constante) │     │ (Zustand+persist) │     │ (componente UI) │
+│  (constante) │     │ (Zustand efímero) │     │ (componente UI) │
 └──────────────┘     └──────────────────┘     └─────────────────┘
                               ▲                        │
                               │                        │
@@ -63,80 +65,41 @@ Este es el **único** requisito del backend. No se necesitan Cloud Functions.
 
 ### Paso 1: Crear `src/version.ts`
 
-Este archivo es la fuente única de verdad para la versión local. Debe mantenerse
-sincronizado con `package.json` manualmente (o vía un script de build).
+Este archivo es la fuente única de verdad para la versión local. Una persona debe mantenerlo
+sincronizado con `package.json` manualmente; la skill y cualquier automatización deben abstenerse de editarlo.
 
 ```typescript
 /**
- * Versión de la app. Mantener sincronizado con package.json.
- * Usado como versión local inicial en el store de versión.
+ * Versión realmente cargada por la app. Una persona debe cambiarla manualmente
+ * y mantenerla sincronizada con package.json antes de cada release.
  */
 export const APP_VERSION = "1.0.0" as const;
 ```
 
 ### Paso 2: Crear `src/store/useVersionStore.ts`
 
-Store de Zustand con persistencia en localStorage. Maneja el estado de versión local vs remota
-con seguridad SSR y soporte de migración de esquema.
+Store de Zustand efímero para la versión remota. La versión local nunca se persiste ni se
+actualiza desde la UI: siempre procede de `APP_VERSION`.
 
 ```typescript
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
-import { APP_VERSION } from "../version";
-
-const safeStorage = createJSONStorage(() => {
-  if (typeof window === "undefined") {
-    return {
-      getItem: () => null,
-      setItem: () => {},
-      removeItem: () => {},
-    };
-  }
-  return localStorage;
-});
 
 interface VersionState {
-  /** Versión local de la app (persistida en localStorage). */
-  versionLocal: string;
   /** Versión remota de Firestore (no persistida). */
   versionRemota: string | null;
-  setVersionLocal: (v: string) => void;
   setVersionRemota: (v: string) => void;
 }
 
-export const useVersionStore = create<VersionState>()(
-  persist(
-    (set) => ({
-      versionLocal: APP_VERSION,
-      versionRemota: null,
-      setVersionLocal: (versionLocal) => set({ versionLocal }),
-      setVersionRemota: (versionRemota) => set({ versionRemota }),
-    }),
-    {
-      name: "app-version",
-      storage: safeStorage,
-      version: 1,
-      partialize: (state) => ({ versionLocal: state.versionLocal }),
-      migrate: (persistedState, version) => {
-        const state = persistedState as { versionLocal?: string };
-        if (version === 0) {
-          return {
-            versionLocal: state.versionLocal ?? APP_VERSION,
-          };
-        }
-        return state;
-      },
-    }
-  )
-);
+export const useVersionStore = create<VersionState>((set) => ({
+  versionRemota: null,
+  setVersionRemota: (versionRemota) => set({ versionRemota }),
+}));
 ```
 
 **Decisiones clave de diseño:**
-- `safeStorage` previene crashes de SSR proporcionando un storage no-op cuando
-  `window` es undefined.
-- `partialize` solo persiste `versionLocal` — la versión remota es
-  efímera y se re-obtiene en cada sesión.
-- `version: 1` con `migrate` permite futuras actualizaciones del esquema del store.
+- `APP_VERSION` es la única fuente de verdad local y solo una persona la cambia en el código.
+- La versión remota es efímera y se obtiene de nuevo en cada sesión.
+- La UI nunca afirma que ejecuta una versión que todavía no fue cargada.
 
 ### Paso 3: Crear `src/hooks/useVersionWebApp.ts`
 
@@ -205,29 +168,28 @@ export function useVersionWebApp(versionLocal: string | null): void {
 ### Paso 4: Crear `src/components/ui/UpdateBanner.tsx`
 
 Banner visual que se muestra cuando las versiones difieren. Al hacer clic en "Actualizar",
-persiste la versión remota localmente y recarga la página.
+recarga la página sin modificar `APP_VERSION` ni persistir una versión que todavía no se cargó.
 
 ```typescript
 "use client";
 
 import { toast } from "sonner";
+import { APP_VERSION } from "../../version";
 import { useVersionStore } from "../../store/useVersionStore";
 
 export function UpdateBanner() {
-  const versionLocal = useVersionStore((s) => s.versionLocal);
   const versionRemota = useVersionStore((s) => s.versionRemota);
-  const setVersionLocal = useVersionStore((s) => s.setVersionLocal);
+  const versionLocal = APP_VERSION;
 
   if (!versionRemota || versionRemota === versionLocal) return null;
 
   const remote = versionRemota;
 
   function handleUpdate() {
-    setVersionLocal(remote);
-    toast.success(`Versión actualizada a ${remote}`, {
-      description: "Recargando la aplicación...",
+    toast.info(`Intentando cargar la versión ${remote}`, {
+      description: "La aplicación seguirá avisando si el nuevo bundle aún no está disponible.",
     });
-    setTimeout(() => window.location.reload(), 1500);
+    setTimeout(() => window.location.reload(), 500);
   }
 
   return (
@@ -257,13 +219,12 @@ Componente orquestador que conecta todo.
 ```typescript
 "use client";
 
-import { useVersionStore } from "../../store/useVersionStore";
+import { APP_VERSION } from "../../version";
 import { useVersionWebApp } from "../../hooks/useVersionWebApp";
 import { UpdateBanner } from "./UpdateBanner";
 
 export function VersionChecker() {
-  const versionLocal = useVersionStore((s) => s.versionLocal);
-  useVersionWebApp(versionLocal);
+  useVersionWebApp(APP_VERSION);
 
   return <UpdateBanner />;
 }
@@ -289,7 +250,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ### Paso 7: Actualizar `package.json` y `src/version.ts`
 
-Al lanzar una nueva versión, actualizar **ambos** archivos:
+Al lanzar una nueva versión, una persona debe actualizar **ambos** archivos. La skill no debe
+cambiar `APP_VERSION`, inferirla desde Firestore ni automatizar este paso, incluso si se le pide hacerlo; debe explicar esta frontera y limitarse a verificar el valor después del cambio humano:
 
 ```bash
 # Ejemplo: subir a 1.1.0
@@ -301,7 +263,7 @@ Al lanzar una nueva versión, actualizar **ambos** archivos:
 
 ## Flujo de despliegue
 
-1. Subir versión en `package.json` y `src/version.ts` (mantenerlos sincronizados).
+1. Una persona sube manualmente la versión en `package.json` y `src/version.ts` y verifica que coincidan.
 2. Construir y desplegar la app.
 3. Actualizar el documento Firestore `version/version` con el nuevo string de versión.
    Esto puede hacerse manualmente en la Firebase Console, vía un script post-despliegue,
@@ -318,7 +280,7 @@ actualiza Firestore primero, los usuarios existentes verán el banner de actuali
 | Librería de toast | `useVersionWebApp.ts` | Reemplazar `sonner` con `react-hot-toast`, `react-toastify`, etc. |
 | Estilo del banner | `UpdateBanner.tsx` | Reemplazar clases de Tailwind con el sistema de diseño |
 | Actualización forzada | `UpdateBanner.tsx` | Agregar un modal que bloquee la interacción en vez de un banner descartable |
-| Comparación de versión | `useVersionWebApp.ts` | Usar comparación semver (`semver.gt()`) en vez de igualdad estricta |
+| Comparación de versión | `useVersionWebApp.ts` | Usar comparación semver (`semver.gt()`) si se quieren ignorar versiones remotas inferiores |
 | Polling en vez de tiempo real | `useVersionWebApp.ts` | Reemplazar `onSnapshot` con `getDoc` en un intervalo |
 | Ruta de Firestore | `useVersionWebApp.ts` | Cambiar `doc(db, "version", "version")` a la ruta preferida |
 | Backend no Firebase | `useVersionWebApp.ts` | Reemplazar listener de Firestore con un fetch/WebSocket a tu API |
@@ -328,12 +290,13 @@ actualiza Firestore primero, los usuarios existentes verán el banner de actuali
 Después de aplicar esta skill, se deben tener estos archivos:
 
 - [ ] `src/version.ts` — constante de versión
-- [ ] `src/store/useVersionStore.ts` — store de Zustand con persistencia
+- [ ] `src/store/useVersionStore.ts` — store efímero de la versión remota
 - [ ] `src/hooks/useVersionWebApp.ts` — listener en tiempo real de Firestore
 - [ ] `src/components/ui/UpdateBanner.tsx` — UI del banner de actualización
 - [ ] `src/components/ui/VersionChecker.tsx` — componente orquestador
 - [ ] El layout raíz monta `<VersionChecker />`
 - [ ] El documento Firestore `version/version` existe con `{ "version": "..." }`
+- [ ] Una persona verificó manualmente que `APP_VERSION` y `package.json` coinciden antes del deploy
 
 ## Suposiciones
 

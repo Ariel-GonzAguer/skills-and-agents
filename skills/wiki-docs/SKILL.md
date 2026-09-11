@@ -1,7 +1,9 @@
 ---
 name: wiki-docs
-version: 1.0.0
 description: Genera documentación técnica avanzada, completa y detallada para proyectos de software en Markdown. Crea una wiki estructurada por dominios técnicos orientada al onboarding de desarrolladores nuevos y a la referencia del equipo actual. Documenta arquitectura, backend, componentes, funcionalidades destacadas, CI/CD, seguridad, despliegue y desarrollo. Usa cuando el usuario pida documentar un proyecto, crear una wiki, generar documentación técnica o estructurar docs de onboarding.
+metadata:
+  author: Ariel GonzAgüer
+  version: "2.1.0"
 ---
 
 # Wiki Docs Skill
@@ -10,10 +12,10 @@ Genera documentación técnica **avanzada, completa y detallada** para proyectos
 
 ## Principios rector
 
-1. **Siempre avanzado**: no existen niveles de detalle. Cada documento debe ser tan completo que un desarrollador senior externo al proyecto pueda entenderlo, contribuir a él y realizar un deploy de producción usando solo la wiki.
+1. **Profundidad proporcional**: cubrir con detalle los flujos críticos y resumir inventarios repetitivos. La documentación debe permitir que un desarrollador nuevo levante el proyecto, encuentre sus límites y sepa dónde profundizar.
 2. **Audiencia dual**: la documentación sirve tanto para el onboarding de desarrolladores nuevos como para la consulta diaria de quienes ya trabajan en el repo.
 3. **Markdown único formato**: no se generan wikis en otros formatos (Obsidian, Docusaurus, Notion, etc.). Los documentos son archivos `.md` con links relativos estándar.
-4. **Todo el repositorio**: se documenta el proyecto completo, no solo las partes "interesantes". Si hay duda sobre si incluir algo, incluirlo.
+4. **Cobertura útil**: documentar arquitectura, límites, operación y módulos públicos. No convertir la wiki en una copia línea por línea del repositorio.
 5. **Cero invención**: toda la información debe provenir del código fuente, configuraciones, README, AGENTS.md, workflows y documentación existente. No se inventan funcionalidades, firmas, variables ni comportamientos.
 
 ## Cuándo usar esta skill
@@ -31,8 +33,9 @@ La skill utiliza estos parámetros:
 |----------|-------------|---------|---------------|
 | `wiki_dir` | Directorio donde se genera la documentación | `wiki-docs/` | No, usar default |
 | `language` | Idioma de la documentación | `es` | **Sí, única pregunta obligatoria** |
+| `scope` | `focused`, `standard` o `complete` según el pedido y tamaño del repo | `standard` | Solo si el alcance es ambiguo |
 
-**Regla**: no se pregunta nivel de detalle, estructura personalizada ni formato. La documentación siempre es avanzada, usa la estructura definida en esta skill y se entrega en Markdown plano.
+**Regla**: inferir idioma y alcance del contexto siempre que sea posible. Preguntar solo cuando la respuesta cambiaría materialmente el entregable. La salida sigue siendo Markdown plano.
 
 ## Flujo de trabajo
 
@@ -50,9 +53,9 @@ Usar `es` como default si el usuario no responde o escribe en español.
 - Si no existe, explorar el código fuente primero y luego crear `_plan.md` con la estructura propuesta.
 - No pedir aprobación del plan salvo que el usuario lo solicite explícitamente. Avanzar directamente a la generación.
 
-### 3. Exploración paralela con subagentes
+### 3. Exploración del repositorio
 
-Antes de escribir ningún archivo de documentación, lanzar **6 explore agents en paralelo** en un solo mensaje. Cada agente cubre un área y debe devolver su reporte en el formato indicado.
+Antes de escribir, crear un inventario del repositorio y dividirlo por dominios. Usar subagentes solo si están disponibles, el entorno lo permite y los dominios son suficientemente independientes; en repositorios pequeños, explorar directamente evita coordinación innecesaria. El número de áreas es adaptativo, no un requisito fijo.
 
 #### 3.1. Agente: Componentes
 
@@ -181,7 +184,7 @@ Para cada workflow, listar jobs, steps, acciones usadas, artefactos.
 
 Categorías a buscar: hardware/dispositivos, IA/ML, tiempo real, algoritmos propios, integraciones externas especiales, offline/PWA, criptografía/seguridad, exportación/generación de archivos, búsqueda avanzada, pipelines de datos, accesibilidad avanzada, internacionalización, autenticación avanzada, performance especial.
 
-#### Lecturas en paralelo obligatorias
+#### Lecturas base
 
 Mientras los explore agents corren, leer en paralelo:
 
@@ -196,7 +199,7 @@ Mientras los explore agents corren, leer en paralelo:
 - `CHANGELOG.md` si existe
 - `.env.example` si existe
 
-**No escribir ningún archivo de documentación hasta tener todos los resultados de la exploración y las lecturas.**
+No escribir documentos finales hasta contar con evidencia suficiente del dominio correspondiente. Se puede mantener `_plan.md` incremental para registrar cobertura y fuentes.
 
 ### 4. Síntesis de hallazgos
 
@@ -211,7 +214,7 @@ Consolidar los reportes de los subagentes en un solo resumen interno. Identifica
 
 ### 5. Crear estructura de directorios
 
-Generar la siguiente estructura base en `{wiki_dir}/`:
+Partir de la siguiente estructura de referencia en `{wiki_dir}/` y crear solo los dominios que existan:
 
 ```
 {wiki_dir}/
@@ -271,9 +274,9 @@ Reglas de adaptación:
 Para cada documento:
 
 1. Leer la plantilla correspondiente en `templates/`.
-2. Extraer información real del código fuente usando `Read`, `Grep` o subagentes si es necesario.
+2. Extraer información real del código fuente con las herramientas disponibles o subagentes si aportan valor.
 3. Rellenar la plantilla con datos concretos del proyecto.
-4. Incluir al menos una tabla y, si es documento de flujo/arquitectura, al menos un diagrama ASCII.
+4. Usar tablas o diagramas solo cuando hagan una relación más clara que la prosa.
 5. Incluir ejemplos de código reales del proyecto.
 6. Terminar con sección `Referencias` que enlace a otros documentos y archivos fuente.
 
@@ -318,17 +321,16 @@ Antes de considerar terminado el trabajo, ejecutar este gate. No se puede report
 - [ ] `.last-update.json` existe.
 - [ ] Todos los directorios de la estructura base existen (salvo los omitidos por no aplicar).
 - [ ] Cada workflow de GitHub Actions tiene su documento en `ci-cd/` o está detallado en `ci-cd/overview.md`.
-- [ ] Cada funcionalidad destacada encontrada tiene su archivo en `features/`.
+- [ ] Cada funcionalidad destacada está cubierta en un documento propio o en el dominio que mejor la explica.
 
 #### 10.2. Validación de contenido
 
 - [ ] Ningún documento tiene secciones vacías, placeholders sin reemplazar ni texto "TODO".
-- [ ] Cada documento tiene al menos una tabla.
-- [ ] Cada documento de flujo/arquitectura tiene al menos un diagrama ASCII.
+- [ ] Las tablas y diagramas agregados representan datos reales y aportan claridad.
 - [ ] Cada documento tiene sección `Referencias` con al menos un link.
 - [ ] Los ejemplos de código son reales y existen en el proyecto.
-- [ ] Las tablas de funciones/componentes/servicios listan el 100% de los elementos, no solo "los principales".
-- [ ] `deployment/troubleshooting.md` tiene al menos 3 entradas reales del proyecto.
+- [ ] Los inventarios indican si son completos o representativos y enlazan a la fuente de verdad.
+- [ ] `deployment/troubleshooting.md` contiene solo incidentes, límites o fallos respaldados por evidencia; no se inventan entradas para cumplir una cuota.
 
 #### 10.3. Validación de links
 
@@ -340,7 +342,7 @@ Antes de considerar terminado el trabajo, ejecutar este gate. No se puede report
 
 #### 10.4. Validación de cobertura
 
-- [ ] Todos los archivos del proyecto relevantes están referenciados en al menos un documento.
+- [ ] Los entrypoints, límites de dominio y archivos operativos relevantes están referenciados.
 - [ ] `quickstart.md` enlaza al 100% de los documentos creados.
 - [ ] No hay funcionalidad destacada sin documentar.
 - [ ] No hay workflow sin documentar.
@@ -372,16 +374,16 @@ La skill incluye plantillas en `templates/` para mantener consistencia. Antes de
 
 ## Instrucciones para subagentes
 
-### Explore agents
+### Explore agents (cuando estén disponibles)
 
-- Lanzar siempre en paralelo en un solo mensaje.
+- Ejecutarlos en paralelo cuando los dominios sean independientes y haya capacidad disponible.
 - Asignar scope preciso y formato de salida obligatorio.
 - No permitir que escriban archivos; solo investigan y reportan.
 - Si un área no existe en el proyecto, el agente debe reportar "No encontrado" en lugar de omitirse.
 
 ### Coder agents
 
-- Usar para generar documentos grandes o cuando el proyecto exceda la capacidad de contexto.
+- Usar para investigar o preparar borradores de dominios grandes; respetar las políticas del entorno sobre delegación.
 - Asignar un dominio completo por agente (ej: uno para `backend/`, otro para `components/`).
 - Entregar el contexto necesario: reportes de explore agents, paths de archivos fuente, plantilla a usar.
 - El agente padre siempre revisa y consolida el output antes de escribir.
@@ -390,7 +392,7 @@ La skill incluye plantillas en `templates/` para mantener consistencia. Antes de
 
 La skill debe evitar estos comportamientos:
 
-- **No resumir donde se puede detallar**: si hay 10 funciones en un servicio, documentar las 10.
+- **No confundir exhaustividad con utilidad**: documentar contratos públicos y decisiones; enlazar al código para detalles mecánicos.
 - **No omitir por parecer obvio**: lo obvio para el autor no lo es para el lector nuevo.
 - **No inventar funcionalidades, firmas, variables ni ejemplos**: todo debe provenir del código fuente.
 - **No copiar el README.md tal cual en quickstart.md**: `quickstart.md` es el mapa de la wiki, no una copia del README.
@@ -416,18 +418,18 @@ La skill debe evitar estos comportamientos:
 
 | Contenido | Nivel mínimo exigido |
 |-----------|----------------------|
-| Función/método | Firma completa + descripción + parámetros + retorno + cuándo usarla |
+| Función/método público o crítica | Firma + propósito + parámetros/retorno no obvios + cuándo usarla |
 | Componente React | Props tipadas + descripción de cada prop + ejemplo de uso |
 | Endpoint API | Método + path + body/query params + respuesta exitosa + errores posibles |
 | Variable de entorno | Nombre + tipo + descripción + si es requerida + ejemplo de valor |
 | Script de package.json | Nombre + comando exacto + cuándo ejecutarlo |
-| Workflow de GitHub Actions | Todos los jobs + steps + secretos + cuándo se ejecuta |
+| Workflow de GitHub Actions | Trigger, jobs, permisos, secretos y artefactos; detallar steps solo cuando sean relevantes |
 | Feature destacada | Flujo completo + archivos + dependencias + limitaciones |
 | Regla de seguridad | Qué protege + condición + ejemplos de permiso/denegación |
 
 ## Diagramas ASCII
 
-Cada documento de tipo flujo o arquitectura debe incluir al menos un diagrama ASCII.
+Los documentos de flujo o arquitectura deben incluir un diagrama cuando existan al menos tres componentes o pasos cuya relación sea difícil de entender linealmente.
 
 Tipos requeridos:
 
@@ -477,5 +479,5 @@ Al terminar, reportar:
 3. Cantidad de documentos creados.
 4. Cantidad de funcionalidades destacadas documentadas.
 5. Cantidad de workflows documentados.
-6. Estado del Quality Gate (todos los ítems deben estar ✅).
+6. Estado del Quality Gate, incluyendo excepciones justificadas y evidencia pendiente.
 7. Lista de archivos clave generados.

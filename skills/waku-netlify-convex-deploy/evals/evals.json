@@ -4,14 +4,14 @@
     {
       "id": 0,
       "prompt": "Inicia un proyecto nuevo de TypeScript Waku + Convex para una app pequeña de notas autenticada y prepáralo para Netlify. No despliegues ni configures secretos alojados.",
-      "expected_output": "Un workflow de inicialización enfocado que confirma las decisiones de producto faltantes, hace scaffolding del proyecto con pnpm, crea schema y tipos generados de forma segura, configura los contextos de Netlify sin valores de secretos, agrega tests de autorización base y se detiene antes de efectos secundarios sin aprobación.",
+      "expected_output": "Un workflow de inicialización enfocado que confirma solo las decisiones de producto bloqueantes, usa la solicitud como autorización para el scaffolding local, crea schema y tipos generados de forma segura, configura los contextos de Netlify sin valores de secretos, agrega tests de autorización base y se detiene antes de efectos externos.",
       "files": [],
       "assertions": [
         "Identifica el modo de inicialización y pregunta solo por las decisiones faltantes que afectan la arquitectura.",
         "Usa la documentación oficial actual de Waku, Convex y Netlify antes de comandos o configuraciones sensibles a versiones.",
         "Crea o propone schema, tipos generados, setup del cliente, configuración de Netlify, nombres de entorno, reglas de ignore y tests base sin exponer secretos.",
         "Distingue salida estática de SSR dinámico y no agrega un runtime sin un requisito de tiempo de request.",
-        "Solicita aprobación explícita antes de editar, instalar, generar, aprovisionar, configurar valores alojados o desplegar."
+        "No vuelve a pedir aprobación para el scaffolding local solicitado; sí la pide antes de dependencias adicionales no implícitas, aprovisionamiento, valores alojados o despliegue."
       ]
     },
     {
@@ -24,7 +24,7 @@
         "Usa expandir, migrar, contraer u otra secuencia compatible en lugar de romper clientes existentes o deshabilitar la validación de schema.",
         "Verifica la autorización de membresía desde datos autoritativos de Convex y testea la denegación cross-user, no solo la visibilidad de UI.",
         "Regenera los archivos generados de Convex con la CLI instalada en lugar de editarlos a mano.",
-        "Pide aprobación explícita antes de ediciones, generación, cambios de variables alojadas o despliegue de preview, y nunca despliega producción."
+        "Realiza las ediciones y generación local solicitadas sin una aprobación redundante; pide aprobación antes de variables alojadas o del despliegue de preview, y nunca despliega producción."
       ]
     },
     {
@@ -37,7 +37,7 @@
         "Verifica el schema de Convex, tipos generados, validadores de runtime, autenticación y autorización de recursos.",
         "Verifica el aislamiento de keys de Convex entre producción y deploy-preview, y los scopes de variables de Netlify, sin imprimir valores.",
         "No despliega porque no se solicitó el despliegue de producción.",
-        "Se detiene después de la auditoría de solo lectura y pide aprobación explícita antes de aplicar correcciones o ejecutar comandos con efectos secundarios."
+        "Aplica las correcciones locales solicitadas sin volver a pedir aprobación; no despliega ni cambia servicios alojados."
       ]
     },
     {

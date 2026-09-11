@@ -1,0 +1,29 @@
+{
+  "skill_name": "chatbot-security",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audita la seguridad de un endpoint de chat que acepta question e history desde el navegador.",
+      "expected_output": "Hallazgos con evidencia sobre roles, límites, autorización de herramientas, salida y abuso sin prometer que sanitizar texto detiene prompt injection.",
+      "files": [],
+      "assertions": [
+        "Rechaza o descarta roles no permitidos en vez de convertirlos silenciosamente en user.",
+        "Valida tipos, tamaños y presupuesto total.",
+        "Separa instrucciones del modelo de controles externos de autorización.",
+        "Evalúa encoding o sanitización en el contexto de salida."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Implementa un rate limit de producción para mi chatbot en serverless usando almacenamiento distribuido.",
+      "expected_output": "Un límite atómico con identidad confiable, ventanas y respuesta de sobrecarga documentadas.",
+      "files": [],
+      "assertions": [
+        "No usa Map como control de producción.",
+        "No usa un read-modify-write no atómico.",
+        "Explica la fuente confiable de IP o principal y considera NAT compartido.",
+        "Incluye Retry-After y comportamiento ante fallo del proveedor."
+      ]
+    }
+  ]
+}

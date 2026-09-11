@@ -1,0 +1,29 @@
+{
+  "skill_name": "security-audit-webapp",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audita si un usuario de esta app Firebase multi-tenant puede leer datos de otra empresa. Solo reporta.",
+      "expected_output": "Un informe de solo lectura con evidencia archivo:línea, escenario, severidad, confianza y comprobaciones pendientes.",
+      "files": [],
+      "assertions": [
+        "Traza autenticación, API y Security Rules sin asumir que una capa compensa otra.",
+        "Permite IDs del cliente solo después de validar pertenencia y autorización en servidor/reglas.",
+        "Distingue hallazgos confirmados de verificaciones externas pendientes.",
+        "No cambia archivos ni configuración."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Revisa XSS, CSP y almacenamiento de sesión en una app React desplegada en Netlify.",
+      "expected_output": "Una auditoría contextual que revisa sources/sinks, escape de React, HTML deliberado y tradeoffs de sesión.",
+      "files": [],
+      "assertions": [
+        "No recomienda sanitizar todos los caracteres como defensa genérica.",
+        "No afirma que IndexedDB neutraliza XSS.",
+        "Adapta CSP al proyecto y propone Report-Only antes de enforcement.",
+        "No copia una CSP mínima sin validar recursos y nonces."
+      ]
+    }
+  ]
+}

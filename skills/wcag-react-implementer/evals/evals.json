@@ -1,0 +1,28 @@
+{
+  "skill_name": "wcag-react-implementer",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Corrige la accesibilidad de este modal React que no atrapa foco ni cierra con Escape.",
+      "expected_output": "Un diálogo con nombre, foco inicial, trap, Escape, restauración de foco y fondo no interactivo.",
+      "files": [],
+      "assertions": [
+        "No coloca aria-hidden=true en un ancestro del diálogo enfocado.",
+        "Restaura el foco al elemento invocador.",
+        "Evita que clicks dentro del diálogo cierren el modal.",
+        "Incluye una prueba de teclado."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Audita target size y estados disabled de los controles de este formulario.",
+      "expected_output": "Correcciones WCAG 2.2 AA que distinguen mínimo normativo de objetivo recomendado.",
+      "files": [],
+      "assertions": [
+        "Usa 24x24 CSS px para el mínimo AA con sus excepciones, no 44x44 como requisito AA universal.",
+        "No usa aria-disabled sin bloquear realmente la interacción.",
+        "Conserva indicadores de foco visibles."
+      ]
+    }
+  ]
+}

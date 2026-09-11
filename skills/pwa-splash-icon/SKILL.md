@@ -1,6 +1,5 @@
 ---
 name: pwa-splash-icon
-version: 1.0.0
 description: >
   Genera un icono de splash screen para PWA con el tamaño correcto a partir del logo existente de la app.
   Agrega padding alrededor del icono para que no recorte por la máscara circular del navegador,
@@ -10,6 +9,9 @@ description: >
   o mencione que el icono de la app aparece cortado en la pantalla de carga. Activa con frases como
   "splash screen", "pwa icon cropped", "icon cortado", "pantalla de carga", "loading screen icon",
   "fondo del splash".
+metadata:
+  author: Ariel GonzAgüer
+  version: "1.1.0"
 ---
 
 # Generador de Icono Splash para PWA
@@ -28,7 +30,7 @@ Crear un nuevo icono de 512x512 con el logo centrado al ~55% del canvas, rodeado
 
 - Node.js instalado
 - Un icono existente de la app (PNG recomendado, cualquier tamaño)
-- `sharp` como dependencia de desarrollo (se instala temporalmente, se elimina después de la generación)
+- `sharp` disponible como dependencia de desarrollo del proyecto durante la generación
 
 ## Pasos de implementación
 
@@ -45,95 +47,53 @@ Antes de empezar, confirmar estos valores con el usuario:
 
 Si el usuario no especifica una proporción, usar `0.55` (55%) por defecto. Esto da suficiente padding para máscaras circulares sin hacer el icono muy pequeño.
 
-### Paso 2 — Instalar sharp temporalmente
+### Paso 2 — Preparar `sharp`
 
 ```bash
 pnpm add -D sharp
 ```
 
-### Paso 3 — Crear y ejecutar el script de redimensión
+Si el proyecto ya incluye `sharp`, no volver a instalarlo. No eliminar una dependencia que existía antes de ejecutar esta skill.
 
-Crear un script temporal `scripts/resize-splash.cjs`:
+### Paso 3 — Ejecutar el generador incluido
 
-```javascript
-const sharp = require('sharp');
-const path = require('path');
-
-// ── Configurar estos valores ──────────────────────────────────────────
-const SRC = path.join(__dirname, '..', 'public', 'imagenes', 'logo.png');
-const DEST = path.join(__dirname, '..', 'public', 'imagenes', 'logo-splash.png');
-const BG = { r: 0xd7, g: 0xef, b: 0xe6 }; // emerald-200 = #d7efe6
-const CANVAS = 512;
-const ICON_RATIO = 0.55;
-// ────────────────────────────────────────────────────────────────────
-
-const iconSize = Math.round(CANVAS * ICON_RATIO);
-
-(async () => {
-  try {
-    const resized = await sharp(SRC)
-      .resize(iconSize, iconSize, {
-        fit: 'contain',
-        background: [BG.r, BG.g, BG.b, 255],
-      })
-      .toBuffer();
-
-    const offset = Math.round((CANVAS - iconSize) / 2);
-
-    await sharp({
-      create: {
-        width: CANVAS,
-        height: CANVAS,
-        channels: 4,
-        background: { ...BG, alpha: 1 },
-      },
-    })
-      .composite([{ input: resized, left: offset, top: offset }])
-      .png()
-      .toFile(DEST);
-
-    console.log(`Created: ${DEST}`);
-    console.log(`Canvas: ${CANVAS}x${CANVAS} | Icon: ${iconSize}x${iconSize} | Offset: ${offset}px`);
-  } catch (err) {
-    console.error('Error:', err.message);
-    process.exit(1);
-  }
-})();
-```
-
-Ejecutarlo:
+La skill incluye `scripts/resize-splash.cjs`. Ejecutarlo desde la raíz del proyecto con cuatro argumentos: origen, destino, fondo y proporción.
 
 ```bash
-node scripts/resize-splash.cjs
+node <ruta-de-la-skill>/scripts/resize-splash.cjs \
+  public/imagenes/logo.png \
+  public/imagenes/logo-maskable.png \
+  '#d7efe6' \
+  0.55
 ```
 
-Verificar la salida visualmente — el icono debería estar centrado con padding generoso en todos los lados.
+El script resuelve `sharp` desde el proyecto actual, valida todos los argumentos y crea un PNG de 512x512. Verificar la salida visualmente: el icono debe estar centrado y conservar completa su silueta dentro de la zona segura central.
 
 ### Paso 4 — Actualizar `manifest.webmanifest`
 
-Cambiar `background_color` y apuntar los iconos a la nueva imagen de splash:
+Cambiar `background_color` y declarar por separado el icono adaptable (`maskable`) y el icono convencional (`any`). No etiquetar un mismo archivo como ambos propósitos salvo que haya sido diseñado y verificado para los dos:
 
 ```json
 {
   "background_color": "#d7efe6",
   "icons": [
     {
-      "src": "/imagenes/logo-splash.png",
+      "src": "/imagenes/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/imagenes/logo-splash.png",
+      "src": "/imagenes/logo-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     }
   ]
 }
 ```
 
-Mantener el icono original para favicon, logo de la barra lateral y otros usos dentro de la app — solo los iconos del manifiesto deben apuntar a la versión splash.
+Mantener el icono original para favicon, logo de la barra lateral y otros usos dentro de la app. La variante con padding es específicamente el icono `maskable`.
 
 ### Paso 5 — Actualizar la caché del service worker
 
@@ -145,26 +105,20 @@ const APP_SHELL = [
   '/offline.html',
   '/manifest.webmanifest',
   '/imagenes/logo.png',
-  '/imagenes/logo-splash.png'  // ← agregar esto
+  '/imagenes/logo-maskable.png'  // ← agregar esto
 ];
 ```
 
 ### Paso 6 — Limpieza
 
-Eliminar el script temporal y sharp:
-
-```bash
-del scripts\resize-splash.cjs    # Windows
-rm scripts/resize-splash.cjs     # macOS/Linux
-pnpm remove sharp
-```
+Si `sharp` se instaló exclusivamente para esta ejecución, se puede retirar con `pnpm remove sharp`. No hay que copiar ni eliminar el script incluido en la skill.
 
 ## Puntos de personalización
 
 | Qué | Cómo |
 |---|---|
 | Proporción del icono | Cambiar `ICON_RATIO` (0.4 = más padding, 0.6 = menos padding) |
-| Tamaño del canvas | Cambiar `CANVAS` (512 es estándar para Android, usar 1024 para iOS) |
+| Tamaño del canvas | El generador produce 512x512; para otros tamaños, crear archivos adicionales y declararlos con su tamaño real |
 | Color de fondo | Cambiar los valores RGB de `BG` para coincidir con cualquier color Tailwind o hex |
 | Formato de salida | Cambiar `.png()` a `.webp()` o `.jpeg()` para menor tamaño de archivo |
 
@@ -185,10 +139,11 @@ Después de aplicar esta skill:
 
 - [ ] El nuevo icono de splash existe en `public/imagenes/` (512x512, centrado, con padding)
 - [ ] El `background_color` del `manifest.webmanifest` coincide con el fondo del icono
-- [ ] Los iconos del `manifest.webmanifest` apuntan a la nueva imagen de splash
+- [ ] El manifiesto usa archivos separados para `purpose: "any"` y `purpose: "maskable"`
+- [ ] La variante `maskable` conserva el contenido importante dentro de la zona segura central
 - [ ] La caché del service worker incluye el nuevo icono de splash (si aplica)
 - [ ] El icono original se sigue usando para favicon, barra lateral y referencias dentro de la app
-- [ ] El script temporal y la dependencia `sharp` fueron eliminados
+- [ ] Si `sharp` se instaló temporalmente, fue retirado; si ya era dependencia, se conservó
 - [ ] Se reconstruye el proyecto para propagar los cambios a `dist/`
 
 ## Suposiciones
