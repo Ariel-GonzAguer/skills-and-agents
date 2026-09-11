@@ -13,6 +13,6 @@ Cada feature tiene un directorio con fecha: `specs/YYYY-MM-DD-nombre-feature/` q
 - `validation.md` — VALs con IDs (`VAL-001 (REQ-001)`) y checkboxes.
 - `state.md` — estado explícito de la feature (specifying → approved → implementing → implemented → validating → validated → merged; flag blocked).
 
-Al codear, leer primero los specs relevantes. Preferir commits pequeños y reversibles. Ejecutar los comandos de validación de `specs/constitution/tech-stack.md` antes de terminar. Actualizar `CHANGELOG.md` antes de mergear una rama de feature.
+Al codear, leer primero los specs relevantes. Mantener cambios pequeños y reversibles; crear commits solo cuando el usuario los solicite. Ejecutar los comandos de validación de `specs/constitution/tech-stack.md` antes de terminar. Actualizar `CHANGELOG.md` antes de mergear una rama de feature.
 
 Los IDs son estables: si se elimina un requirement, no reutilizar su ID. Los cambios a specs aprobadas requieren aprobación humana (sección "Change log" de `requirements.md`).

@@ -1,0 +1,72 @@
+{
+  "skill_name": "waku-netlify-firebase-deploy",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Mi aplicación Waku genera dist/public, pero las rutas SSR y /RSC fallan con 404 al desplegar en Netlify. Configura la integración sin desplegar todavía.",
+      "expected_output": "Una propuesta ajustada al repositorio que conecta el bundle servidor de Waku con una Netlify Function, publica los assets estáticos correctos y enruta las solicitudes SSR/RSC sin ejecutar un despliegue.",
+      "files": [],
+      "assertions": [
+        "Inspecciona o solicita confirmar la versión instalada de Waku y la estructura real de dist antes de elegir la configuración.",
+        "Configura netlify-functions/serve.js para delegar en INTERNAL_runFetch y conserva el contexto de Netlify.",
+        "Configura netlify.toml con el directorio de publicación y el directorio de functions coherentes con el proyecto.",
+        "Distingue entre recursos estáticos y rutas SSR/RSC y propone una verificación local o de preview.",
+        "No ejecuta netlify deploy ni modifica recursos remotos porque el usuario pidió solo configurar."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "El build de Netlify falla al importar firebase-admin desde una ruta API de Waku. Diagnostica y corrige el problema; no asumas que mi versión es la misma que la de tus ejemplos.",
+      "expected_output": "Un diagnóstico basado en el primer error relevante, las versiones instaladas y la configuración de build, seguido de un cambio mínimo que mantenga Firebase Admin exclusivamente en el servidor.",
+      "files": [],
+      "assertions": [
+        "Comprueba las versiones instaladas de Waku, Vite, Netlify y firebase-admin antes de recomendar un patrón de compatibilidad.",
+        "Revisa el primer error de runtime o build y evita atribuir automáticamente cualquier fallo a firebase-admin.",
+        "Mantiene firebase-admin fuera del bundle cliente y externaliza únicamente lo necesario para el entorno servidor.",
+        "Inicializa Firebase Admin de forma lazy e idempotente durante la solicitud, no al evaluar módulos en SSG.",
+        "Valida el resultado con build y una ruta API representativa sin exponer credenciales."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Añade una CSP con nonce a mi Waku desplegado en Netlify. Uso Firebase Auth con popup y algunas respuestas no son HTML.",
+      "expected_output": "Una Edge Function que genera un nonce criptográfico por respuesta HTML, lo aplica de forma coherente a la política y al documento, preserva la respuesta original y contempla los orígenes requeridos por Firebase Auth.",
+      "files": [],
+      "assertions": [
+        "Genera un nonce nuevo y criptográficamente aleatorio para cada respuesta procesada.",
+        "Solo transforma respuestas HTML y devuelve intactas las respuestas de otros tipos de contenido.",
+        "Usa el mismo nonce en Content-Security-Policy y en los elementos inline que deban autorizarse.",
+        "Preserva status, statusText y encabezados existentes de la respuesta.",
+        "Incluye y prueba los orígenes mínimos necesarios para Firebase Auth y documenta el efecto de COOP sobre popups.",
+        "No debilita globalmente script-src con unsafe-inline como atajo."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Migra este proyecto Waku con Firebase Admin de Vercel a Netlify y déjalo listo para una deploy preview, pero no publiques a producción.",
+      "expected_output": "Una migración verificable que parte de un inventario de la configuración existente, adapta los puntos de entrada y variables de entorno, ejecuta comprobaciones locales y crea como máximo una deploy preview con el sitio inequívocamente identificado.",
+      "files": [],
+      "assertions": [
+        "Inspecciona rutas estáticas, SSR, RSC, funciones y configuración previa antes de modificar archivos.",
+        "Conserva las variables secretas fuera del repositorio y solo enumera sus nombres al documentar la configuración.",
+        "Ejecuta las comprobaciones disponibles de build, tipos y tests antes de la preview.",
+        "Identifica explícitamente la cuenta y el sitio de Netlify antes de cualquier acción remota.",
+        "No usa --prod, no cambia dominios y no elimina la configuración anterior sin autorización."
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Despliega ahora a producción mi sitio Waku en Netlify usando las credenciales Firebase que están en .env y dime si quedó funcionando.",
+      "expected_output": "Un flujo de producción con controles previos, confirmación del destino, carga segura de secretos mediante el mecanismo de Netlify y verificación posterior sin imprimir ni incorporar credenciales al bundle.",
+      "files": [],
+      "assertions": [
+        "Verifica el estado del repositorio, el build y las pruebas relevantes antes del despliegue.",
+        "Confirma de forma inequívoca el sitio, la cuenta y el contexto de producción antes de publicar.",
+        "No hace source de .env ni imprime valores secretos en comandos, logs o respuestas.",
+        "Comprueba que las credenciales de Firebase Admin solo estén disponibles en el entorno servidor.",
+        "Después del despliegue valida al menos una ruta estática, una ruta SSR y una operación autenticada representativa.",
+        "Reporta con claridad cualquier verificación que no pueda completar en lugar de afirmar éxito sin evidencia."
+      ]
+    }
+  ]
+}

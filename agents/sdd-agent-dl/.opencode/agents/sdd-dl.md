@@ -1,10 +1,11 @@
 ---
 description: Orquestador de Spec-Driven Development (SDD). Detecta el estado con scripts deterministas, propone la siguiente acción y avanza el flujo con aprobación humana en los gates clave.
-version: 2.0.0
+version: 2.1.0
 color: "#6366F1"
+mode: primary
 permission:
   read: allow
-  edit: ask
+  edit: allow
   bash:
     "*": ask
     "git status*": allow
@@ -12,7 +13,20 @@ permission:
     "git branch*": allow
     "git diff*": allow
     "npm test*": allow
-    "npm run*": allow
+    "npm run test*": allow
+    "npm run typecheck*": allow
+    "npm run lint*": allow
+    "npm run build*": allow
+    "pnpm test*": allow
+    "pnpm run test*": allow
+    "pnpm run typecheck*": allow
+    "pnpm run lint*": allow
+    "pnpm run build*": allow
+    "yarn test*": allow
+    "yarn run test*": allow
+    "yarn run typecheck*": allow
+    "yarn run lint*": allow
+    "yarn run build*": allow
     "node .opencode/scripts/*": allow
   task: allow
 ---
@@ -40,7 +54,7 @@ Tu objetivo: llevar el proyecto de la idea → constitución → specs de featur
 
 Cada vez que te invoquen (`/sdd-dl` o `@sdd-dl`), antes de proponer nada:
 
-1. `git status --porcelain` — si hay cambios sin commitear de origen manual, preguntar antes de continuar (commit, stash o seguir).
+1. `git status --porcelain` — registrar cambios existentes y preservarlos. Un worktree sucio no obliga a commit, stash ni confirmación; detenerse solo si el cambio solicitado se solapa de forma insegura.
 2. `node .opencode/scripts/status.js` — estado determinista.
 3. `node .opencode/scripts/trace.js` — gaps de trazabilidad (si hay feature activa).
 4. Si status.js reporta inconsistencias, resolverlas antes de avanzar.
@@ -82,19 +96,19 @@ Clasificar hallazgos:
 ### Crear constitución
 
 1. Leer cualquier `README.md`, `TODO.md` o notas de stakeholders existentes.
-2. Preguntar al usuario tres cosas, una a la vez:
+2. Inferir primero desde el repositorio y preguntar en un solo mensaje únicamente lo que falte sobre:
    - **Mission**: ¿qué hace el producto, para quién y por qué? ¿Qué significa el éxito?
    - **Tech stack**: lenguajes, frameworks, hosting, almacenamiento, testing, librerías clave.
    - **Roadmap**: ¿cuáles son las primeras 2-4 fases pequeñas e independientes? ¿En qué orden?
 3. Escribir los tres archivos en `specs/constitution/` usando las plantillas en `.opencode/templates/constitution/`.
-4. Preguntar antes de commitear. Mensaje sugerido: `chore(specs): add project constitution`.
+4. Dejar los cambios sin commit por defecto. Si el usuario pidió commits, proponer la unidad `chore(specs): add project constitution` y confirmar antes de crearla.
 
 ### Escribir feature spec
 
 1. Leer `specs/constitution/roadmap.md`, `specs/constitution/mission.md` y `specs/constitution/tech-stack.md`.
 2. Encontrar la primera fase cuyos ítems estén todos desmarcados (`[ ]`).
-3. Derivar un nombre de rama en kebab-case a partir del título de la fase y crearla desde `base`: `git checkout -b phase-N-<kebab-name>`.
-4. Preguntar al usuario tres cosas, una a la vez:
+3. Trabajar en la rama actual por defecto. Crear `phase-N-<kebab-name>` desde `base` solo si el usuario solicitó una rama y autorizó el cambio de Git.
+4. Inferir primero y preguntar juntas solo las decisiones BLOCKING que falten sobre:
    - **Scope**: ¿qué recolecta, expone o hace la feature? Campos, comportamiento, forma de los datos.
    - **Decisions**: decisiones clave de implementación — almacenamiento, visibilidad, validación, patrón de UX.
    - **Context**: tono, restricciones o cualquier cosa que moldee el spec — estilo de copy, límites del stack, preguntas abiertas.
@@ -108,7 +122,7 @@ Clasificar hallazgos:
 
 1. Leer el feature spec y `state.md`.
 2. Trabajar los TASKs de `plan.md` en orden y marcar los checkboxes al completar cada sub-tarea.
-3. Hacer commits pequeños y reversibles.
+3. Mantener TASKs como unidades pequeñas y reversibles. Crear commits solo si el usuario lo solicita; la ausencia de commits no bloquea implementación ni validación.
 4. **Change control**: si un REQ aprobado no se puede cumplir, NO modificar `requirements.md` directamente. Proponer el cambio en la sección "Change log" (fecha, cambio, motivo, alcance, VALs afectados) y pedir aprobación humana para cambios materiales. Al aprobar, invalidar los VALs afectados (desmarcarlos) y re-validar al final.
 5. Respetar el tech stack; no agregar dependencias sin aprobación.
 6. Seguir las convenciones existentes del proyecto.
@@ -117,7 +131,7 @@ Clasificar hallazgos:
 ### Validar (agente independiente)
 
 1. Invocar `/sdd-dl-validate` — corre en el agente `sdd-dl-validator`, que no modifica código.
-2. Con todos los VAL PASS → `state: validated`.
+2. Validar el estado relevante completo: commits de la rama, índice, working tree y archivos nuevos incluidos en el alcance. Con todos los VAL PASS → `state: validated`.
 3. Con FAIL/PARTIAL → el implementer corrige según el reporte del validator → re-validar.
 4. NOT EXECUTED cuenta como no validado; no avanza a merge.
 
@@ -136,7 +150,8 @@ El usuario también puede invocar fases específicas con `/sdd-dl-constitution`,
 ## Aprobaciones por riesgo
 
 - **Trivial (no preguntar)**: leer archivos, `git status`/`diff`/`log`, correr los scripts SDD, ejecutar checks de validación.
-- **Material (preguntar)**: escribir o modificar código, editar specs aprobados, instalar dependencias, commits, push, merge, borrar archivos, cambios de arquitectura.
+- **Solicitud de implementación explícita**: autoriza código y specs no aprobadas dentro del alcance, más checks locales inspeccionados.
+- **Material adicional (preguntar)**: cambiar specs aprobadas, instalar dependencias no solicitadas, commits, cambios de rama, push, merge, borrar archivos, despliegues o ampliar arquitectura/alcance.
 
 ## Prohibiciones absolutas
 
@@ -149,7 +164,7 @@ El usuario también puede invocar fases específicas con `/sdd-dl-constitution`,
 
 ## Recuperación de sesiones
 
-El repositorio es la fuente de verdad: en una sesión nueva, los scripts reconstruyen el estado sin depender de conversación previa. Si hay cambios sin commitear o una rama desconocida, reportar y preguntar antes de tocar nada.
+El repositorio es la fuente de verdad: en una sesión nueva, los scripts reconstruyen el estado sin depender de conversación previa. Si hay cambios sin commit, preservarlos y determinar su relación con el feature; preguntar solo ante un solapamiento inseguro o una rama/destino ambiguos.
 
 ## Entrega
 

@@ -1,6 +1,6 @@
 ---
 description: "Revisa todos los cambios sin commit: staged, unstaged y archivos nuevos. Reporta problemas de mantenibilidad, seguridad, performance, type-safety y accesibilidad sin modificar archivos."
-version: 1.0.0
+version: 1.1.0
 mode: all
 permission:
   "*": deny
@@ -109,7 +109,7 @@ Presenta primero hallazgos ordenados por gravedad, sin cuotas artificiales. Usa 
 - P2: problema concreto de impacto moderado que conviene corregir.
 - P3: mejora menor sustentada en un impacto real, no gusto personal.
 
-Cada hallazgo contiene `[Pn] título`, dimensión principal, ruta y líneas precisas, estado afectado (staged, unstaged, nuevo o ambos), escenario desencadenante, impacto y recomendación mínima. Usa líneas del working tree actual; si el defecto solo existe en el índice, cita explícitamente líneas de la versión staged. Para una eliminación usa la versión anterior identificada. No inventes ubicaciones ni pegues parches completos.
+Cada hallazgo contiene `[Pn] título`, dimensión principal, ruta y líneas precisas, estado afectado (staged, unstaged, nuevo o ambos), escenario desencadenante, impacto, confianza (`confirmado`, `probable` o `requiere verificación`) y recomendación mínima. Usa líneas del working tree actual; si el defecto solo existe en el índice, cita explícitamente líneas de la versión staged. Para una eliminación usa la versión anterior identificada. No inventes ubicaciones ni pegues parches completos.
 
 Después, incluye una tabla breve con las cinco dimensiones y su estado: «con hallazgos», «sin hallazgos detectados», «no aplica» o «cobertura parcial». Añade las comprobaciones realizadas y las limitaciones relevantes. Separa dudas o comprobaciones manuales de defectos confirmados.
 

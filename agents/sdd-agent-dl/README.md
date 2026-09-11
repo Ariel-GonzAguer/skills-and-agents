@@ -36,7 +36,7 @@ flowchart LR
 
 1. `/sdd-dl-constitution` — mission, tech-stack y roadmap en `specs/constitution/`.
 2. `/sdd-dl-feature-spec` — spec con REQs + clarification gate (BLOCKING/IMPORTANT/OPTIONAL) → aprobación humana.
-3. `/sdd-dl-implement` — TASKs con commits pequeños; change control para specs aprobadas.
+3. `/sdd-dl-implement` — TASKs pequeños y reversibles; commits opcionales a solicitud del usuario; change control para specs aprobadas.
 4. `/sdd-dl-validate` — validator independiente.
 5. `/sdd-dl-merge` — changelog + merge (solo desde `validated`, 0 BLOCKING).
 
@@ -44,9 +44,9 @@ O `/sdd-dl` para el modo orquestado: detecta el estado y propone el siguiente pa
 
 ## Quick Start
 
-### 1. Copiar el agente en tu proyecto
+### 1. Inspeccionar y copiar el agente
 
-Copiá el contenido de esta carpeta (`sdd-agent-dl/`) a la raíz de tu proyecto de OpenCode. Es decir, la carpeta `.opencode/` y `AGENTS.md` deben quedar en la raíz.
+La carpeta `.opencode/` y `AGENTS.md` deben quedar en la raíz. Antes de copiar, inspeccioná archivos existentes para no sobrescribir agentes, comandos o instrucciones locales.
 
 ```bash
 # Desde la raíz de tu proyecto
@@ -57,17 +57,13 @@ cp /ruta/a/sdd-agent-dl/AGENTS.md ./AGENTS.md
 En Windows (PowerShell):
 
 ```powershell
-Copy-Item -Recurse -Force /ruta/a/sdd-agent-dl/.opencode ./.opencode
-Copy-Item -Force /ruta/a/sdd-agent-dl/AGENTS.md ./AGENTS.md
+Copy-Item -Recurse /ruta/a/sdd-agent-dl/.opencode ./.opencode
+Copy-Item /ruta/a/sdd-agent-dl/AGENTS.md ./AGENTS.md
 ```
 
 ### 2. Fusionar la configuración (opcional)
 
-Si ya tenés `.opencode/opencode.json`, fusioná el contenido de `.opencode/opencode.json` de este agente con el tuyo. Si no tenés uno, copiá el archivo tal cual:
-
-```bash
-cp .opencode/opencode.json ./opencode.json
-```
+Si ya tenés `.opencode/opencode.json`, fusioná la entrada `agent.sdd-dl` del archivo del paquete con el tuyo antes de copiar. Si no existe, conserva el archivo en `.opencode/opencode.json`; no lo muevas a la raíz.
 
 ### 3. Inicializar OpenCode
 
@@ -86,8 +82,8 @@ Una feature pequeña atravesando el flujo completo:
 
 ## Safety
 
-- Aprobaciones por riesgo: trivial (leer, `git status/diff`, checks) no pregunta; material (editar código, specs aprobadas, dependencias, commits, merge) pide aprobación.
-- Permisos OpenCode: el orquestador tiene `edit: ask`; el validator tiene `edit: deny` y bash con allowlist.
+- Aprobaciones por riesgo: una solicitud explícita de implementación autoriza cambios locales en su alcance; specs aprobadas, dependencias adicionales, commits, ramas, merge y efectos externos conservan gates propios.
+- Permisos OpenCode: el orquestador permite edición gobernada por estado y alcance; el validator tiene `edit: deny` y una allowlist de checks comunes para npm, pnpm y Yarn.
 - Prohibiciones absolutas: no ocultar failures, no cambiar requirements para que parezcan cumplidos, no marcar PASS sin evidencia, no mergear con BLOCKING, no inventar resultados de tests.
 
 ## Portability
@@ -103,6 +99,13 @@ Una feature pequeña atravesando el flujo completo:
 - **Validator independiente**: reduce el sesgo de self-validation; reporta sin corregir.
 - **Change control**: las specs aprobadas no se editan libremente; cambios materiales requieren aprobación humana e invalidan las validations afectadas.
 - **Scripts deterministas**: lo que no necesita razonamiento (estado, matriz, changelog) no depende del LLM.
+- **Trabajo sin commit**: el validator cubre commits, índice, working tree y archivos nuevos; el flujo no obliga a crear ramas o commits antes de la revisión humana.
+
+## Versiones del paquete
+
+- `sdd-dl`: 2.1.0
+- `sdd-dl-validator`: 1.1.0
+- `sdd-agent-dl-workflow`: 2.1.0
 
 ## Estructura
 

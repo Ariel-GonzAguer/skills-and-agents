@@ -30,16 +30,18 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 
 Agentes en Markdown diseñados principalmente para OpenCode. Las adaptaciones para CommandCode se documentan por separado.
 
+Los casos conductuales y su protocolo de forward-testing están en [`agents/evals/`](./agents/evals/README.md).
+
 | Agente                      | Rol                                                                                                                               |
 | --------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | `pnpm-auditor` | Audita varios repos con pnpm; propone update/override y limpieza mínima del workspace. Correcciones solo con permiso por repo |
 | `code-reviewer` | Revisa cambios staged, unstaged y nuevos: mantenibilidad, seguridad, performance, type-safety y accesibilidad. Solo lectura |
 | `architecture-reviewer`     | Revisa arquitectura: complejidad innecesaria, escalabilidad, simplificación                                                       |
-| `chatbot-security-reviewer` | Audita endpoints y UI de chatbots LLM contra OWASP LLM Top 10                                                                     |
-| `firestore-auditor`         | Detecta consultas costosas, modelado deficiente y riesgos de costo en Firestore                                                   |
-| `netlify-costs`             | Estima gastos de sitios desplegados en Netlify vía API REST                                                                       |
+| `chatbot-security-reviewer` | Audita fronteras de confianza, datos, herramientas, consumo y salida de sistemas LLM                                                |
+| `firestore-auditor`         | Audita autorización, reglas, consultas, índices, listeners, escala y costos de Firestore                                           |
+| `netlify-costs`             | Analiza facturación, uso y proyecciones de Netlify sin exponer credenciales                                                        |
 | `waku-deploy-auditor`       | Revisión pre-deploy como Staff Engineer (Waku/React/Netlify)                                                                      |
-| `convex-teacher`            | Enseña Convex desde cero con analogías a Firebase                                                                                 |
+| `convex-teacher`            | Enseña Convex con analogías a Firebase y puede acompañar una implementación interactiva                                            |
 | `viability-*` (6 roles)     | Roles del sistema product-viability-evaluator: researcher, commercial/financial/product analyst, skeptic (red team) y synthesizer |
 | `sdd-agent-dl`                | Orquestador autónomo de Spec-Driven Development: constitución, feature specs, implementación, validación y merge. Incluye 6 comandos (`/sdd-dl`, `/sdd-dl-constitution`, `/sdd-dl-feature-spec`, `/sdd-dl-implement`, `/sdd-dl-validate`, `/sdd-dl-merge`) |
 
@@ -105,7 +107,7 @@ cp agents/*.md ~/.commandcode/agents/
 Diferencias de frontmatter a tener en cuenta:
 
 - `mode:` es ignorado por CommandCode (podés dejarlo o borrarlo)
-- `model:` sí existe en CommandCode, pero espera sus propios ids (`claude-sonnet-5`, etc.). Los ids de OpenCode como `opencode/mimo-v2.5-free` no existen ahí: quitá el campo para que herede el modelo de la sesión, o reemplazalo por un id válido
+- Los agentes del repo no fijan `model:`: heredan el modelo de la sesión para conservar portabilidad. Si agregás uno, debe usar un ID válido para el harness destino
 - Opcional: agregá `tools:` (por ejemplo `tools: read_file, grep, glob`) para limitar las herramientas del agente
 
 **Otros agentes** (Claude Code, Cursor, etc.): las skills siguen el formato estándar `SKILL.md`; copiá la carpeta al directorio de skills de tu herramienta.
@@ -122,13 +124,14 @@ Validar el catálogo, manifiestos, evals e índice antes de publicar cambios:
 
 ```bash
 node scripts/validate-skills.mjs
+node scripts/validate-agents.mjs
 ```
 
-El validador reporta como advertencia cualquier skill que todavía no tenga una suite de evals estructurada.
+Todas las skills del catálogo cuentan con al menos una suite de evals estructurada.
 
 ## Notas
 
-- Algunos agentes declaran un `model` por defecto; ajustalo según los modelos disponibles en tu proveedor.
+- Los agentes heredan el modelo de la sesión; elegí uno con las capacidades necesarias para la tarea y el acceso permitido.
 - El sistema `product-viability-evaluator` funciona mejor con sus 6 agentes `viability-*` instalados junto a la skill.
 - No se incluye ningún secreto ni configuración privada; revisá siempre lo que publicás de tu entorno.
 

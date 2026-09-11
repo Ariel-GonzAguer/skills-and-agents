@@ -13,9 +13,6 @@ const allowedFrontmatter = new Set([
   'metadata',
   'allowed-tools',
 ]);
-const skillsWithoutStructuredEvals = new Set([
-  path.normalize('skills/waku-netlify-firebase-deploy/SKILL.md'),
-]);
 
 async function walk(directory) {
   const entries = await readdir(directory, { withFileTypes: true });
@@ -111,8 +108,6 @@ for (const skillFile of skillFiles.sort()) {
     } catch (error) {
       failures.push(`${path.relative(root, evalPath)}: JSON inválido (${error.message})`);
     }
-  } else if (skillsWithoutStructuredEvals.has(relative)) {
-    warnings.push(`${relative}: no tiene evals/evals.json`);
   } else if (!(packagedSddEval && await exists(packagedSddEval))) {
     failures.push(`${relative}: falta evals/evals.json`);
   }
