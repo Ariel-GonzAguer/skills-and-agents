@@ -16,6 +16,7 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 | `product-viability-evaluator` | Evaluación multi-agente de viabilidad de productos/SaaS con red team adversario, scoring objetivo y veredicto BUILD/VALIDATE/PIVOT/RECONSIDER/ABANDON. Incluye schemas, scripts de scoring y evals |
 | `security-audit-webapp` | Auditoría de seguridad para webapps serverless (Waku/React/Netlify/Firebase) contra OWASP |
 | `chatbot-openai-builder` | Chatbots accesibles con OpenAI: streaming, rate limiting, UI flotante |
+| `chatbot-openrouter-builder` | Chatbots accesibles con OpenRouter: SDKs, streaming, routing, privacidad y costos |
 | `chatbot-security` | Checklist y patrones seguros para LLM chatbots (OWASP LLM Top 10) |
 | `wiki-docs` | Genera wiki técnica estructurada por dominios para cualquier codebase |
 | `theme-switching` | Light/dark mode en React con Zustand + localStorage + Tailwind v4 |

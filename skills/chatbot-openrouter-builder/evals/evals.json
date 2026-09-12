@@ -1,0 +1,45 @@
+{
+  "skill_name": "chatbot-openrouter-builder",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Agrega a mi web React un chatbot flotante con streaming usando OpenRouter. Quiero cambiar el modelo sin tocar código y no quiero desplegar todavía.",
+      "expected_output": "Una implementación accesible y verificada que usa el SDK compatible con la versión instalada, modelo configurable y endpoint seguro del lado del servidor.",
+      "files": [],
+      "assertions": [
+        "Lee y aplica también chatbot-security.",
+        "Usa OPENROUTER_API_KEY y OPENROUTER_MODEL solo en el servidor.",
+        "Comprueba la firma de chat.send mediante tipos o typecheck y no mezcla formas de request de versiones distintas.",
+        "Detecta errores mid-stream aunque la respuesta HTTP sea 200.",
+        "No despliega ni crea claves o créditos."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Migra este endpoint de OpenAI a OpenRouter con un modelo principal y dos fallbacks. Los mensajes contienen datos sensibles y necesito evitar retención.",
+      "expected_output": "Una migración mínima con fallbacks allowlisted, ZDR explícito, límites de costo y pruebas de privacidad, routing y errores.",
+      "files": [],
+      "assertions": [
+        "Preserva el contrato existente salvo cambios necesarios para OpenRouter.",
+        "Trata los fallbacks como decisiones de calidad, costo y privacidad, y registra el modelo efectivo.",
+        "Configura ZDR sin afirmar que cubre plugins o herramientas de terceros.",
+        "No acepta modelos, proveedores ni parámetros de gasto arbitrarios desde el cliente.",
+        "Distingue errores 402, 429 y fallos mid-stream."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "El chatbot de OpenRouter muestra respuestas parciales como exitosas cuando el proveedor se cae. Diagnostica y corrige sin rediseñar la UI.",
+      "expected_output": "Una corrección acotada del protocolo de streaming que reconoce frames de error, conserva deltas parciales como estado incompleto y prueba cancelación y transporte.",
+      "files": [],
+      "assertions": [
+        "Inspecciona el protocolo y la versión del SDK existentes antes de cambiar código.",
+        "No considera HTTP 200 como prueba suficiente de éxito.",
+        "No reintenta automáticamente después de haber emitido texto.",
+        "Preserva el diseño visual fuera de alcance.",
+        "Añade pruebas de error pre-stream, mid-stream, stream vacío y cancelación."
+      ]
+    }
+  ]
+}
+

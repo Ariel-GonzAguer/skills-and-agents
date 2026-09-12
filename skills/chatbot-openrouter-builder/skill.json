@@ -1,0 +1,26 @@
+{
+  "name": "chatbot-openrouter-builder",
+  "description": "Construye chatbots accesibles con OpenRouter Client SDKs, streaming robusto, routing y fallbacks controlados, privacidad y límites de gasto.",
+  "version": "1.0.0",
+  "author": [
+    "Ariel GonzAgüer"
+  ],
+  "tags": [
+    "openrouter",
+    "chatbot",
+    "streaming",
+    "model-routing",
+    "wcag"
+  ],
+  "triggers": [
+    "integrar openrouter",
+    "crear chatbot openrouter",
+    "chatbot multi-modelo",
+    "migrar chatbot a openrouter",
+    "openrouter streaming",
+    "openrouter client sdk"
+  ],
+  "category": "ai-integration",
+  "complexity": "medium"
+}
+

@@ -10,6 +10,12 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [2.2.0] — 2026-09-11
+
+### Added
+
+- `chatbot-openrouter-builder` — 1.0.0: creación y migración de chatbots con OpenRouter Client SDKs, streaming robusto, routing y fallbacks explícitos, privacidad, costos, accesibilidad y evals conductuales.
+
 ## [2.1.0] — 2026-09-10
 
 ### Changed
