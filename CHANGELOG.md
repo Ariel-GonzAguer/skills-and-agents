@@ -10,6 +10,12 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [2.3.0] — 2026-09-12
+
+### Added
+
+- `governance-mentor` — 2.0.0: agente primario para OpenCode que inicia el aprendizaje clonando el repositorio público canónico, instala con lockfile congelado y permiso explícito, valida que sea un starter limpio y acompaña las fases sin implementar los ejercicios. El fork queda reservado para solicitudes expresas. Incluye eval conductual.
+
 ## [2.2.0] — 2026-09-11
 
 ### Added
