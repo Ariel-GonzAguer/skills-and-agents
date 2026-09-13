@@ -10,6 +10,12 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [3.0.0] — 2026-09-12
+
+### Changed
+
+- `governance-mentor` pasa a llamarse `governance-mentor-starter` — 3.0.0 (major): queda definido como agente global, inicial y temporal. Su responsabilidad termina después de clonar, instalar y verificar el laboratorio; luego transfiere el control al `governance-mentor` local en una nueva sesión de OpenCode abierta desde el repositorio clonado.
+
 ## [2.3.0] — 2026-09-12
 
 ### Added

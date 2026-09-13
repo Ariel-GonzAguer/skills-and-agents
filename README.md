@@ -40,7 +40,7 @@ Los casos conductuales y su protocolo de forward-testing están en [`agents/eval
 | `architecture-reviewer`     | Revisa arquitectura: complejidad innecesaria, escalabilidad, simplificación                                                       |
 | `chatbot-security-reviewer` | Audita fronteras de confianza, datos, herramientas, consumo y salida de sistemas LLM                                                |
 | `firestore-auditor`         | Audita autorización, reglas, consultas, índices, listeners, escala y costos de Firestore                                           |
-| `governance-mentor`         | Clona con permiso el laboratorio público, instala y verifica el starter, y acompaña las fases sin resolver los ejercicios |
+| `governance-mentor-starter` | Agente global y temporal: clona con permiso el laboratorio público, instala, verifica y transfiere el control al mentor local |
 | `netlify-costs`             | Analiza facturación, uso y proyecciones de Netlify sin exponer credenciales                                                        |
 | `waku-deploy-auditor`       | Revisión pre-deploy como Staff Engineer (Waku/React/Netlify)                                                                      |
 | `convex-teacher`            | Enseña Convex con analogías a Firebase y puede acompañar una implementación interactiva                                            |
