@@ -10,6 +10,12 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [4.0.0] — 2026-09-13
+
+### Removed
+
+- `governance-mentor-starter` — 4.0.0 (major): se elimina el agente global temporal, su entrada del catálogo y su evaluación conductual.
+
 ## [3.0.0] — 2026-09-12
 
 ### Changed
