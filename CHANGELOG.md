@@ -10,6 +10,19 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [3.1.0] — 2026-09-17
+
+### Changed
+
+- `chatbot-openai-builder` — 1.3.0 (minor): incorpora límites por usuario o tenant para tokens, concurrencia y gasto, circuit breaker, rendering seguro de salidas y validación de respuestas estructuradas.
+- `chatbot-openrouter-builder` — 1.1.0 (minor): añade rendering seguro, validación de salidas estructuradas, delimitación de contenido no confiable, minimización de PII y controles de límites por usuario o tenant.
+- `chatbot-security` — 1.2.0 (minor): amplía los controles para salidas y Markdown, esquemas, PII, herramientas, RAG, límites de costo, telemetría y pruebas adversariales; también endurece el ejemplo de sanitización.
+- `security-audit-webapp` — 1.2.0 (minor): añade una sección de auditoría para funcionalidades con LLM, RAG, herramientas y agentes, incluyendo autorización, costos, observabilidad y verificación.
+
+### Added
+
+- `skills/chatbot-security/references/ai-feature-defense.md`: guía de defensa pre-lanzamiento para salidas del modelo, prompts, herramientas, RAG, límites, observabilidad y pruebas de funcionalidades de IA.
+
 ## [3.0.0] — 2026-09-12
 
 ### Changed

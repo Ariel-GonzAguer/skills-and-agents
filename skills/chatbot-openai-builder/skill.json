@@ -1,7 +1,7 @@
 {
   "name": "chatbot-openai-builder",
-  "description": "Construye chatbots accesibles con OpenAI GPT, streaming de respuestas, rate limiting persistente y UI flotante lista para producción.",
-  "version": "1.2.0",
+  "description": "Construye chatbots accesibles con OpenAI GPT, streaming, límites de gasto, rendering seguro y UI flotante lista para producción.",
+  "version": "1.3.0",
   "author": [
     "Ariel GonzAgüer"
   ],

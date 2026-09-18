@@ -5,11 +5,12 @@ description: |
   Usa esta skill SIEMPRE que el usuario pida: revisar seguridad, auditar vulnerabilidades,
   "puede un atacante robar datos", "revisá el código de seguridad", hardening, o cuando
   mencione OWASP, CSRF, XSS, rate limiting, IDOR, enumeración de emails, token storage,
-  o cualquier preocupación de seguridad en una webapp. Aplica a proyectos con Firebase Auth,
+  o cualquier preocupación de seguridad en una webapp. También cubre funcionalidades con LLM,
+  RAG, herramientas o agentes. Aplica a proyectos con Firebase Auth,
   Firestore, Netlify Functions, Waku, React, Zustand, y stacks similares.
 metadata:
   author: Ariel GonzAgüer
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Auditoría de seguridad para aplicaciones web serverless
@@ -204,7 +205,32 @@ Archivos típicos:
 - `src/lib/analytics/**/*.ts` — tracking con query params
 - `src/pages/_api/**/*.ts` — APIs que reflejan input
 
-## 10. Infraestructura y Configuración
+## 10. Funcionalidades de IA
+
+Si la aplicación invoca un LLM, consulta RAG o da acceso a herramientas, audita además este flujo. Para una guía de implementación detallada, lee la skill `chatbot-security` y su referencia `ai-feature-defense.md`.
+
+### 10.1 Salidas, esquemas y prompts
+
+- ¿La salida del modelo llega al DOM solo como texto o tras Markdown sin HTML crudo y una sanitización con allowlist estricta?
+- ¿Toda salida estructurada se valida contra un esquema en servidor antes de modificar datos, precios, permisos, destinatarios o UI?
+- ¿Los prompts delimitan documentos, historial y contenido externo como datos no confiables? ¿Los secretos, credenciales, autorizaciones y configuración sensible permanecen fuera del prompt?
+- ¿Se minimiza o redacta PII antes de enviarla al proveedor y se revisaron los términos de uso y retención aplicables?
+
+### 10.2 Herramientas, agentes y RAG
+
+- ¿Cada herramienta aplica en código la identidad, el tenant y la autorización, con el mínimo acceso necesario? La descripción de la herramienta no cuenta como control.
+- ¿Las acciones irreversibles o de alto impacto requieren aprobación humana justo antes de ejecutarse? ¿Lectura privada y escritura externa están separadas por una frontera de autorización?
+- ¿Los documentos se validan antes de indexarse y los fragmentos RAG entran al prompt como datos, no instrucciones?
+- ¿El retrieval usa los permisos del usuario y estos igualan o superan la sensibilidad del dato de origen?
+
+### 10.3 Abuso, costos y pruebas
+
+- ¿Hay límites atómicos por usuario/tenant para solicitudes, tokens, concurrencia y gasto, además de IP confiable como señal complementaria?
+- ¿La telemetría estructurada cubre solicitudes, respuestas y llamadas a herramientas con correlación, actor, decisión, uso y costo, pero con redacción/retención de PII y secretos?
+- ¿Existen alertas para egress HTTP inesperado de componentes de IA, anomalías de costo y denegaciones repetidas?
+- ¿Las pruebas incluyen prompt injection, extracción del system prompt, abuso de herramientas y medición de falsos positivos con tráfico o casos representativos?
+
+## 11. Infraestructura y Configuración
 
 - Firebase Console: ¿restricciones de API key y App Check configuradas como capas adicionales? Recordar que la API key web identifica el proyecto y no sustituye Auth ni Security Rules.
 - Firebase Console: ¿dominios OAuth autorizados correctos?
@@ -212,7 +238,7 @@ Archivos típicos:
 - `private/` directory: ¿incluido en deploy pero no servido públicamente?
 - Service account: ¿se lee desde env var `FIREBASE_SERVICE_ACCOUNT_JSON` o archivo?
 
-## 11. Dependencias
+## 12. Dependencias
 
 - ¿Hay dependencias con vulnerabilidades conocidas?
 - Revisar `pnpm audit` o `npm audit`

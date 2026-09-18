@@ -8,7 +8,7 @@ description: >
   depurar su streaming. No aplica a agentes autónomos con bucles de herramientas.
 metadata:
   author: Ariel GonzAgüer
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Chatbot OpenRouter Builder
@@ -34,8 +34,9 @@ Construye chatbots de producción sobre la API unificada de OpenRouter sin ocult
 4. Verifica la documentación oficial y los tipos de la versión instalada. Los SDKs son generados desde OpenAPI y sus firmas pueden cambiar; no mezcles ejemplos de versiones distintas.
 5. Define el contrato de producto: modelo(s), calidad mínima, latencia, costo máximo, privacidad, política de fallbacks, longitud de contexto y capacidades necesarias.
 6. Implementa la llamada exclusivamente en servidor, valida entradas e historial, aplica límites atómicos y transmite un protocolo propio estable hacia el navegador.
-7. Añade una UI accesible o integra el endpoint con la UI existente sin cambiar su diseño fuera de alcance.
-8. Ejecuta typecheck, tests y validaciones de streaming, errores, cancelación, seguridad y accesibilidad.
+7. Trata cada salida como no confiable: renderiza texto o Markdown/HTML sanitizado, y valida salidas estructuradas con un esquema del servidor antes de usarlas.
+8. Añade una UI accesible o integra el endpoint con la UI existente sin cambiar su diseño fuera de alcance.
+9. Ejecuta typecheck, tests y validaciones de streaming, errores, cancelación, seguridad y accesibilidad.
 
 Lee [implementation.md](references/implementation.md) para la implementación TypeScript de referencia. Lee [routing-privacy-and-cost.md](references/routing-privacy-and-cost.md) cuando haya que elegir modelos, proveedores, fallbacks o políticas de datos. Lee [testing.md](references/testing.md) para la matriz de verificación.
 
@@ -67,6 +68,7 @@ Lee [implementation.md](references/implementation.md) para la implementación Ty
 ### Costos y límites
 
 - Aplica un límite propio de solicitudes, concurrencia y presupuesto de entrada/salida aunque OpenRouter también imponga límites.
+- Mantén límites y circuit breakers por usuario o tenant, no solo por clave del proveedor o IP.
 - Distingue `402` (créditos o límite monetario) de `429` (rate limit) y conserva `Retry-After` cuando exista.
 - Registra duración, modelo solicitado, modelo/proveedor efectivo, tokens y costo reportado sin almacenar prompts ni PII por defecto.
 - Usa límites de crédito por clave o workspace como defensa adicional, no como sustituto de controles de la aplicación.
@@ -77,6 +79,7 @@ Lee [implementation.md](references/implementation.md) para la implementación Ty
 - `HTTP-Referer` y `X-OpenRouter-Title`/opciones equivalentes del SDK sirven para atribución de la app; no son controles de autorización ni validación CSRF.
 - ZDR afecta el routing de inferencia, pero no garantiza la política de herramientas o plugins de terceros.
 - No habilites debug del SDK ni eco del request upstream en producción; puede revelar headers, prompts o datos internos.
+- Separa las instrucciones de cualquier documento, historial o resultado externo con delimitadores que los etiqueten como datos no confiables. Redacta PII antes de enviarla cuando no sea indispensable.
 
 ## Variables de entorno
 
@@ -133,6 +136,8 @@ Registra identificadores de correlación como `X-Generation-Id` cuando estén di
 - [ ] Streaming detecta errores antes y después de comprometer la respuesta.
 - [ ] Routing, privacidad y fallbacks están configurados según requisitos explícitos.
 - [ ] Errores públicos no filtran prompts, metadata o credenciales.
+- [ ] Salidas estructuradas se validan contra esquema en servidor antes de producir efectos.
+- [ ] Herramientas, RAG o acciones externas, si existen, siguen los controles de `chatbot-security` y su referencia `ai-feature-defense.md`.
 
 ### Frontend
 
@@ -149,6 +154,7 @@ Registra identificadores de correlación como `X-Generation-Id` cuando estén di
 - [ ] Se probó error mid-stream con HTTP 200 y stream sin contenido.
 - [ ] Se verificó el modelo/proveedor efectivo y el uso reportado.
 - [ ] Cualquier prueba real con costo fue autorizada y acotada.
+- [ ] Se probaron prompt injection, extracción de system prompt, abuso de herramientas y casos reales para medir falsos positivos de guardrails cuando apliquen.
 
 ## Fuentes oficiales
 

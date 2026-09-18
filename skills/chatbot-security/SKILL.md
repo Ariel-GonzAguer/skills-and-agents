@@ -5,14 +5,15 @@ description: >
   con LLM (OpenAI, Anthropic, Gemini o cualquier proveedor). Aplica automáticamente
   cuando se crea, modifica o revisa un chatbot. Cubre OWASP LLM Top 10: inyección
   de prompt, suplantación de rol en historial, validación de inputs, rate limiting,
-  CSRF, hardening del system prompt, logging muerto, exposición de datos sensibles
-  y headers de respuesta. Se activa con "crear chatbot", "modificar chatbot",
+  CSRF, hardening del system prompt, rendering seguro, salidas estructuradas,
+  exposición de datos sensibles y headers de respuesta. Incluye controles para
+  herramientas, RAG, límites de costo y pruebas adversariales. Se activa con "crear chatbot", "modificar chatbot",
   "API chatbot", "endpoint de chat", "ruta OpenAI", "endpoint LLM",
   "asistente virtual", "api chatbot", o cualquier código que invoque un LLM
   con historial suministrado por el usuario.
 metadata:
   author: Ariel GonzAgüer
-  version: "1.1.0"
+  version: "1.2.0"
 ---
 
 # Seguridad de Chatbots
@@ -41,6 +42,13 @@ Cada ✗ es un bloqueador.
 | 10 | `OPENAI_API_KEY` / credenciales LLM solo en variables de entorno, nunca en código fuente | A07 |
 | 11 | Sin PII ni claves privadas embebidas en el system prompt | LLM02 |
 | 12 | Todas las llamadas de log usan el valor de retorno de `sanitizeForLogging` | A09 |
+| 13 | La salida del modelo se muestra como texto o HTML sanitizado con allowlist estricta; Markdown elimina HTML crudo | LLM02 / A03 |
+| 14 | Toda salida estructurada se valida contra un esquema antes de afectar estado, datos o UI | LLM02 |
+| 15 | Contenido externo se delimita como datos y PII se minimiza o redacta antes del prompt | LLM01 / LLM02 |
+| 16 | Herramientas tienen mínimo privilegio, validan autorización en código y requieren aprobación humana para acciones irreversibles | LLM06 / LLM08 |
+| 17 | RAG valida la ingesta, etiqueta el contexto recuperado como datos y respeta los controles de acceso de origen | LLM08 |
+| 18 | Hay límites por usuario de solicitudes, tokens y gasto, junto con telemetría y alertas operativas | LLM10 / A04 |
+| 19 | Se probaron inyección, extracción del prompt, abuso de herramientas y falsos positivos de guardrails | LLM01 / LLM06 |
 
 ---
 
@@ -148,10 +156,14 @@ Las respuestas del LLM pueden contener HTML, script tags o event handlers. Nunca
 
 // SEGURO — si necesitas formato básico, usa DOMPurify
 import DOMPurify from 'dompurify';
-<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.content) }} />
+<div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(message.content, {
+  ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'code', 'pre', 'a'],
+  ALLOWED_ATTR: ['href', 'title'],
+  ALLOW_DATA_ATTR: false,
+}) }} />
 ```
 
-**Regla**: trata la salida del LLM como input de usuario no confiable. El modelo puede ser engañado vía prompt injection para devolver HTML malicioso.
+**Regla**: trata la salida del LLM como input de usuario no confiable. El modelo puede ser engañado vía prompt injection para devolver HTML malicioso. Si usas Markdown, configura el parser para deshabilitar o eliminar HTML crudo antes de sanitizar el resultado; DOMPurify no sustituye esta decisión de parser ni la validación de URLs permitidas.
 
 ---
 
@@ -413,6 +425,10 @@ logInfo('[chatbot] LLM response completed in 1240ms');
 ## Plantilla completa de handler seguro
 
 Adapta la plantilla al runtime existente; no la pegues a ciegas sobre la autorización o logging específica del proyecto. Lee [secure-handler-template.md](references/secure-handler-template.md) cuando necesites comandos detallados, plantillas o ejemplos de implementación.
+
+## Controles de IA más allá del endpoint
+
+Lee [ai-feature-defense.md](references/ai-feature-defense.md) antes de desplegar cuando el chatbot renderice Markdown/HTML, consuma respuestas estructuradas, use herramientas o agentes, consulte RAG, o procese PII. Aplica también su sección de límites, telemetría y pruebas para cualquier endpoint LLM en producción.
 
 ## Escaneo rápido de detección
 

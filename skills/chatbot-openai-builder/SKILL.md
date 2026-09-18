@@ -1,12 +1,13 @@
 ---
 name: chatbot-openai-builder
 description: |
-  Construye chatbots accesibles con OpenAI GPT, streaming de respuestas, rate limiting y UI flotante. 
+  Construye chatbots accesibles con OpenAI GPT, streaming de respuestas, límites de uso
+  y gasto, rendering seguro y UI flotante.
   Usa cuando el usuario pida: crear chatbot, integrar OpenAI, asistente virtual, chat con IA, 
   chatbot con streaming, chatbot accesible WCAG, chat flotante, implementar GPT en mi sitio.
 metadata:
   author: Ariel GonzAgüer
-  version: "1.2.0"
+  version: "1.3.0"
 ---
 
 # Chatbot OpenAI Builder
@@ -40,6 +41,8 @@ Usa esta skill cuando el usuario mencione:
 - Validación de origen (CSRF)
 - Rate limiting por IP
 - Validación de esquema, tamaño y presupuesto de inputs; output encoding al renderizar
+- Límites por usuario de tokens, concurrencia y gasto; circuit breaker
+- Salida del modelo como texto o Markdown/HTML sanitizado con allowlist estricta
 - Variables de entorno para API keys
 
 ## Implementación paso a paso
@@ -48,6 +51,8 @@ Usa el stack del proyecto y las restricciones de seguridad para seleccionar una 
 
 Lee también la skill `chatbot-security` antes de implementar el endpoint. Esta skill construye la
 funcionalidad; `chatbot-security` define las fronteras de autorización, datos, herramientas, gasto y abuso.
+Lee su referencia `ai-feature-defense.md` antes de lanzar si hay Markdown/HTML, salidas estructuradas,
+RAG, herramientas, PII o acciones externas.
 
 ## Características de accesibilidad (WCAG 2.1+)
 
@@ -83,8 +88,9 @@ funcionalidad; `chatbot-security` define las fronteras de autorización, datos, 
 ### 1. Reducción de tokens (costos de OpenAI)
 - System prompt compacto y sin redundancias
 - Limitar historial a últimos 10-20 mensajes
-- `max_completion_tokens` bajo (500-1000)
+- Definir límites duros de tokens de entrada y salida según el contrato del producto
 - Elegir el modelo mediante `OPENAI_MODEL` después de medir calidad, latencia y costo con casos reales
+- Aplicar un presupuesto por usuario o tenant y cortar solicitudes antes de iniciar una generación que lo exceda
 
 ### 2. Cache de datos del negocio
 ```typescript
@@ -238,6 +244,8 @@ Prueba el límite del servidor, la UI con streaming, el rate limiting y la acces
 - [ ] Timeout de 30s
 - [ ] Manejo de errores específicos
 - [ ] Logging de métricas (tokens, duración)
+- [ ] Límite por usuario/tenant de tokens, concurrencia y presupuesto activo
+- [ ] Salidas estructuradas validadas por esquema antes de usarlas
 
 ### Frontend ✅
 - [ ] Componente React con TypeScript
@@ -270,6 +278,7 @@ Prueba el límite del servidor, la UI con streaming, el rate limiting y la acces
 - [ ] Validación de origen implementada
 - [ ] Rate limiting activo
 - [ ] Inputs sanitizados
+- [ ] Salida LLM renderizada como texto o Markdown/HTML sanitizado con allowlist estricta
 - [ ] API key nunca expuesta al frontend
 - [ ] Headers de seguridad configurados
 
@@ -280,6 +289,8 @@ Prueba el límite del servidor, la UI con streaming, el rate limiting y la acces
 - [ ] Cache de datos del negocio
 - [ ] Timeout en peticiones
 - [ ] Modelo configurado por entorno y evaluado con casos representativos
+- [ ] Telemetría estructurada redactada, alertas de egress/sobreuso y retención revisadas
+- [ ] Pruebas de inyección, extracción de prompt y abuso de herramientas/guardrails ejecutadas cuando apliquen
 
 ## Personalización del chatbot
 
