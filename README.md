@@ -2,6 +2,8 @@
 
 Skills, agentes y comandos propios para diferentes `AI agent harness`, compatibles con OpenCode, CommandCode, Codex, Claude Code, Cursor y otros.
 
+> **Compatibilidad con OpenCode:** los agentes, comandos y skills de este repo están escritos en el formato nativo de OpenCode v2. También funcionan en OpenCode v1 gracias a la normalización hacia atrás, salvo por plugins de TUI que no se portaron. Si venís de v1, consultá [`docs/opencode-migracion-v1-v2.md`](./docs/opencode-migracion-v1-v2.md).
+
 Enfoque: desarrollo JAMStack, desarrollo frontend con React, TypeScript, Waku/Astro, Netlify, Firebase, accesibilidad (WCAG 2.2), performance e integración de IA/LLMs en productos reales.
 
 ## Contenido
@@ -12,6 +14,7 @@ Cada carpeta es una skill autocontenida con su `SKILL.md`.
 
 | Skill                        | Descripción                         |
 | ---------------------------- | ----------------------------------- |
+| `acuerdos-piloto` | Acuerdos de piloto y revisión legal preventiva para productos digitales |
 | `pwa-splash-icon` | Generación de iconos de splash para PWA |
 | `product-viability-evaluator` | Evaluación multi-agente de viabilidad de productos/SaaS con red team adversario, scoring objetivo y veredicto BUILD/VALIDATE/PIVOT/RECONSIDER/ABANDON. Incluye schemas, scripts de scoring y evals |
 | `security-audit-webapp` | Auditoría de seguridad para webapps serverless (Waku/React/Netlify/Firebase) contra OWASP |
@@ -78,15 +81,23 @@ Soluciones reales documentadas en producción, complementarias a las skills.
 
 ## Instalación
 
-**OpenCode**: copiá las carpetas a tu configuración:
+**OpenCode**: copiá las carpetas a tu configuración global o al proyecto. En v2 las rutas preferidas son:
 
 ```bash
 # skills
 cp -r skills/<nombre> ~/.config/opencode/skills/
 
-# agentes y comandos
+# agentes y comandos globales
 cp agents/*.md ~/.config/opencode/agents/
 cp commands/*.md ~/.config/opencode/commands/
+```
+
+También podés instalarlos por proyecto en `.opencode/` (v2 descubre ambas):
+
+```bash
+cp -r skills/<nombre> ./.opencode/skills/
+cp agents/*.md ./.opencode/agents/
+cp commands/*.md ./.opencode/commands/
 ```
 
 **SDD Agent DL** (excepción): este agente se recomienda copiarlo a la raíz de tu proyecto, no al directorio de configuración:

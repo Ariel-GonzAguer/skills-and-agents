@@ -14,7 +14,8 @@
 8. [MCP — Model Context Protocol](#mcp--model-context-protocol)
 9. [Flujo de trabajo recomendado](#flujo-de-trabajo-recomendado)
 10. [Personalización avanzada](#personalización-avanzada)
-11. [Recursos](#recursos)
+11. [Migración de v1 a v2](#migración-de-v1-a-v2)
+12. [Recursos](#recursos)
 
 ---
 
@@ -74,26 +75,43 @@ El archivo `opencode.json` controla el comportamiento global de OpenCode. A cont
 
 ```json
 {
-  "$schema": "https://opencode.ai/config.schema.json",
-
-  "theme": "opencode",
-
-  "autoshare": false,
+  "$schema": "https://opencode.ai/config.json",
 
   "model": "anthropic/claude-sonnet-4-5",
 
-  "provider": {
+  "providers": {
     "anthropic": {
-      "apiKey": "env:ANTHROPIC_API_KEY"
+      "package": "aisdk:@ai-sdk/anthropic",
+      "settings": {
+        "apiKey": "{env:ANTHROPIC_API_KEY}"
+      }
     },
     "openai": {
-      "apiKey": "env:OPENAI_API_KEY"
+      "package": "aisdk:@ai-sdk/openai",
+      "settings": {
+        "apiKey": "{env:OPENAI_API_KEY}"
+      }
     },
     "google": {
-      "apiKey": "env:GEMINI_API_KEY"
+      "package": "aisdk:@ai-sdk/google",
+      "settings": {
+        "apiKey": "{env:GEMINI_API_KEY}"
+      }
     }
   },
 
+  "permissions": [
+    { "action": "shell", "resource": "*", "effect": "ask" }
+  ]
+}
+```
+
+La configuración del cliente TUI (temas, keybinds) ahora vive en `~/.config/opencode/cli.json`:
+
+```json
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "theme": { "name": "opencode" },
   "keybinds": {
     "leader": "ctrl+x"
   }
@@ -102,10 +120,12 @@ El archivo `opencode.json` controla el comportamiento global de OpenCode. A cont
 
 ### Notas importantes
 
-- **Nunca escribas API keys directamente** — usa `"env:NOMBRE_VARIABLE"` para leerlas del entorno.
+- **Nunca escribas API keys directamente** — usa `"{env:NOMBRE_VARIABLE}"` para leerlas del entorno.
+- En v2 los proveedores se declaran bajo `providers` (plural), con `package` (prefijo `aisdk:`) y `settings`.
 - Puedes tener múltiples proveedores configurados y cambiar entre ellos con `/connect`.
 - El campo `"model"` define el modelo por defecto; puedes sobreescribirlo en cualquier momento.
 - Los temas disponibles se listan con `/themes`. Opciones populares: `opencode`, `tokyo-night`, `catppuccin`, `dracula`.
+- Si venís de OpenCode v1, consultá [`opencode-migracion-v1-v2.md`](./opencode-migracion-v1-v2.md).
 
 ### Variables de entorno recomendadas
 
@@ -138,12 +158,16 @@ Genera un archivo `AGENTS.md` en la raíz. Este archivo le explica al agente la 
 
 ## Modos de trabajo
 
-| Modo          | Descripción                              | Activar              |
-|---------------|------------------------------------------|----------------------|
-| **Plan**      | Solo lectura y análisis (sin cambios)    | `Tab` o `/plan`      |
-| **Build**     | Edita y modifica archivos reales         | `Tab` o `/build`     |
+En OpenCode v2 los modos se implementan como **agentes**. El agente por defecto es `plan` (solo lectura y análisis); podés cambiar a `build` (edita archivos) con `Tab` o `/build`.
 
-> Buena práctica: siempre analiza primero con **Plan** antes de ejecutar cambios con **Build**.
+| Agente/modo   | Descripción                              | Activar              |
+|---------------|------------------------------------------|----------------------|
+| **plan**      | Solo lectura y análisis (sin cambios)    | `Tab` o `/plan`      |
+| **build**     | Edita y modifica archivos reales         | `Tab` o `/build`     |
+
+> Buena práctica: siempre analiza primero con **plan** antes de ejecutar cambios con **build**.
+>
+> Podés definir tus propios agentes en `~/.config/opencode/agents/<nombre>.md` o `.opencode/agents/<nombre>.md`. El cuerpo del Markdown es el system prompt; el frontmatter controla `mode`, `permissions`, `model`, etc.
 
 ---
 
@@ -178,16 +202,16 @@ Selecciona **GitHub Copilot** en la lista de proveedores. OpenCode abrirá un fl
 
 ```json
 {
-  "provider": {
+  "providers": {
     "copilot": {
-      "npm": "@ai-sdk/openai-compatible",
-      "options": {
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "settings": {
         "baseURL": "https://api.githubcopilot.com"
       },
       "models": {
-        "gpt-4o": {},
-        "claude-3.7-sonnet": {},
-        "o3-mini": {}
+        "gpt-4o": { "name": "GPT-4o" },
+        "claude-sonnet-4-5": { "name": "Claude Sonnet 4.5" },
+        "o3-mini": { "name": "o3-mini" }
       }
     }
   },
@@ -204,10 +228,10 @@ Si tu organización usa GitHub Enterprise Server, agrega el endpoint personaliza
 
 ```json
 {
-  "provider": {
+  "providers": {
     "copilot-enterprise": {
-      "npm": "@ai-sdk/openai-compatible",
-      "options": {
+      "package": "aisdk:@ai-sdk/openai-compatible",
+      "settings": {
         "baseURL": "https://TU_EMPRESA.github.com/api/v3/copilot"
       }
     }
@@ -244,28 +268,30 @@ MCP permite que OpenCode acceda a herramientas externas: bases de datos, APIs, s
 ```json
 {
   "mcp": {
-    "filesystem": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/ruta/permitida"],
-      "enabled": true
-    },
-
-    "github": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
-      "env": {
-        "GITHUB_TOKEN": "env:GITHUB_TOKEN"
+    "servers": {
+      "filesystem": {
+        "type": "local",
+        "command": ["npx", "-y", "@modelcontextprotocol/server-filesystem", "/ruta/permitida"],
+        "disabled": false
       },
-      "enabled": true
-    },
 
-    "postgres": {
-      "type": "local",
-      "command": ["npx", "-y", "@modelcontextprotocol/server-postgres"],
-      "env": {
-        "POSTGRES_CONNECTION_STRING": "env:DATABASE_URL"
+      "github": {
+        "type": "local",
+        "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+        "env": {
+          "GITHUB_TOKEN": "{env:GITHUB_TOKEN}"
+        },
+        "disabled": false
       },
-      "enabled": true
+
+      "postgres": {
+        "type": "local",
+        "command": ["npx", "-y", "@modelcontextprotocol/server-postgres"],
+        "env": {
+          "POSTGRES_CONNECTION_STRING": "{env:DATABASE_URL}"
+        },
+        "disabled": false
+      }
     }
   }
 }
@@ -276,19 +302,21 @@ MCP permite que OpenCode acceda a herramientas externas: bases de datos, APIs, s
 ```json
 {
   "mcp": {
-    "context7": {
-      "type": "remote",
-      "url": "https://mcp.context7.com/mcp",
-      "enabled": true
-    },
-
-    "empresa-interna": {
-      "type": "remote",
-      "url": "https://tools.miempresa.com/mcp",
-      "headers": {
-        "Authorization": "Bearer env:MCP_API_KEY"
+    "servers": {
+      "context7": {
+        "type": "remote",
+        "url": "https://mcp.context7.com/mcp",
+        "disabled": false
       },
-      "enabled": true
+
+      "empresa-interna": {
+        "type": "remote",
+        "url": "https://tools.miempresa.com/mcp",
+        "headers": {
+          "Authorization": "Bearer {env:MCP_API_KEY}"
+        },
+        "disabled": false
+      }
     }
   }
 }
@@ -340,11 +368,11 @@ MCP permite que OpenCode acceda a herramientas externas: bases de datos, APIs, s
 
 ### Comandos reutilizables (Skills/Prompts)
 
-Crea archivos `.md` en `.opencode/commands/` con plantillas de prompts que uses frecuentemente (la convención actual es plural; OpenCode también sigue aceptando `command/` singular). Después los ejecutás dentro de OpenCode como `/review`, `/test` o `/refactor`:
+Crea archivos `.md` en `.opencode/commands/` con plantillas de prompts que uses frecuentemente (OpenCode v2 prefiere `commands/`; también acepta `command/` singular por compatibilidad). Después los ejecutás dentro de OpenCode como `/review`, `/test` o `/refactor`:
 
 ```
 .opencode/
-  command/
+  commands/
     review.md       → "Revisa este código buscando bugs y code smells..."
     test.md         → "Escribe tests unitarios con Vitest para..."
     refactor.md     → "Refactoriza siguiendo los principios SOLID..."
@@ -379,6 +407,26 @@ El archivo `AGENTS.md` en la raíz es la "memoria" del agente sobre tu proyecto.
 - src/hooks/      → custom hooks
 - src/api/        → llamadas al backend
 ```
+
+---
+
+## Migración de v1 a v2
+
+Si venís usando OpenCode v1, los cambios más importantes son:
+
+- `provider` (singular) → `providers` (plural), con `package` y `settings`.
+- `apiKey: "env:VAR"` → `"{env:VAR}"`.
+- `autoshare` → `share` (`"manual"`, `"auto"` o `"disabled"`).
+- `agent` (singular) → `agents` (plural).
+- `tools` → `permissions` con el formato `{ action, resource, effect }`.
+- `bash` → `shell`, `task` → `subagent`, `write`/`patch` → `edit`.
+- `prompt` en JSON → `system` (string).
+- `mcp.<id>` → `mcp.servers.<id>`, `enabled` → `disabled` (inverso).
+- `theme` y `keybinds` se mudan de `opencode.json` a `cli.json`.
+- Plugins de TUI v1 no funcionan en v2; hay que portarlos o quitarlos.
+- Los directorios preferidos son `.opencode/agents/`, `.opencode/commands/` y `.opencode/skills/`.
+
+Para una guía completa con ejemplos antes/después, consultá [`opencode-migracion-v1-v2.md`](./opencode-migracion-v1-v2.md).
 
 ---
 

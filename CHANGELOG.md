@@ -10,6 +10,19 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [3.1.1] — 2026-09-21
+
+### Changed
+
+- `agents/sdd-agent-dl/.opencode/commands/sdd-dl-validate.md`: `subtask: true` cambiado a `subagent: true` para compatibilidad nativa con OpenCode v2.
+- `scripts/validate-agents.mjs`: añadido `permissions` a `allowedKeys` para que el validador no rechace agentes escritos ya en formato V2.
+- `docs/opencode-guia.md`: actualizada la guía al formato de configuración v2 (`providers`, `settings`, `{env:VAR}`, `mcp.servers`, modos de agente, etc.) y añadida sección de migración v1→v2.
+- `README.md`: añadida nota de compatibilidad con OpenCode v2 y rutas de instalación globales/por proyecto.
+
+### Added
+
+- `docs/opencode-migracion-v1-v2.md`: guía completa de migración de agentes, skills, comandos, MCP, plugins y configuración de OpenCode v1 a v2, con tabla de cambios, ejemplos antes/después y lista de verificación.
+
 ## [3.1.0] — 2026-09-17
 
 ### Changed

@@ -9,7 +9,17 @@ const agentRoots = [
   path.join(root, 'agents'),
   path.join(root, 'agents', 'sdd-agent-dl', '.opencode', 'agents'),
 ];
-const allowedKeys = new Set(['description', 'version', 'mode', 'model', 'temperature', 'color', 'permission', 'tools']);
+const allowedKeys = new Set([
+  'description',
+  'version',
+  'mode',
+  'model',
+  'temperature',
+  'color',
+  'permission',
+  'permissions',
+  'tools',
+]);
 const allowedModes = new Set(['all', 'primary', 'subagent']);
 const readOnlyAgents = new Set([
   'architecture-reviewer',

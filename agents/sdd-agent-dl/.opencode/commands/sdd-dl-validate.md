@@ -1,7 +1,7 @@
 ---
 description: Validar la rama actual contra su feature spec (validator independiente).
 agent: sdd-dl-validator
-subtask: true
+subagent: true
 ---
 
 Validar la rama actual contra su feature spec de forma independiente.
