@@ -65,10 +65,18 @@ function parseValidation(content) {
   for (const section of sections) {
     const m = section.match(/^(VAL-\d+) \(([^)]*)\)/);
     if (!m) continue;
-    const refs = m[2].split(/[\s,]+/).filter((r) => r && r !== "ALL");
+    // ALL is retained as a transversal validation, not an invalid REQ ID.
+    const refs = m[2].split(/[\s,]+/).filter(Boolean);
     const boxes = (section.match(/^- \[[ x]\] /gm) || []).length;
     const done = (section.match(/^- \[x\] /gm) || []).length;
-    vals.push({ id: m[1], refs, boxes, done, result: boxes > 0 && done === boxes ? "PASS" : "FAIL" });
+    vals.push({
+      id: m[1],
+      refs,
+      transversal: refs.includes("ALL"),
+      boxes,
+      done,
+      result: boxes > 0 && done === boxes ? "PASS" : "FAIL",
+    });
   }
   return vals;
 }
@@ -115,7 +123,11 @@ function main() {
   for (const v of vals) {
     if (seenVals.has(v.id)) errors.push(`ID duplicado: ${v.id}`);
     seenVals.add(v.id);
-    for (const ref of v.refs) if (!reqIds.has(ref)) errors.push(`${v.id} referencia REQ inexistente: ${ref}`);
+    for (const ref of v.refs) {
+      if (ref !== "ALL" && !reqIds.has(ref)) {
+        errors.push(`${v.id} referencia REQ inexistente: ${ref}`);
+      }
+    }
     if (v.refs.length === 0) errors.push(`${v.id} sin referencia a REQ`);
   }
 
@@ -124,7 +136,9 @@ function main() {
   console.log("| ----------- | ---------- | ----- | ----------- | ------ |");
   for (const r of reqs) {
     const rTasks = tasks.filter((t) => t.refs.includes(r.id)).map((t) => t.id);
-    const rVals = vals.filter((v) => v.refs.includes(r.id));
+    const rVals = vals.filter(
+      (v) => v.transversal || v.refs.includes(r.id)
+    );
     if (rTasks.length === 0) gaps.push(`${r.id}: sin TASK que lo implemente`);
     if (rVals.length === 0) gaps.push(`${r.id}: sin VAL que lo valide`);
     if (!r.hasCriteria) gaps.push(`${r.id}: sin acceptance criteria`);
@@ -140,7 +154,7 @@ function main() {
   for (const t of tasks) {
     if (t.refs.length === 0) continue;
     const uncovered = t.refs.filter(
-      (r) => !vals.some((v) => v.refs.includes(r))
+      (r) => !vals.some((v) => v.transversal || v.refs.includes(r))
     );
     if (uncovered.length) {
       gaps.push(`${t.id}: los REQ ${uncovered.join(", ")} no tienen VAL`);

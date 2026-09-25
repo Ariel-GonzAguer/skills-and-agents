@@ -9,3 +9,5 @@ Avanzar el proyecto usando Spec-Driven Development. Inspeccionar el estado con l
 2. `node .opencode/scripts/status.js` — estado actual.
 3. `node .opencode/scripts/trace.js` — gaps de trazabilidad.
 4. Proponer la siguiente acción según el estado y ejecutarla respetando los gates, actualizando `state.md` en cada transición.
+
+En un proyecto legacy o brownfield sin `specs/discovery.md`, la siguiente acción es `/sdd-dl-discover` antes de crear o revisar la constitución.

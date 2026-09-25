@@ -15,4 +15,4 @@ Crear la constitución del proyecto en `specs/constitution/`.
    - `specs/constitution/tech-stack.md`
    - `specs/constitution/roadmap.md`
    Usar las plantillas en `.opencode/templates/constitution/`.
-4. Dejar sin commit por defecto. Crear `chore(specs): add project constitution` solo si el usuario pidió commits y confirma esa unidad.
+4. Dejar sin commit por defecto. Crear `chore(specs): add project constitution` solo si el usuario lo solicita explícitamente.

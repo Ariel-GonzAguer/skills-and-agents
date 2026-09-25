@@ -1,7 +1,7 @@
 ---
 state: specifying
 feature: <nombre-feature>
-branch: phase-N-<kebab-name>
+branch:
 base: main
 updated: <YYYY-MM-DD>
 blockers: []
@@ -17,7 +17,8 @@ Las transiciones las valida scripts/status.js. No editar state a mano por fuera 
 
 ## Decisiones aprobadas
 
-<!-- Decisiones humanas relevantes: aprobación de spec, cambios de spec aprobados (change control). -->
+<!-- Registrar una decisión o aprobación humana antes de pasar a approved.
+Ejemplo: - 2026-09-24: Spec aprobada por <persona>; alcance y criterios aceptados. -->
 
 ## Próximos pasos
 

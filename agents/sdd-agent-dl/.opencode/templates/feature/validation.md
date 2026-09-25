@@ -1,6 +1,6 @@
 # Validation
 
-<!-- Cada VAL referencia el/los REQ que valida. El validator marca checkboxes solo con evidencia real. Resultado final por VAL: PASS / FAIL / PARTIAL / NOT EXECUTED. -->
+<!-- Cada VAL referencia el/los REQ que valida. ALL conserva su significado: es una validación transversal aplicable a todos los REQ. El validator marca checkboxes solo con evidencia real. Resultado final por VAL: PASS / FAIL / PARTIAL / NOT EXECUTED. -->
 
 ## Automated checks
 
@@ -32,7 +32,9 @@
 
 ## Results
 
-<!-- Tabla completada por el validator: VAL | resultado | evidencia. -->
+| VAL | Resultado | Evidencia |
+| --- | --- | --- |
+| VAL-001 | NOT EXECUTED | - |
 
 ## Definition of done
 

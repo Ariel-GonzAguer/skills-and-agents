@@ -13,6 +13,10 @@ Cada feature tiene un directorio con fecha: `specs/YYYY-MM-DD-nombre-feature/` q
 - `validation.md` — VALs con IDs (`VAL-001 (REQ-001)`) y checkboxes.
 - `state.md` — estado explícito de la feature (specifying → approved → implementing → implemented → validating → validated → merged; flag blocked).
 
-Al codear, leer primero los specs relevantes. Mantener cambios pequeños y reversibles; crear commits solo cuando el usuario los solicite. Ejecutar los comandos de validación de `specs/constitution/tech-stack.md` antes de terminar. Actualizar `CHANGELOG.md` antes de mergear una rama de feature.
+Para un proyecto legacy o brownfield, realizar primero una fase explícita de descubrimiento y documentar evidencia, riesgos y comandos reales en `specs/discovery.md`. La constitución y los specs posteriores deben usar esa evidencia.
+
+Al codear, leer primero los specs relevantes. Mantener cambios pequeños y reversibles; crear ramas y commits solo cuando el usuario los solicite explícitamente. Ejecutar los comandos de validación de `specs/constitution/tech-stack.md` antes de terminar. Actualizar `CHANGELOG.md` antes de mergear una rama de feature.
 
 Los IDs son estables: si se elimina un requirement, no reutilizar su ID. Los cambios a specs aprobadas requieren aprobación humana (sección "Change log" de `requirements.md`).
+
+`VAL-XXX (ALL)` es una validación transversal aplicable a todos los REQ. Desde `approved`, `state.md` debe contener una aprobación o decisión registrada en "Decisiones aprobadas". `validated` y `merged` requieren TASKs completos y una fila `PASS` con evidencia para cada VAL.

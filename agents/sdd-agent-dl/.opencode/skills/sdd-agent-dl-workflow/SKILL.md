@@ -13,7 +13,7 @@ description: >
 compatibility: Diseñada para OpenCode y para instalarse junto con los agentes, comandos, scripts y plantillas incluidos en agents/sdd-agent-dl/.opencode.
 metadata:
   author: Ariel GonzAgüer
-  version: "2.1.0"
+  version: "2.2.0"
 ---
 
 # SDD Agent DL Workflow
@@ -35,15 +35,15 @@ Si falta una pieza:
 
 ## Flujo
 
-1. Inspeccionar el repositorio buscando la constitución SDD (`specs/constitution/mission.md`, `specs/constitution/tech-stack.md`, `specs/constitution/roadmap.md`).
+1. Inspeccionar el repositorio. En un proyecto legacy/brownfield, ejecutar una fase explícita de descubrimiento y registrar la evidencia en `specs/discovery.md` antes de constituirlo o planificar cambios.
    Antes, ejecutar o inspeccionar `.opencode/scripts/status.js`; si no existe, aplicar el contrato de instalación.
 2. Si falta, crear la constitución entrevistando al usuario.
-3. Encontrar la siguiente fase incompleta del roadmap y crear una rama de git.
+3. Encontrar la siguiente fase incompleta del roadmap. Trabajar en la rama actual; crear una rama solo si el usuario lo solicita explícitamente.
 4. Escribir un directorio de feature spec con `requirements.md` (REQ-IDs + acceptance criteria), `plan.md` (TASK-IDs con referencia a REQ), `validation.md` (VAL-IDs con referencia a REQ) y `state.md` (estado explícito).
 5. Clarification gate: clasificar ambigüedades BLOCKING/IMPORTANT/OPTIONAL; 0 BLOCKING antes de aprobar.
-6. Implementar el plan en commits pequeños y reversibles; change control para specs aprobadas.
+6. Implementar el plan en cambios pequeños y reversibles; crear commits solo si el usuario lo solicita explícitamente; aplicar change control para specs aprobadas.
 7. Validar con un agente independiente (PASS/FAIL/PARTIAL/NOT EXECUTED por VAL).
-8. Actualizar `CHANGELOG.md` y mergear solo desde `validated`.
+8. Actualizar `CHANGELOG.md` con su cursor SHA y mergear solo desde `validated`, con TASKs completos y VALs PASS con evidencia.
 
 ## Restricciones
 

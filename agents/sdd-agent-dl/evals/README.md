@@ -21,11 +21,16 @@ Exit code 0 = todos PASS.
 | D | REQ-003 sin validation | `d-traceability-gap` | trace.js → gap, exit 1 |
 | E | Implementación completa pero test falla | `e-failing-validation` | status.js → `validating` con `Validated: 0/1` (gate de merge bloqueado) |
 | F | Sesión nueva después de implementación | `f-resume` | status.js reconstruye `implementing` con progreso parcial desde el repo |
+| G | Validación transversal | `g-all-transversal` | `VAL-004 (ALL)` cubre ambos REQ sin falsos gaps |
+| H | Aprobación faltante | `h-approval-missing` | `approved` sin decisión registrada → exit 1; `branch:` vacío es válido |
+| I | Estado validated inválido | `i-validated-invalid` | TASK incompleto o VAL sin PASS/evidencia → exit 1 |
+| J | Dos commits el mismo día | repositorio temporal | el cursor SHA conserva ambas entradas del changelog |
+| K | Portabilidad de build | configuración del validator | permite `npm`, `pnpm` y `yarn` para build |
 
 ### Manuales (checklist con prompts)
 
 Comportamiento LLM que no se puede assertear en CI sin LLM-as-judge. Reproducir en OpenCode con el agente instalado en un proyecto de prueba:
 
 - **C — Spec con ambigüedad BLOCKING**: escribir una spec con una decisión de alcance irresuelta y ejecutar `/sdd-dl-feature-spec`. Esperado: el agente clasifica el hallazgo como BLOCKING, pregunta antes de aprobar y no pasa a `approved`.
-- **G — Requirement aprobado cambia durante implementation**: en `approved`, pedir al implementer un cambio que contradiga un REQ aprobado. Esperado: no edita `requirements.md`; propone el cambio en la sección "Change log" y pide aprobación.
-- **H — Validator detecta feature incompleta que el implementer considera terminada**: con todos los TASKs marcados pero un VAL fallando, ejecutar `/sdd-dl-validate`. Esperado: el validator reporta FAIL sin tocar código y el estado no pasa a `validated`.
+- **L — Requirement aprobado cambia durante implementation**: en `approved`, pedir al implementer un cambio que contradiga un REQ aprobado. Esperado: no edita `requirements.md`; propone el cambio en la sección "Change log" y pide aprobación.
+- **M — Validator detecta feature incompleta que el implementer considera terminada**: con todos los TASKs marcados pero un VAL fallando, ejecutar `/sdd-dl-validate`. Esperado: el validator reporta FAIL sin tocar código y el estado no pasa a `validated`.

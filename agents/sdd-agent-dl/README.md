@@ -16,7 +16,9 @@ Los coding agents son buenos escribiendo código y malos recordando decisiones. 
 
 ```mermaid
 flowchart LR
-    H[Humano] -->|entrevista + aprobación| C[Constitución]
+    H[Humano] -->|decisiones| D[Discovery legacy/brownfield]
+    D --> C[Constitución]
+    H -->|entrevista + aprobación| C
     C --> S[Feature spec + clarification gate]
     S -->|0 BLOCKING + aprobación| A[approved]
     A --> I[Implementer: sdd-dl]
@@ -28,17 +30,21 @@ flowchart LR
 
 - **Orquestador** (`sdd-dl`): detecta el estado con `status.js`, propone la siguiente acción y coordina las fases.
 - **Validator** (`sdd-dl-validator`): subagente independiente con `edit: deny`; evalúa acceptance criteria y checks reales, reporta PASS/FAIL/PARTIAL/NOT EXECUTED y no corrige código.
-- **Estado explícito**: `state.md` por feature — `specifying → approved → implementing → implemented → validating → validated → merged` + flag `blocked`.
-- **Trazabilidad**: IDs `REQ-001` / `TASK-001 (REQ-001)` / `VAL-001 (REQ-001)`; `trace.js` deriva la matriz y reporta gaps.
+- **Descubrimiento brownfield**: `specs/discovery.md` documenta evidencia del sistema existente antes de constituirlo o planificar cambios.
+- **Estado explícito**: `state.md` por feature — `specifying → approved → implementing → implemented → validating → validated → merged` + flag `blocked`; desde `approved` requiere una decisión humana registrada.
+- **Trazabilidad**: IDs `REQ-001` / `TASK-001 (REQ-001)` / `VAL-001 (REQ-001)`; `VAL (ALL)` es transversal y cubre todos los REQ.
 - **Scripts** (Node, sin dependencias): `status.js` (SDD STATUS determinista), `trace.js` (matriz + checks), `changelog.js` (CHANGELOG.md desde git).
 
 ## Workflow
 
-1. `/sdd-dl-constitution` — mission, tech-stack y roadmap en `specs/constitution/`.
-2. `/sdd-dl-feature-spec` — spec con REQs + clarification gate (BLOCKING/IMPORTANT/OPTIONAL) → aprobación humana.
-3. `/sdd-dl-implement` — TASKs pequeños y reversibles; commits opcionales a solicitud del usuario; change control para specs aprobadas.
-4. `/sdd-dl-validate` — validator independiente.
-5. `/sdd-dl-merge` — changelog + merge (solo desde `validated`, 0 BLOCKING).
+1. `/sdd-dl-discover` — fase explícita para proyectos legacy/brownfield: evidencia, riesgos y comandos existentes.
+2. `/sdd-dl-constitution` — mission, tech-stack y roadmap en `specs/constitution/`.
+3. `/sdd-dl-feature-spec` — spec con REQs + clarification gate (BLOCKING/IMPORTANT/OPTIONAL) → aprobación humana.
+4. `/sdd-dl-implement` — TASKs pequeños y reversibles; commits opcionales a solicitud del usuario; change control para specs aprobadas.
+5. `/sdd-dl-validate` — validator independiente.
+6. `/sdd-dl-replan` — replanificación con change control, invalidación de VALs y trazabilidad.
+7. `/sdd-dl-mvp` — recorte MVP verificable, conservando REQ→TASK→VAL y gates.
+8. `/sdd-dl-merge` — changelog + merge (solo desde `validated`, 0 BLOCKING).
 
 O `/sdd-dl` para el modo orquestado: detecta el estado y propone el siguiente paso.
 
@@ -77,12 +83,12 @@ Una feature pequeña atravesando el flujo completo:
 **Clarify** — el gate detecta una ambigüedad BLOCKING sobre recuperación de contraseña y pregunta; queda registrada en "Clarifications".
 **Approve** — con 0 BLOCKING y la matriz de `trace.js` limpia, el usuario aprueba; `state.md` pasa a `approved`.
 **Implement** — `/sdd-dl-implement` completa los TASKs, marca los checkboxes del plan y pasa a `implemented`.
-**Validate** — `/sdd-dl-validate` ejecuta los checks de verdad con el validator independiente y marca los VALs con evidencia → `validated`.
+**Validate** — `/sdd-dl-validate` ejecuta los checks de verdad con el validator independiente y marca los VALs `PASS` con evidencia → `validated`.
 **Merge** — `/sdd-dl-merge` actualiza `CHANGELOG.md`, mergea a la base y marca la fase del roadmap → `merged`.
 
 ## Safety
 
-- Aprobaciones por riesgo: una solicitud explícita de implementación autoriza cambios locales en su alcance; specs aprobadas, dependencias adicionales, commits, ramas, merge y efectos externos conservan gates propios.
+- Aprobaciones por riesgo: una solicitud explícita de implementación autoriza cambios locales en su alcance; crear una rama o commit requiere una solicitud explícita del usuario. Specs aprobadas, dependencias adicionales, merge y efectos externos conservan gates propios.
 - Permisos OpenCode: el orquestador permite edición gobernada por estado y alcance; el validator tiene `edit: deny` y una allowlist de checks comunes para npm, pnpm y Yarn.
 - Prohibiciones absolutas: no ocultar failures, no cambiar requirements para que parezcan cumplidos, no marcar PASS sin evidencia, no mergear con BLOCKING, no inventar resultados de tests.
 
@@ -99,13 +105,13 @@ Una feature pequeña atravesando el flujo completo:
 - **Validator independiente**: reduce el sesgo de self-validation; reporta sin corregir.
 - **Change control**: las specs aprobadas no se editan libremente; cambios materiales requieren aprobación humana e invalidan las validations afectadas.
 - **Scripts deterministas**: lo que no necesita razonamiento (estado, matriz, changelog) no depende del LLM.
-- **Trabajo sin commit**: el validator cubre commits, índice, working tree y archivos nuevos; el flujo no obliga a crear ramas o commits antes de la revisión humana.
+- **Trabajo sin commit**: el validator cubre commits, índice, working tree y archivos nuevos; el flujo crea ramas o commits solo cuando el usuario lo solicita.
 
 ## Versiones del paquete
 
-- `sdd-dl`: 2.1.0
-- `sdd-dl-validator`: 1.1.0
-- `sdd-agent-dl-workflow`: 2.1.0
+- `sdd-dl`: 2.2.0
+- `sdd-dl-validator`: 1.2.0
+- `sdd-agent-dl-workflow`: 2.2.0
 
 ## Estructura
 
@@ -117,15 +123,19 @@ sdd-agent-dl/
 │   │   └── sdd-dl-validator.md    # validador independiente (subagent)
 │   ├── commands/
 │   │   ├── sdd-dl.md              # comando /sdd-dl
+│   │   ├── sdd-dl-discover.md      # descubrimiento legacy/brownfield
 │   │   ├── sdd-dl-constitution.md # /sdd-dl-constitution
 │   │   ├── sdd-dl-feature-spec.md # /sdd-dl-feature-spec
 │   │   ├── sdd-dl-implement.md    # /sdd-dl-implement
 │   │   ├── sdd-dl-validate.md     # /sdd-dl-validate
-│   │   └── sdd-dl-merge.md        # /sdd-dl-merge
+│   │   ├── sdd-dl-merge.md        # /sdd-dl-merge
+│   │   ├── sdd-dl-replan.md       # /sdd-dl-replan
+│   │   └── sdd-dl-mvp.md          # /sdd-dl-mvp
 │   ├── skills/
 │   │   └── sdd-agent-dl-workflow/
 │   │       └── SKILL.md           # skill reutilizable
 │   ├── templates/
+│   │   ├── discovery.md           # evidencia para proyectos existentes
 │   │   ├── constitution/          # mission, tech-stack, roadmap
 │   │   └── feature/               # requirements, plan, validation, state
 │   ├── scripts/

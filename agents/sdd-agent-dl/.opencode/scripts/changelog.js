@@ -1,12 +1,10 @@
 #!/usr/bin/env node
 /**
- * Mantener CHANGELOG.md a partir del historial de commits de git.
+ * Mantener CHANGELOG.md desde el historial de git sin perder commits del
+ * mismo día. El cursor es un SHA, no una fecha.
  *
  * Uso:
- *   node .opencode/scripts/changelog.js
- *
- * Si CHANGELOG.md no existe, lo crea con todos los commits.
- * Si existe, antepone los commits más nuevos que la última fecha registrada.
+ *   node .opencode/scripts/changelog.js [--base <ref>]
  */
 
 const { execFileSync } = require("child_process");
@@ -14,90 +12,106 @@ const fs = require("fs");
 const path = require("path");
 
 const CHANGELOG = path.resolve("CHANGELOG.md");
+const MARKER_RE = /<!--\s*sdd-changelog:last-commit=([0-9a-fA-F]+)\s*-->/;
 
-function gitLog(sinceDate) {
-  const args = ["log", "--format=%ad|%s", "--date=short"];
-  if (sinceDate) {
-    args.push(`--after=${sinceDate}`);
-  }
-  const output = execFileSync("git", args, {
+function git(args) {
+  return execFileSync("git", args, {
     encoding: "utf8",
-    stdio: ["pipe", "pipe", "ignore"],
+    stdio: ["pipe", "pipe", "inherit"],
+  }).trim();
+}
+
+function parseArgs(args) {
+  if (args.length === 0) return { base: null };
+  if (args.length === 2 && args[0] === "--base" && args[1]) {
+    return { base: args[1] };
+  }
+  console.error("Uso: node .opencode/scripts/changelog.js [--base <ref>]");
+  process.exit(1);
+}
+
+function resolveRef(ref) {
+  if (!ref) return null;
+  try {
+    return git(["rev-parse", "--verify", ref]);
+  } catch {
+    console.error(`No se pudo resolver la referencia base: ${ref}`);
+    process.exit(1);
+  }
+}
+
+function readMarker(content) {
+  const match = content.match(MARKER_RE);
+  return match ? match[1] : null;
+}
+
+function gitLog(from) {
+  const args = ["log", "--format=%H%x1f%ad%x1f%s", "--date=short"];
+  if (from) args.push(`${from}..HEAD`);
+  const output = git(args);
+  if (!output) return [];
+  return output.split("\n").flatMap((line) => {
+    const [sha, date, subject] = line.split("\x1f");
+    return sha && date && subject ? [{ sha, date, subject }] : [];
   });
+}
+
+function renderSections(commits) {
   const byDate = new Map();
-  for (const line of output.trim().split("\n")) {
-    const sep = line.indexOf("|");
-    if (sep === -1) continue;
-    const date = line.slice(0, sep).trim();
-    const subject = line.slice(sep + 1).trim();
-    if (!byDate.has(date)) byDate.set(date, []);
-    byDate.get(date).push(subject);
+  for (const commit of commits) {
+    if (!byDate.has(commit.date)) byDate.set(commit.date, []);
+    byDate.get(commit.date).push(commit.subject);
   }
-  return byDate;
-}
-
-function lastDateInChangelog() {
-  if (!fs.existsSync(CHANGELOG)) return null;
-  for (const line of fs.readFileSync(CHANGELOG, "utf8").split("\n")) {
-    if (line.startsWith("## ")) {
-      const candidate = line.slice(3).trim();
-      if (/^\d{4}-\d{2}-\d{2}$/.test(candidate)) {
-        return candidate;
-      }
-    }
-  }
-  return null;
-}
-
-function renderSections(byDate) {
   const lines = [];
-  const dates = Array.from(byDate.keys()).sort().reverse();
-  for (const date of dates) {
+  for (const [date, subjects] of byDate) {
     lines.push(`\n## ${date}\n`);
-    for (const subject of byDate.get(date)) {
-      lines.push(`- ${subject}\n`);
-    }
+    for (const subject of subjects) lines.push(`- ${subject}\n`);
   }
-  return lines;
+  return lines.join("");
+}
+
+function setMarker(content, sha) {
+  const marker = `<!-- sdd-changelog:last-commit=${sha} -->`;
+  if (MARKER_RE.test(content)) return content.replace(MARKER_RE, marker);
+  const newline = content.startsWith("# ") ? content.indexOf("\n") + 1 : 0;
+  return `${content.slice(0, newline)}\n${marker}\n${content.slice(newline)}`;
 }
 
 function main() {
-  if (!fs.existsSync(CHANGELOG)) {
-    const byDate = gitLog();
-    if (byDate.size === 0) {
-      console.log("No se encontraron commits — nada que escribir.");
-      process.exit(0);
-    }
-    const content = ["# Changelog\n", ...renderSections(byDate)];
-    fs.writeFileSync(CHANGELOG, content.join(""));
-    const total = Array.from(byDate.values()).reduce((sum, list) => sum + list.length, 0);
-    console.log(`Creado CHANGELOG.md con ${total} entradas en ${byDate.size} fecha(s).`);
+  const { base } = parseArgs(process.argv.slice(2));
+  const existing = fs.existsSync(CHANGELOG)
+    ? fs.readFileSync(CHANGELOG, "utf8")
+    : "";
+  const marker = readMarker(existing);
+  const start = marker || resolveRef(base);
+
+  if (existing && !marker && !base) {
+    console.error(
+      "CHANGELOG.md no tiene marcador SHA. Ejecutá de nuevo con --base <ref> para establecer un cursor seguro."
+    );
+    process.exit(1);
+  }
+
+  const commits = gitLog(start);
+  if (commits.length === 0) {
+    console.log("No hay commits nuevos — CHANGELOG.md está actualizado.");
     return;
   }
 
-  const last = lastDateInChangelog();
-  const byDate = gitLog(last);
-  byDate.delete(last);
-
-  if (byDate.size === 0) {
-    console.log("No hay commits nuevos desde la última entrada — CHANGELOG.md está actualizado.");
-    process.exit(0);
+  const latestSha = commits[0].sha;
+  if (!existing) {
+    fs.writeFileSync(
+      CHANGELOG,
+      setMarker(`# Changelog\n${renderSections(commits)}`, latestSha)
+    );
+  } else {
+    const withMarker = setMarker(existing, latestSha);
+    const markerEnd = withMarker.indexOf("\n", withMarker.indexOf("-->")) + 1;
+    const updated = `${withMarker.slice(0, markerEnd)}${renderSections(commits)}${withMarker.slice(markerEnd)}`;
+    fs.writeFileSync(CHANGELOG, updated);
   }
 
-  const existing = fs.readFileSync(CHANGELOG, "utf8");
-  const lines = existing.split(/(?<=\n)/);
-  let insertAt = 0;
-  if (lines.length > 0 && lines[0].startsWith("# ")) {
-    insertAt = 1;
-  }
-  const updated = [
-    ...lines.slice(0, insertAt),
-    ...renderSections(byDate),
-    ...lines.slice(insertAt),
-  ].join("");
-  fs.writeFileSync(CHANGELOG, updated);
-  const total = Array.from(byDate.values()).reduce((sum, list) => sum + list.length, 0);
-  console.log(`Agregadas ${total} entradas nuevas a CHANGELOG.md.`);
+  console.log(`Agregadas ${commits.length} entradas nuevas a CHANGELOG.md.`);
 }
 
 main();
