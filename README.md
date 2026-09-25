@@ -48,7 +48,7 @@ Los casos conductuales y su protocolo de forward-testing están en [`agents/eval
 | `waku-deploy-auditor`       | Revisión pre-deploy como Staff Engineer (Waku/React/Netlify)                                                                      |
 | `convex-teacher`            | Enseña Convex con analogías a Firebase y puede acompañar una implementación interactiva                                            |
 | `viability-*` (6 roles)     | Roles del sistema product-viability-evaluator: researcher, commercial/financial/product analyst, skeptic (red team) y synthesizer |
-| `sdd-agent-dl`                | Orquestador autónomo de Spec-Driven Development: constitución, feature specs, implementación, validación y merge. Incluye 6 comandos (`/sdd-dl`, `/sdd-dl-constitution`, `/sdd-dl-feature-spec`, `/sdd-dl-implement`, `/sdd-dl-validate`, `/sdd-dl-merge`) |
+| `sdd-agent-dl`                | Orquestador autónomo de Spec-Driven Development: discovery brownfield, constitución, feature specs, implementación, validación independiente y merge con gates trazables. Incluye 9 comandos SDD. |
 
 ### Comandos (`commands/`)
 
@@ -59,10 +59,13 @@ Comandos rápidos para OpenCode (`~/.config/opencode/commands/`).
 - `react-doctor`: análisis de código React
 - `summarize`: resumen rápido del proyecto actual
 - `/sdd-dl`: orquestador autónomo de Spec-Driven Development
+- `/sdd-dl-discover`: documentar evidencia, riesgos y comandos reales de un proyecto legacy/brownfield
 - `/sdd-dl-constitution`: crear constitución del proyecto (mission, tech-stack, roadmap)
 - `/sdd-dl-feature-spec`: escribir el siguiente feature spec desde el roadmap
 - `/sdd-dl-implement`: implementar el feature spec actual
 - `/sdd-dl-validate`: validar la rama contra su feature spec
+- `/sdd-dl-replan`: replanificar con change control, trazabilidad e invalidación de VALs afectados
+- `/sdd-dl-mvp`: definir el corte MVP verificable del roadmap o feature
 - `/sdd-dl-merge`: actualizar changelog y mergear la fase
 
 ### Documentos técnicos (`docs/`)
@@ -107,7 +110,7 @@ cp -r agents/sdd-agent-dl/.opencode ./.opencode
 cp agents/sdd-agent-dl/AGENTS.md ./AGENTS.md
 ```
 
-Ver `agents/sdd-agent-dl/README.md` para instrucciones detalladas.
+Ver [`agents/sdd-agent-dl/README.md`](./agents/sdd-agent-dl/README.md) para instrucciones detalladas, los gates de aprobación/validación y el uso inicial de `changelog.js --base <ref>` para establecer su cursor SHA.
 
 Esta excepción se hace por la posibilidad de que ya tengas un agente o flujo de trabajo SDD en tu proyecto, y no quieras sobreescribirlo. Si no tenés un flujo SDD, podés copiarlo sin problemas en la carpeta de configuración de OpenCode.
 

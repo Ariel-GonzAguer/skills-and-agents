@@ -10,6 +10,22 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [3.2.0] — 2026-09-24
+
+### Changed
+
+- `sdd-dl` — 2.2.0 (minor): endurece gates deterministas. Desde `approved` exige una aprobación o decisión registrada; `implemented`, `validating`, `validated` y `merged` exigen TASKs completos; `validated` y `merged` requieren cada VAL en `PASS` con evidencia. Permite `branch:` vacío y no reporta divergencia de rama tras `merged`.
+- `sdd-dl-validator` — 1.2.0 (minor): permite checks de build con `npm`, `pnpm` y `yarn`.
+- `sdd-agent-dl-workflow` — 2.2.0 (minor): alinea ramas y commits con una solicitud explícita del usuario, añade discovery brownfield y requiere evidencia de validación antes de mergear.
+- `agents/sdd-agent-dl/.opencode/scripts/trace.js`: `VAL-XXX (ALL)` conserva `ALL` como validación transversal para todos los REQ, sin generar gaps falsos.
+- `agents/sdd-agent-dl/.opencode/scripts/changelog.js`: reemplaza el cursor por fecha con el marcador `<!-- sdd-changelog:last-commit=... -->`; `--base <ref>` establece el cursor inicial y evita perder commits del mismo día.
+
+### Added
+
+- `/sdd-dl-discover`: fase explícita de descubrimiento para proyectos legacy/brownfield, con plantilla `specs/discovery.md`.
+- `/sdd-dl-replan` y `/sdd-dl-mvp`: comandos para replanificar cambios con control humano y definir un corte MVP verificable.
+- Evals deterministas para `VAL (ALL)`, aprobación faltante, `validated` inválido, el cursor SHA del changelog con dos commits en la misma fecha y portabilidad de build.
+
 ## [3.1.1] — 2026-09-21
 
 ### Changed
