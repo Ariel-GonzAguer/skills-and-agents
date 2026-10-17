@@ -10,6 +10,13 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [3.2.1] — 2026-10-17
+
+### Changed
+
+- `docs/firebase-admin-bundling-waku-netlify.md`, `docs/firebase-admin-cjs-interop.md`, `docs/react-19-rtl-16-vitest-act-fix.md`: sincronizados con la documentación de `documentacionTotal` (soluciones de bundling de Firebase Admin, interop CJS y fix de `act` con vitest).
+- `.gitignore`: añadido `.kilo` para excluir la configuración de Kilo del repositorio.
+
 ## [3.2.0] — 2026-09-24
 
 ### Changed
