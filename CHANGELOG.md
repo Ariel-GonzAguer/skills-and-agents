@@ -10,6 +10,14 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [3.2.2] — 2026-10-18
+
+### Changed
+
+- `netlify-costs` — 2.0.1 (patch): añade denials explícitos de `netlify deploy`, `netlify publish`, `netlify api` y `git push` como defensa en profundidad del contrato de solo lectura.
+- `pnpm-auditor` — 1.1.1 (patch): añade denials de `publish` y `deploy`, que no cubrían los denials existentes solo de git y permitían subir paquetes a un registry.
+- `convex-teacher` — 2.0.1 (patch): añade denial de `publish` junto a los denials de deploy ya presentes.
+
 ## [3.2.1] — 2026-10-17
 
 ### Changed

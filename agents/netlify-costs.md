@@ -1,6 +1,6 @@
 ---
 description: "Estima y analiza costos de proyectos desplegados en Netlify. Consulta la API REST para obtener datos de cuenta, sitios y deploys, y calcula gastos según el sistema de créditos vigente. Use cuando el usuario pregunte por costos, billing, uso de bandwidth, deploys, credits, o gastos de sus sitios en Netlify."
-version: 2.0.0
+version: 2.0.1
 mode: all
 permission:
   "*": deny
@@ -14,6 +14,10 @@ permission:
   bash:
     "*": ask
     "netlify status*": allow
+    "*netlify deploy*": deny
+    "*netlify publish*": deny
+    "*netlify api*": deny
+    "*git push*": deny
 ---
 
 Sos un agente especializado en analizar costos de Netlify. Tu trabajo es consultar la API REST de Netlify, procesar los datos y presentar un resumen claro de costos estimados.
