@@ -10,7 +10,7 @@ description: |
   Firestore, Netlify Functions, Waku, React, Zustand, y stacks similares.
 metadata:
   author: Ariel GonzAgüer
-  version: "1.2.0"
+  version: "1.2.1"
 ---
 
 # Auditoría de seguridad para aplicaciones web serverless
@@ -91,6 +91,27 @@ Revisa TODOS los mensajes de error:
 - Errores de token: ¿revelan si la cuenta existe pero no está vinculada?
 
 No declarar automáticamente “aceptable” una filtración del SDK. Evaluar si la configuración de protección contra enumeración está disponible y mostrar mensajes uniformes en la UI. En recuperación de contraseña, responder de forma indistinguible exista o no la cuenta. Mantener el detalle diagnóstico solo en telemetría protegida.
+
+### 6.1 Caso de estudio: password reset anti-enumeración (Firebase)
+
+El formulario "olvidé mi contraseña" es el clásico **oráculo de enumeración**: si responde distinto según el correo exista, el atacante lo usa como API de consulta para armar la lista de usuarios registrados (phishing dirigido, credential stuffing, spam a usuarios reales).
+
+**Patrón seguro verificado en implementación real:**
+
+1. **Un solo texto de éxito genérico** en la UI, idéntico exista o no la cuenta: *"Si existe una cuenta con ese correo, te enviaremos un enlace para restablecer tu contraseña."* — con `role="status"`.
+2. **Mapear `auth/user-not-found` → éxito** (`ok: true`), nunca a un error visible: si la "Email enumeration protection" de Firebase está desactivada, el SDK devuelve ese error y mostrarlo filtra la cuenta. Con protección activada el error no existe; el código queda defensivo en ambos escenarios.
+3. **`auth/too-many-requests` → mensaje propio de rate limit** ("Demasiados intentos…"): no revela nada sobre existencia y orienta al usuario legítimo.
+4. **Errores de red/genéricos → mensaje neutro** distinto al de rate limit (no filtra información, sí es accionable).
+5. **Validar formato de email ANTES de llamar al SDK** (`auth/invalid-email` y regex local): el typo del usuario se mitiga en validación de sintaxis, no con un error diferenciado que revele existencia.
+
+**Tradeoff aceptado**: quien escribe mal su correo ve el mensaje de éxito y nunca llega el email. Es el estándar de la industria (Gmail, GitHub, Mercado Libre); la alternativa —decir "ese correo no existe"— regala información al atacante.
+
+**Infra no bloqueante**: recomendar al humano activar *Email enumeration protection* en Firebase Console (Authentication → Settings). Es configuración, no código; dejarlo anotado como pendiente de infraestructura en el spec/state.
+
+**Checks de verificación para el reporte**:
+- Enviar el reset con un correo CON cuenta y otro SIN cuenta → ambos deben mostrar **el mismo string exacto** de éxito.
+- `grep` en mensajes de error de auth: no debe haber "no existe", "no encontramos", "no registrado" en respuestas al cliente.
+- Verificar que el componente NO llame directamente al SDK con manejo de errores propio disperso: centralizar el mapeo en un módulo testeable (patrón `src/lib/passwordreset.ts` con tests mockeados).
 
 ## 7. Almacenamiento de Tokens
 

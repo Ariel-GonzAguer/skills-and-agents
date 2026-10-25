@@ -10,6 +10,12 @@ Reglas de bump:
 - `minor`: funcionalidad nueva compatible
 - `patch`: correcciones y documentación
 
+## [3.2.3] — 2026-10-25
+
+### Changed
+
+- `security-audit-webapp` — 1.2.1 (patch): añade caso de estudio 6.1 sobre password reset anti-enumeración en Firebase: texto de éxito genérico, mapeo de `auth/user-not-found` a éxito, manejo de rate limit, validación de formato previa al SDK, tradeoff aceptado, infra no bloqueante y checks de verificación para el reporte.
+
 ## [3.2.2] — 2026-10-18
 
 ### Changed
